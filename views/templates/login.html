@@ -1,0 +1,28 @@
+{% extends "base_auth.html" %}
+{% from "_macros.html" import campo_senha, icone_alerta %}
+
+{% block titulo %}Entrar{% endblock %}
+{% block titulo_cartao %}Bem-vindo de volta{% endblock %}
+{% block subtitulo_cartao %}Entre para continuar seus planos de voo{% endblock %}
+
+{% block formulario %}
+<div class="alerta-erro" id="alerta-login" role="alert" hidden>
+  {{ icone_alerta() }}
+  E-mail ou senha incorretos
+</div>
+
+<form class="formulario" id="form-login" novalidate>
+  <div class="campo">
+    <label class="campo__rotulo" for="email">E-mail</label>
+    <input class="campo__entrada" id="email" name="email" type="email" placeholder="voce@email.com" autocomplete="email" maxlength="150">
+  </div>
+  {{ campo_senha("senha", "Senha", "Digite sua senha", "current-password") }}
+  <button type="submit" class="botao botao--primario botao--grande botao--bloco">Decolar</button>
+</form>
+
+<p class="auth__troca">Ainda não tem conta? <a href="{{ url_for('paginas.cadastro') }}">Criar conta</a></p>
+{% endblock %}
+
+{% block scripts %}
+<script type="module" src="{{ url_for('static', filename='js/login.js') }}"></script>
+{% endblock %}

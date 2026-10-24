@@ -1,0 +1,191 @@
+{% extends "base.html" %}
+
+{% block titulo %}Quadro{% endblock %}
+
+{% block estilos %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/header.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/quadro.css') }}">
+{% endblock %}
+
+{% block conteudo %}
+<div class="app tela-quadro" id="tela-quadro" data-quadro-id="{{ quadro_id }}">
+  {% include "_header.html" %}
+
+  <div class="barra-quadro">
+    <a class="botao botao--fantasma botao-voltar" href="{{ url_for('paginas.quadros') }}" aria-label="Voltar para o Hangar">
+      <svg class="icone" width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M19 12H5"></path><path d="m12 19-7-7 7-7"></path></svg>Hangar
+    </a>
+    <h1 class="quadro-titulo" id="quadro-titulo">
+      <button type="button" class="quadro-titulo__botao" title="Clique para editar o título"></button>
+    </h1>
+    <button type="button" class="botao botao--secundario botao-nova-coluna" data-acao="nova-coluna" aria-label="Nova coluna">
+      <svg class="icone" width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14"></path><path d="M5 12h14"></path></svg><span class="botao-nova-coluna__texto">Nova coluna</span>
+    </button>
+  </div>
+
+  <!-- Carregando -->
+  <div class="quadro-carregando" id="quadro-carregando" aria-busy="true" aria-label="Carregando quadro">
+    <div class="coluna-esqueleto"><div class="esqueleto esqueleto--titulo"></div><div class="esqueleto" style="height:64px"></div><div class="esqueleto" style="height:48px"></div><div class="esqueleto" style="height:72px"></div><div class="esqueleto esqueleto--rodape"></div></div>
+    <div class="coluna-esqueleto"><div class="esqueleto esqueleto--titulo"></div><div class="esqueleto" style="height:80px"></div><div class="esqueleto" style="height:52px"></div><div class="esqueleto esqueleto--rodape"></div></div>
+    <div class="coluna-esqueleto"><div class="esqueleto esqueleto--titulo"></div><div class="esqueleto" style="height:48px"></div><div class="esqueleto" style="height:64px"></div><div class="esqueleto" style="height:48px"></div><div class="esqueleto esqueleto--rodape"></div></div>
+  </div>
+
+  <!-- Erro -->
+  <div id="quadro-erro" hidden>
+    <div class="estado-erro" role="alert">
+      <span class="estado-erro__icone" aria-hidden="true"><svg class="icone" width="26" height="26" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><path d="M12 8v4"></path><path d="M12 16h.01"></path></svg></span>
+      <h2 class="estado-erro__titulo">Não foi possível carregar o quadro</h2>
+      <p class="estado-erro__texto">Verifique sua conexão e tente de novo.</p>
+      <button type="button" class="botao botao--secundario" data-acao="tentar-novamente">Tentar novamente</button>
+    </div>
+  </div>
+
+  <!-- Vazio (sem colunas) -->
+  <div class="quadro-sem-colunas" id="quadro-sem-colunas" hidden>
+    <div class="quadro-sem-colunas__cartao">
+      <img src="{{ url_for('static', filename='img/mascote-nuvem.png') }}" alt="">
+      <p>Este plano de voo ainda não tem rotas. Crie sua primeira coluna!</p>
+      <button type="button" class="botao botao--primario" data-acao="nova-coluna">Criar primeira coluna</button>
+    </div>
+  </div>
+
+  <!-- Preenchido -->
+  <div class="quadro-pontos" id="quadro-pontos" role="status" hidden></div>
+  <div class="quadro-colunas" id="quadro-colunas" hidden></div>
+</div>
+
+<template id="tpl-coluna">
+  <section class="coluna">
+    <div class="coluna__topo">
+      <h2 class="coluna__titulo">
+        <button type="button" class="coluna__titulo-botao" title="Clique para renomear"></button>
+      </h2>
+      <span class="coluna__contagem"></span>
+      <button type="button" class="botao-icone botao-menu" aria-haspopup="menu" aria-expanded="false">
+        <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><circle cx="5" cy="12" r="1.8"></circle><circle cx="12" cy="12" r="1.8"></circle><circle cx="19" cy="12" r="1.8"></circle></svg>
+      </button>
+      <div class="menu" role="menu" hidden>
+        <button type="button" role="menuitem" class="menu__item" data-acao="renomear">
+          <svg class="icone" width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path d="M17 3a2.85 2.85 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"></path></svg>Renomear
+        </button>
+        <button type="button" role="menuitem" class="menu__item menu__item--perigo" data-acao="excluir">
+          <svg class="icone" width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18"></path><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"></path><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>Excluir coluna
+        </button>
+      </div>
+    </div>
+    <div class="coluna__cartoes">
+      <p class="coluna__vazia">Céu limpo por aqui ☁️</p>
+    </div>
+    <div class="coluna__rodape">
+      <button type="button" class="botao-adicionar-cartao" data-acao="abrir-adicionar">
+        <svg class="icone" width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14"></path><path d="M5 12h14"></path></svg>Adicionar cartão
+      </button>
+      <form class="form-rapido" data-acao="adicionar" hidden>
+        <textarea class="form-rapido__entrada" name="titulo" rows="3" maxlength="100" placeholder="Digite o título do cartão…" aria-label="Título do novo cartão"></textarea>
+        <div class="form-rapido__botoes">
+          <button type="submit" class="botao botao--primario">Adicionar</button>
+          <button type="button" class="botao-icone" data-acao="cancelar-adicionar" aria-label="Cancelar novo cartão">
+            <svg class="icone" width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg>
+          </button>
+        </div>
+      </form>
+    </div>
+  </section>
+</template>
+
+<template id="tpl-cartao">
+  <div class="cartao" role="button" tabindex="0">
+    <div class="cartao__etiqueta" aria-hidden="true" hidden></div>
+    <div class="cartao__corpo">
+      <span class="cartao__titulo"></span>
+      <div class="cartao__indicadores" hidden>
+        <span class="prazo" hidden>
+          <svg class="icone" width="13" height="13" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"></rect><path d="M16 2v4"></path><path d="M8 2v4"></path><path d="M3 10h18"></path></svg><span class="prazo__texto"></span>
+        </span>
+        <span class="cartao__tem-descricao" title="Este cartão tem descrição" hidden>
+          <svg class="icone" width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 6H3"></path><path d="M15 12H3"></path><path d="M17 18H3"></path></svg>
+        </span>
+      </div>
+    </div>
+  </div>
+</template>
+
+<template id="tpl-nova-coluna">
+  <button type="button" class="nova-coluna" data-acao="nova-coluna">
+    <svg class="icone" width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14"></path><path d="M5 12h14"></path></svg>Nova coluna
+  </button>
+</template>
+
+<template id="tpl-nova-coluna-form">
+  <form class="nova-coluna-form form-rapido">
+    <input class="form-rapido__entrada" name="titulo" maxlength="50" placeholder="Título da coluna" aria-label="Título da nova coluna" autocomplete="off">
+    <div class="form-rapido__botoes">
+      <button type="submit" class="botao botao--primario">Criar coluna</button>
+      <button type="button" class="botao-icone" data-acao="cancelar" aria-label="Cancelar nova coluna">
+        <svg class="icone" width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg>
+      </button>
+    </div>
+  </form>
+</template>
+
+<template id="tpl-modal-cartao">
+  <div class="sobreposicao">
+    <form class="dialogo modal-cartao" role="dialog" aria-modal="true" aria-labelledby="cartao-titulo-rotulo" novalidate>
+      <div class="modal-cartao__cabecalho">
+        <div class="campo modal-cartao__titulo-campo">
+          <label class="campo__rotulo" id="cartao-titulo-rotulo" for="cartao-titulo">Título do cartão</label>
+          <input class="campo__entrada modal-cartao__titulo-entrada" id="cartao-titulo" name="titulo" maxlength="100" autocomplete="off">
+          <p class="modal-cartao__coluna">na coluna <strong data-campo="nome-coluna"></strong></p>
+        </div>
+        <button type="button" class="botao-icone" data-acao="fechar" aria-label="Fechar">
+          <svg class="icone" width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg>
+        </button>
+      </div>
+
+      <div class="modal-cartao__corpo">
+        <div class="campo">
+          <label class="campo__rotulo" for="cartao-coluna">Mover para</label>
+          <select class="campo__entrada" id="cartao-coluna" name="coluna"></select>
+        </div>
+        <div class="campo">
+          <label class="campo__rotulo" for="cartao-descricao">Descrição</label>
+          <textarea class="campo__entrada" id="cartao-descricao" name="descricao" maxlength="2000" rows="4" placeholder="Adicione mais detalhes sobre esta tarefa…" aria-describedby="cartao-descricao-contador"></textarea>
+          <span class="modal-cartao__contador" id="cartao-descricao-contador">0/2000</span>
+        </div>
+        <div class="campo">
+          <label class="campo__rotulo" for="cartao-prazo">Prazo</label>
+          <div class="modal-cartao__prazo">
+            <input class="campo__entrada" id="cartao-prazo" name="prazo" type="date" lang="pt-BR">
+            <button type="button" class="botao botao-remover-prazo" data-acao="remover-prazo">Remover prazo</button>
+          </div>
+        </div>
+        <div class="campo">
+          <span class="campo__rotulo" id="cartao-etiqueta-rotulo">Etiqueta</span>
+          <div class="etiquetas" role="radiogroup" aria-labelledby="cartao-etiqueta-rotulo"></div>
+        </div>
+      </div>
+
+      <div class="modal-cartao__rodape">
+        <button type="button" class="botao botao--perigo" data-acao="excluir">
+          <svg class="icone" width="17" height="17" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18"></path><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"></path><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>Excluir cartão
+        </button>
+        <div class="modal-cartao__acoes">
+          <button type="button" class="botao botao--secundario" data-acao="fechar">Cancelar</button>
+          <button type="submit" class="botao botao--primario">Salvar</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</template>
+
+<template id="tpl-etiqueta">
+  <button type="button" class="etiqueta-opcao" role="radio" aria-checked="false">
+    <svg class="icone etiqueta-opcao__check" width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" style="stroke-width:3"><path d="M20 6 9 17l-5-5"></path></svg>
+    <svg class="icone etiqueta-opcao__sem" width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" style="stroke:#8193A8"><path d="M5 19 19 5"></path></svg>
+  </button>
+</template>
+{% endblock %}
+
+{% block scripts %}
+<script type="module" src="{{ url_for('static', filename='js/quadro.js') }}"></script>
+{% endblock %}

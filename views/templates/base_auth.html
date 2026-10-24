@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{# Moldura comum de Login e Cadastro: fundo de nuvens, mascote e cartão do formulário. #}
+
+{% block estilos %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/auth.css') }}">
+{% endblock %}
+
+{% block conteudo %}
+<div class="auth">
+  <div class="auth__fundo" aria-hidden="true"></div>
+
+  <div class="auth__lado">
+    <img class="auth__mascote" src="{{ url_for('static', filename='img/mascote-nuvem.png') }}" alt="">
+    <p class="auth__slogan">Organize suas tarefas com a leveza de arrastar um cartão.</p>
+  </div>
+
+  <main class="auth__cartao">
+    <div class="auth__topo">
+      <img class="auth__mascote-pequeno" src="{{ url_for('static', filename='img/mascote-nuvem.png') }}" alt="">
+      <div class="auth__marca">
+        <img src="{{ url_for('static', filename='img/logo-nuvem.png') }}" alt="" aria-hidden="true">
+        <span>Air<span class="logo__plan">Plan</span></span>
+      </div>
+      <div>
+        <h1 class="auth__titulo">{% block titulo_cartao %}{% endblock %}</h1>
+        <p class="auth__subtitulo">{% block subtitulo_cartao %}{% endblock %}</p>
+      </div>
+    </div>
+    {% block formulario %}{% endblock %}
+  </main>
+</div>
+{% endblock %}

@@ -1,0 +1,63 @@
+/* Tokens de design do AirPlan: cores, raios, sombras e fonte (fonte da verdade: protótipo). */
+:root {
+  /* Céu */
+  --ceu-topo: #5AB2F0;
+  --ceu-base: #E8F5FF;
+
+  /* Marca */
+  --primaria: #1F6FC9;
+  --primaria-hover: #185AA3;
+  --primaria-clara: #EEF6FE;       /* fundo de hover em botões claros e menus */
+  --primaria-foco: rgba(31, 111, 201, .25);
+
+  /* Superfícies e bordas */
+  --nuvem: #FFFFFF;
+  --nuvem-borda: #D6E8F7;
+  --borda-input: #C9DDF0;
+  --fundo-suave: #EEF3F8;
+  --fundo-desabilitado: #F3F7FB;
+
+  /* Texto */
+  --texto: #1E2A3A;
+  --texto-suave: #5B6B7F;
+
+  /* Estados */
+  --sucesso: #2EAD6B;
+  --alerta: #F5A524;
+  --erro: #E5484D;
+  --erro-texto: #C42F35;
+  --erro-fundo: #FDE8E8;
+  --erro-fundo-hover: #FDEEEE;
+  --perigo: #D13B40;
+  --perigo-hover: #B52F34;
+
+  /* Etiquetas dos cartões */
+  --etiqueta-verde: #2EAD6B;
+  --etiqueta-amarelo: #F5C524;
+  --etiqueta-laranja: #F5822A;
+  --etiqueta-vermelho: #E5484D;
+  --etiqueta-roxo: #8B5CF6;
+  --etiqueta-azul: #1F6FC9;
+
+  /* Selo de prazo */
+  --prazo-normal-fundo: #EEF3F8;
+  --prazo-normal-texto: #4A5A6E;
+  --prazo-breve-fundo: #FEF0D6;
+  --prazo-breve-texto: #8A5300;
+  --prazo-atrasado-fundo: #FDE8E8;
+  --prazo-atrasado-texto: #B4262B;
+
+  /* Sombras */
+  --sombra: 0 4px 12px rgba(30, 42, 58, .08);
+  --sombra-elevada: 0 12px 32px rgba(30, 42, 58, .18);
+
+  /* Raios */
+  --raio-card: 10px;
+  --raio-coluna: 16px;
+  --raio-modal: 20px;
+  --raio-botao: 10px;
+  --raio-input: 8px;
+
+  /* Fonte */
+  --fonte: Nunito, system-ui, sans-serif;
+}

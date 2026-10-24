@@ -1,0 +1,300 @@
+/* Tela "Meus planos de voo" (Hangar): grade de quadros, estados e modal Novo/Renomear. */
+.tela-hangar {
+  background: linear-gradient(180deg, #CBE6FB 0%, #EAF6FF 45%, #F7FBFF 100%);
+}
+
+.hangar {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding: clamp(24px, 2.8vw, 40px) clamp(16px, 3.4vw, 48px) 40px;
+}
+
+.hangar__conteudo {
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+.hangar__topo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 28px;
+}
+
+.hangar__titulo {
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.botao-novo-quadro {
+  padding: 0 18px 0 14px;
+  box-shadow: 0 4px 12px rgba(31, 111, 201, .25);
+}
+
+.botao-novo-quadro .icone,
+.quadro-novo .icone {
+  stroke-width: 2.4;
+}
+
+/* Grade: 4 colunas no desktop, 2 no tablet, 1 no celular. */
+.grade-quadros {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 20px;
+}
+
+/* ---------- Card do quadro ---------- */
+.quadro-card {
+  position: relative;
+  min-width: 0;
+}
+
+.quadro-card__link {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: #fff;
+  border-radius: var(--raio-card);
+  box-shadow: var(--sombra);
+  color: var(--texto);
+  text-decoration: none;
+  transition: transform .18s ease, box-shadow .18s ease;
+}
+
+.quadro-card__link:hover {
+  color: var(--texto);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 28px rgba(30, 42, 58, .14);
+}
+
+.quadro-card__capa {
+  position: relative;
+  height: 72px;
+  flex: none;
+  overflow: hidden;
+  background: var(--ceu-topo);
+}
+
+.quadro-card__nuvem {
+  position: absolute;
+  fill: #fff;
+}
+
+.quadro-card__nuvem--grande {
+  width: 110px;
+  left: 18px;
+  bottom: -26px;
+  opacity: .5;
+}
+
+.quadro-card__nuvem--pequena {
+  width: 64px;
+  left: 118px;
+  top: 10px;
+  opacity: .35;
+}
+
+.quadro-card__corpo {
+  flex: 1;
+  padding: 14px 16px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.quadro-card__titulo {
+  min-height: 43px;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.quadro-card__resumo {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--texto-suave);
+}
+
+.quadro-card .botao-menu {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: rgba(255, 255, 255, .9);
+  color: var(--texto);
+}
+
+.quadro-card .botao-menu:hover {
+  background: #fff;
+}
+
+.quadro-card .menu {
+  top: 48px;
+  right: 10px;
+  z-index: 5;
+  width: 180px;
+}
+
+/* Botão tracejado "Criar novo quadro" no fim da grade. */
+.quadro-novo {
+  min-height: 171px;
+  border: 2px dashed #8DBFE8;
+  border-radius: var(--raio-card);
+  background: rgba(255, 255, 255, .55);
+  color: var(--primaria);
+  font-size: 15px;
+  font-weight: 700;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: background .15s, border-color .15s;
+}
+
+.quadro-novo:hover {
+  background: rgba(255, 255, 255, .9);
+  border-color: var(--primaria);
+}
+
+.quadro-novo__mais {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--ceu-base);
+  display: grid;
+  place-items: center;
+}
+
+/* ---------- Carregando (skeleton) ---------- */
+.quadro-esqueleto {
+  overflow: hidden;
+  background: #fff;
+  border-radius: var(--raio-card);
+  box-shadow: 0 4px 12px rgba(30, 42, 58, .06);
+}
+
+.quadro-esqueleto__capa {
+  height: 72px;
+  border-radius: 0;
+  background: #DCE9F5;
+}
+
+.quadro-esqueleto__corpo {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.quadro-esqueleto__linha {
+  height: 16px;
+}
+
+.quadro-esqueleto__linha--curta {
+  height: 12px;
+  width: 45%;
+  background: #E9F1F9;
+}
+
+.quadro-esqueleto__espaco {
+  height: 20px;
+}
+
+/* Larguras e atrasos diferentes para os esqueletos não piscarem todos juntos. */
+.quadro-esqueleto:nth-child(1) .quadro-esqueleto__linha { width: 78%; }
+.quadro-esqueleto:nth-child(2) .quadro-esqueleto__linha { width: 62%; }
+.quadro-esqueleto:nth-child(3) .quadro-esqueleto__linha { width: 84%; }
+.quadro-esqueleto:nth-child(4) .quadro-esqueleto__linha { width: 55%; }
+.quadro-esqueleto:nth-child(2) .esqueleto { animation-delay: .15s; }
+.quadro-esqueleto:nth-child(3) .esqueleto { animation-delay: .3s; }
+.quadro-esqueleto:nth-child(4) .esqueleto { animation-delay: .45s; }
+
+/* ---------- Vazio ---------- */
+.hangar-vazio {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: clamp(8px, 2vw, 32px) 16px 40px;
+  text-align: center;
+}
+
+.hangar-vazio__mascote {
+  width: clamp(220px, 24vw, 340px);
+  height: auto;
+  filter: drop-shadow(0 14px 20px rgba(30, 42, 58, .12));
+}
+
+.hangar-vazio__titulo {
+  margin-top: 8px;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.hangar-vazio__texto {
+  max-width: 380px;
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--texto-suave);
+  text-wrap: pretty;
+}
+
+.hangar-vazio .botao {
+  margin-top: 10px;
+  height: 46px;
+  padding: 0 22px;
+}
+
+/* ---------- Modal Novo / Renomear quadro ---------- */
+.modal-quadro {
+  max-width: 480px;
+  padding: 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.modal-quadro__rodape-campo {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.modal-quadro__contador {
+  margin-left: auto;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--texto-suave);
+}
+
+/* ---------- Responsivo ---------- */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .grade-quadros {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 767px) {
+  .grade-quadros {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .modal-quadro .dialogo__botoes {
+    margin-top: auto;
+  }
+
+  .modal-quadro .dialogo__botoes .botao {
+    flex: 1;
+  }
+}

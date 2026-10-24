@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+
+{% block titulo %}Meus planos de voo{% endblock %}
+
+{% block estilos %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/header.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/quadros.css') }}">
+{% endblock %}
+
+{% block conteudo %}
+<div class="app tela-hangar">
+  {% include "_header.html" %}
+
+  <main class="hangar">
+    <div class="hangar__conteudo">
+      <div class="hangar__topo">
+        <h1 class="hangar__titulo">Meus planos de voo</h1>
+        <button type="button" class="botao botao--primario botao-novo-quadro" data-acao="novo-quadro">
+          <svg class="icone" width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14"></path><path d="M5 12h14"></path></svg>Novo quadro
+        </button>
+      </div>
+
+      <!-- Carregando -->
+      <div class="grade-quadros" id="hangar-carregando" aria-busy="true" aria-label="Carregando seus quadros">
+        <div class="quadro-esqueleto"><div class="esqueleto quadro-esqueleto__capa"></div><div class="quadro-esqueleto__corpo"><div class="esqueleto quadro-esqueleto__linha"></div><div class="esqueleto quadro-esqueleto__linha--curta"></div><div class="quadro-esqueleto__espaco"></div></div></div>
+        <div class="quadro-esqueleto"><div class="esqueleto quadro-esqueleto__capa"></div><div class="quadro-esqueleto__corpo"><div class="esqueleto quadro-esqueleto__linha"></div><div class="esqueleto quadro-esqueleto__linha--curta"></div><div class="quadro-esqueleto__espaco"></div></div></div>
+        <div class="quadro-esqueleto"><div class="esqueleto quadro-esqueleto__capa"></div><div class="quadro-esqueleto__corpo"><div class="esqueleto quadro-esqueleto__linha"></div><div class="esqueleto quadro-esqueleto__linha--curta"></div><div class="quadro-esqueleto__espaco"></div></div></div>
+        <div class="quadro-esqueleto"><div class="esqueleto quadro-esqueleto__capa"></div><div class="quadro-esqueleto__corpo"><div class="esqueleto quadro-esqueleto__linha"></div><div class="esqueleto quadro-esqueleto__linha--curta"></div><div class="quadro-esqueleto__espaco"></div></div></div>
+      </div>
+
+      <!-- Preenchido -->
+      <div class="grade-quadros" id="hangar-lista" hidden>
+        <button type="button" class="quadro-novo" data-acao="novo-quadro">
+          <span class="quadro-novo__mais" aria-hidden="true"><svg class="icone" width="20" height="20" viewBox="0 0 24 24"><path d="M12 5v14"></path><path d="M5 12h14"></path></svg></span>
+          Criar novo quadro
+        </button>
+      </div>
+
+      <!-- Vazio -->
+      <div class="hangar-vazio" id="hangar-vazio" hidden>
+        <img class="hangar-vazio__mascote" src="{{ url_for('static', filename='img/mascote-nuvem.png') }}" alt="">
+        <h2 class="hangar-vazio__titulo">Nenhum plano de voo ainda ☁️</h2>
+        <p class="hangar-vazio__texto">Crie seu primeiro quadro para começar a organizar suas tarefas</p>
+        <button type="button" class="botao botao--primario" data-acao="novo-quadro">Criar meu primeiro quadro</button>
+      </div>
+
+      <!-- Erro -->
+      <div class="estado-erro" id="hangar-erro" role="alert" hidden>
+        <span class="estado-erro__icone" aria-hidden="true"><svg class="icone" width="26" height="26" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><path d="M12 8v4"></path><path d="M12 16h.01"></path></svg></span>
+        <h2 class="estado-erro__titulo">Não foi possível carregar seus quadros</h2>
+        <p class="estado-erro__texto">Verifique sua conexão e tente de novo.</p>
+        <button type="button" class="botao botao--secundario" data-acao="tentar-novamente">Tentar novamente</button>
+      </div>
+    </div>
+  </main>
+</div>
+
+<template id="tpl-quadro">
+  <article class="quadro-card">
+    <a class="quadro-card__link" href="">
+      <div class="quadro-card__capa" aria-hidden="true">
+        <svg class="quadro-card__nuvem quadro-card__nuvem--grande" viewBox="0 0 200 100"><circle cx="62" cy="62" r="32"></circle><circle cx="104" cy="44" r="40"></circle><circle cx="148" cy="64" r="28"></circle><rect x="36" y="58" width="134" height="36" rx="18"></rect></svg>
+        <svg class="quadro-card__nuvem quadro-card__nuvem--pequena" viewBox="0 0 200 100"><circle cx="62" cy="62" r="32"></circle><circle cx="104" cy="44" r="40"></circle><circle cx="148" cy="64" r="28"></circle><rect x="36" y="58" width="134" height="36" rx="18"></rect></svg>
+      </div>
+      <div class="quadro-card__corpo">
+        <h2 class="quadro-card__titulo"></h2>
+        <p class="quadro-card__resumo"></p>
+      </div>
+    </a>
+    <button type="button" class="botao-icone botao-menu" aria-haspopup="menu" aria-expanded="false">
+      <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><circle cx="5" cy="12" r="1.8"></circle><circle cx="12" cy="12" r="1.8"></circle><circle cx="19" cy="12" r="1.8"></circle></svg>
+    </button>
+    <div class="menu" role="menu" hidden>
+      <button type="button" role="menuitem" class="menu__item" data-acao="renomear">
+        <svg class="icone" width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path d="M17 3a2.85 2.85 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"></path></svg>Renomear
+      </button>
+      <button type="button" role="menuitem" class="menu__item menu__item--perigo" data-acao="excluir">
+        <svg class="icone" width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18"></path><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"></path><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>Excluir
+      </button>
+    </div>
+  </article>
+</template>
+
+<template id="tpl-modal-quadro">
+  <div class="sobreposicao">
+    <form class="dialogo modal-quadro" role="dialog" aria-modal="true" aria-labelledby="modal-quadro-titulo" novalidate>
+      <div class="dialogo__cabecalho">
+        <h2 class="dialogo__titulo" id="modal-quadro-titulo"></h2>
+        <button type="button" class="botao-icone" data-acao="fechar" aria-label="Fechar">
+          <svg class="icone" width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg>
+        </button>
+      </div>
+      <div class="campo">
+        <label class="campo__rotulo" for="titulo-quadro">Título do quadro</label>
+        <input class="campo__entrada" id="titulo-quadro" name="titulo" maxlength="100" placeholder="Ex.: TCC, Mudança de casa, Estudos" autocomplete="off">
+        <div class="modal-quadro__rodape-campo" data-lugar-erro>
+          <span class="modal-quadro__contador">0/100</span>
+        </div>
+      </div>
+      <div class="dialogo__botoes">
+        <button type="button" class="botao botao--secundario" data-acao="fechar">Cancelar</button>
+        <button type="submit" class="botao botao--primario"></button>
+      </div>
+    </form>
+  </div>
+</template>
+{% endblock %}
+
+{% block scripts %}
+<script type="module" src="{{ url_for('static', filename='js/quadros.js') }}"></script>
+{% endblock %}

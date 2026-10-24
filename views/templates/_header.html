@@ -1,0 +1,21 @@
+<header class="cabecalho">
+  <a href="{{ url_for('paginas.quadros') }}" class="logo" aria-label="AirPlan — ir para Meus planos de voo">
+    <img class="logo__imagem" src="{{ url_for('static', filename='img/logo-nuvem.png') }}" alt="" aria-hidden="true">
+    <span>Air<span class="logo__plan">Plan</span></span>
+  </a>
+  <div class="usuario-menu">
+    <button type="button" class="avatar" id="avatar" aria-label="Menu do usuário" aria-haspopup="menu" aria-expanded="false" aria-controls="menu-usuario"></button>
+    <div class="menu" id="menu-usuario" role="menu" hidden>
+      <div class="usuario-menu__dados">
+        <div class="usuario-menu__nome" id="menu-usuario-nome"></div>
+        <div class="usuario-menu__email" id="menu-usuario-email"></div>
+      </div>
+      <a role="menuitem" class="menu__item" href="{{ url_for('paginas.perfil') }}">
+        <svg class="icone" width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"></circle><path d="M4 21v-1a6 6 0 0 1 6-6h4a6 6 0 0 1 6 6v1"></path></svg>Meu perfil
+      </a>
+      <button type="button" role="menuitem" class="menu__item menu__item--perigo" data-acao="sair">
+        <svg class="icone" width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><path d="m16 17 5-5-5-5"></path><path d="M21 12H9"></path></svg>Sair
+      </button>
+    </div>
+  </div>
+</header>

@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% from "_macros.html" import campo_senha %}
+
+{% block titulo %}Meu perfil{% endblock %}
+
+{% block estilos %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/header.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/perfil.css') }}">
+{% endblock %}
+
+{% block conteudo %}
+<div class="app tela-perfil">
+  {% include "_header.html" %}
+
+  <main class="perfil">
+    <div class="perfil__conteudo">
+      <div class="perfil__topo">
+        <a class="botao botao--fantasma botao-voltar" href="{{ url_for('paginas.quadros') }}">
+          <svg class="icone" width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M19 12H5"></path><path d="m12 19-7-7 7-7"></path></svg>Hangar
+        </a>
+        <h1 class="perfil__titulo">Meu perfil</h1>
+      </div>
+
+      <form class="perfil__secao" id="form-dados" aria-labelledby="titulo-dados" novalidate>
+        <div class="perfil__identidade">
+          <span class="perfil__avatar" id="perfil-avatar" aria-hidden="true"></span>
+          <h2 class="perfil__secao-titulo" id="titulo-dados">Dados pessoais</h2>
+        </div>
+        <div class="campo">
+          <label class="campo__rotulo" for="nome">Nome</label>
+          <input class="campo__entrada" id="nome" name="nome" maxlength="100" autocomplete="name">
+        </div>
+        <div class="campo">
+          <label class="campo__rotulo" for="email">E-mail</label>
+          <input class="campo__entrada" id="email" name="email" readonly aria-describedby="email-ajuda">
+          <span class="campo__ajuda" id="email-ajuda">O e-mail não pode ser alterado.</span>
+        </div>
+        <button type="submit" class="botao botao--primario">Salvar alterações</button>
+      </form>
+
+      <form class="perfil__secao" id="form-senha" aria-labelledby="titulo-senha" novalidate>
+        <h2 class="perfil__secao-titulo" id="titulo-senha">Alterar senha</h2>
+        {{ campo_senha("atual", "Senha atual", "Sua senha atual", "current-password") }}
+        {{ campo_senha("nova", "Nova senha", "Mínimo de 8 caracteres", "new-password", forca=true) }}
+        {{ campo_senha("confirmar", "Confirmar nova senha", "Repita a nova senha", "new-password") }}
+        <button type="submit" class="botao botao--primario">Alterar senha</button>
+      </form>
+
+      <section class="perfil__secao perfil__sessao" aria-labelledby="titulo-sessao">
+        <div>
+          <h2 class="perfil__secao-titulo" id="titulo-sessao">Sessão</h2>
+          <p class="perfil__sessao-texto">Você está conectado como <span id="perfil-email-sessao"></span></p>
+        </div>
+        <button type="button" class="botao botao--secundario" data-acao="sair">
+          <svg class="icone" width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><path d="m16 17 5-5-5-5"></path><path d="M21 12H9"></path></svg>Sair da conta
+        </button>
+      </section>
+    </div>
+  </main>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script type="module" src="{{ url_for('static', filename='js/perfil.js') }}"></script>
+{% endblock %}

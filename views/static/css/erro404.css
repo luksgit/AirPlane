@@ -1,0 +1,124 @@
+/* Página 404 "Turbulência!": céu nublado, aviãozinho perdido e botão de volta. */
+.pagina-404 {
+  position: relative;
+  min-height: 100vh;
+  min-height: 100dvh;
+  overflow: hidden;
+  display: flex;
+  align-items: safe center;
+  justify-content: safe center;
+  padding: 24px 16px;
+  background: linear-gradient(180deg, #5D7896 0%, #8EA6BF 50%, #D5E1EC 100%);
+}
+
+.nuvem-404 {
+  position: absolute;
+  fill: #3E5470;
+  pointer-events: none;
+  animation: flutua ease-in-out infinite;
+}
+
+.nuvem-404:nth-of-type(1) { left: 3%; top: 10%; width: 300px; opacity: .45; animation-duration: 52s; }
+.nuvem-404:nth-of-type(2) { left: 70%; top: 6%; width: 240px; opacity: .35; animation-duration: 64s; }
+.nuvem-404:nth-of-type(3) { left: 78%; top: 60%; width: 320px; opacity: .4; animation-duration: 58s; }
+.nuvem-404:nth-of-type(4) { left: -4%; top: 70%; width: 360px; opacity: .5; animation-duration: 70s; }
+.nuvem-404:nth-of-type(5) { left: 36%; top: 84%; width: 240px; opacity: .3; animation-duration: 54s; }
+
+@keyframes flutua {
+  0%, 100% { transform: translateX(0); }
+  50% { transform: translateX(48px); }
+}
+
+.erro404 {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 440px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.erro404__aviao {
+  position: relative;
+  width: 220px;
+  height: 130px;
+  margin-bottom: -6px;
+}
+
+.erro404__rota {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  fill: none;
+  stroke: #fff;
+  stroke-width: 2.5;
+  stroke-dasharray: 6 8;
+  stroke-linecap: round;
+  opacity: .8;
+}
+
+.erro404__icone-aviao {
+  position: absolute;
+  top: 4px;
+  right: 14px;
+  fill: #fff;
+  stroke: var(--texto);
+  stroke-width: 1.4;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+  filter: drop-shadow(0 6px 8px rgba(30, 42, 58, .25));
+  animation: perdido 5s ease-in-out infinite;
+}
+
+@keyframes perdido {
+  0%, 100% { transform: translate(0, 0) rotate(-18deg); }
+  50% { transform: translate(14px, -12px) rotate(-8deg); }
+}
+
+.erro404__cartao {
+  width: 100%;
+  padding: 36px clamp(22px, 3vw, 36px) 32px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  text-align: center;
+  background: #fff;
+  border-radius: var(--raio-modal);
+  box-shadow: 0 12px 32px rgba(30, 42, 58, .25);
+}
+
+.erro404__codigo {
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: .12em;
+  color: var(--texto-suave);
+}
+
+.erro404__titulo {
+  font-size: 32px;
+  font-weight: 800;
+  line-height: 1.15;
+}
+
+.erro404__texto {
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--texto-suave);
+  text-wrap: pretty;
+}
+
+.erro404 .botao {
+  margin-top: 14px;
+  padding: 0 24px;
+}
+
+/* No celular ficam só 3 nuvens, em outras posições. */
+@media (max-width: 767px) {
+  .nuvem-404:nth-of-type(1) { left: -50px; top: 60px; width: 200px; }
+  .nuvem-404:nth-of-type(2) { left: 220px; top: 150px; width: 170px; }
+  .nuvem-404:nth-of-type(3) { left: 10px; top: auto; bottom: 40px; width: 240px; }
+  .nuvem-404:nth-of-type(n+4) { display: none; }
+}

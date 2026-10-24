@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block titulo %}Página não encontrada{% endblock %}
+
+{% block estilos %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/erro404.css') }}">
+{% endblock %}
+
+{% block conteudo %}
+<div class="pagina-404">
+  <svg class="nuvem-404" viewBox="0 0 200 100" aria-hidden="true"><circle cx="62" cy="62" r="32"></circle><circle cx="104" cy="44" r="40"></circle><circle cx="148" cy="64" r="28"></circle><rect x="36" y="58" width="134" height="36" rx="18"></rect></svg>
+  <svg class="nuvem-404" viewBox="0 0 200 100" aria-hidden="true"><circle cx="62" cy="62" r="32"></circle><circle cx="104" cy="44" r="40"></circle><circle cx="148" cy="64" r="28"></circle><rect x="36" y="58" width="134" height="36" rx="18"></rect></svg>
+  <svg class="nuvem-404" viewBox="0 0 200 100" aria-hidden="true"><circle cx="62" cy="62" r="32"></circle><circle cx="104" cy="44" r="40"></circle><circle cx="148" cy="64" r="28"></circle><rect x="36" y="58" width="134" height="36" rx="18"></rect></svg>
+  <svg class="nuvem-404" viewBox="0 0 200 100" aria-hidden="true"><circle cx="62" cy="62" r="32"></circle><circle cx="104" cy="44" r="40"></circle><circle cx="148" cy="64" r="28"></circle><rect x="36" y="58" width="134" height="36" rx="18"></rect></svg>
+  <svg class="nuvem-404" viewBox="0 0 200 100" aria-hidden="true"><circle cx="62" cy="62" r="32"></circle><circle cx="104" cy="44" r="40"></circle><circle cx="148" cy="64" r="28"></circle><rect x="36" y="58" width="134" height="36" rx="18"></rect></svg>
+
+  <main class="erro404">
+    <div class="erro404__aviao" aria-hidden="true">
+      <svg class="erro404__rota" viewBox="0 0 220 130"><path d="M10 110 C 50 120, 60 60, 100 70 S 150 120, 160 60"></path></svg>
+      <svg class="erro404__icone-aviao" width="64" height="64" viewBox="0 0 24 24"><path d="m22 2-7 20-4-9-9-4Z"></path><path d="M22 2 11 13"></path></svg>
+    </div>
+    <div class="erro404__cartao">
+      <span class="erro404__codigo">ERRO 404</span>
+      <h1 class="erro404__titulo">Turbulência! 🌩️</h1>
+      <p class="erro404__texto">Não encontramos a página que você procurava.</p>
+      <a class="botao botao--primario botao--grande" href="{{ destino }}">{{ texto_botao }}</a>
+    </div>
+  </main>
+</div>
+{% endblock %}

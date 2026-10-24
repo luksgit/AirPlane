@@ -1,0 +1,95 @@
+/* Tela "Meu perfil": dados pessoais, alterar senha e sessão. */
+.tela-perfil {
+  background: linear-gradient(180deg, #CBE6FB 0%, #EAF6FF 45%, #F7FBFF 100%);
+}
+
+.perfil {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 20px clamp(16px, 3vw, 40px) 48px;
+}
+
+.perfil__conteudo {
+  max-width: 640px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.perfil__topo {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.perfil__topo .botao-voltar {
+  margin-left: -8px;
+}
+
+.perfil__topo .botao-voltar .icone {
+  stroke-width: 2.2;
+}
+
+.perfil__titulo {
+  font-size: 28px;
+  font-weight: 700;
+}
+
+.perfil__secao {
+  padding: clamp(20px, 2.2vw, 28px);
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: var(--sombra);
+}
+
+.perfil__secao-titulo {
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.perfil__identidade {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.perfil__avatar {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: var(--primaria);
+  color: #fff;
+  display: grid;
+  place-items: center;
+  font-size: 18px;
+  font-weight: 800;
+}
+
+.perfil__secao > .botao {
+  align-self: flex-start;
+  padding: 0 20px;
+}
+
+.perfil__sessao {
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.perfil__sessao-texto {
+  margin-top: 4px;
+  font-size: 14px;
+  color: var(--texto-suave);
+}
+
+.perfil__sessao .botao {
+  padding: 0 18px 0 14px;
+}

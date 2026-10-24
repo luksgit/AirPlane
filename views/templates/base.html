@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block titulo %}{% endblock %} · AirPlan</title>
+  <link rel="icon" type="image/png" href="{{ url_for('static', filename='img/logo-nuvem.png') }}">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/tokens.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
+  {% block estilos %}{% endblock %}
+</head>
+<body>
+  {% block conteudo %}{% endblock %}
+  {% include "_toasts.html" %}
+  {% include "_confirmar.html" %}
+  {% block scripts %}{% endblock %}
+</body>
+</html>

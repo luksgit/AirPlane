@@ -1,0 +1,28 @@
+{% extends "base_auth.html" %}
+{% from "_macros.html" import campo_senha %}
+
+{% block titulo %}Criar conta{% endblock %}
+{% block titulo_cartao %}Embarque no AirPlan{% endblock %}
+{% block subtitulo_cartao %}Crie sua conta em segundos{% endblock %}
+
+{% block formulario %}
+<form class="formulario" id="form-cadastro" novalidate>
+  <div class="campo">
+    <label class="campo__rotulo" for="nome">Nome</label>
+    <input class="campo__entrada" id="nome" name="nome" type="text" placeholder="Como podemos te chamar?" autocomplete="name" maxlength="100">
+  </div>
+  <div class="campo">
+    <label class="campo__rotulo" for="email">E-mail</label>
+    <input class="campo__entrada" id="email" name="email" type="email" placeholder="voce@email.com" autocomplete="email" maxlength="150">
+  </div>
+  {{ campo_senha("senha", "Senha", "Mínimo de 8 caracteres", "new-password", forca=true) }}
+  {{ campo_senha("confirmar", "Confirmar senha", "Repita a senha", "new-password") }}
+  <button type="submit" class="botao botao--primario botao--grande botao--bloco">Criar conta</button>
+</form>
+
+<p class="auth__troca">Já tem conta? <a href="{{ url_for('paginas.login') }}">Entrar</a></p>
+{% endblock %}
+
+{% block scripts %}
+<script type="module" src="{{ url_for('static', filename='js/cadastro.js') }}"></script>
+{% endblock %}

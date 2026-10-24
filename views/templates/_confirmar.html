@@ -1,0 +1,15 @@
+<template id="tpl-confirmar">
+  <div class="sobreposicao sobreposicao--confirmar">
+    <div class="dialogo confirmar" role="alertdialog" aria-modal="true" aria-labelledby="confirmar-titulo" aria-describedby="confirmar-texto">
+      <span class="confirmar__icone" aria-hidden="true">
+        <svg class="icone" width="28" height="28" viewBox="0 0 24 24"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"></path><path d="M12 9v4"></path><path d="M12 17h.01"></path></svg>
+      </span>
+      <h2 class="dialogo__titulo" id="confirmar-titulo"></h2>
+      <p class="confirmar__texto" id="confirmar-texto"></p>
+      <div class="confirmar__botoes">
+        <button type="button" class="botao botao--secundario" data-acao="cancelar">Cancelar</button>
+        <button type="button" class="botao botao--perigo" data-acao="confirmar"></button>
+      </div>
+    </div>
+  </div>
+</template>

@@ -1,0 +1,612 @@
+/* Base do AirPlan: reset, botões, campos de formulário, toasts, modais, menus e skeleton. */
+
+/* ---------- Reset e tipografia ---------- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  height: 100%;
+}
+
+body {
+  font-family: var(--fonte);
+  color: var(--texto);
+  background: var(--ceu-base);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, p {
+  margin: 0;
+}
+
+a {
+  color: var(--primaria);
+}
+
+a:hover {
+  color: var(--primaria-hover);
+}
+
+button,
+input,
+select,
+textarea {
+  font-family: inherit;
+}
+
+img {
+  display: block;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+*:focus-visible {
+  outline: 3px solid rgba(31, 111, 201, .6);
+  outline-offset: 2px;
+}
+
+.visualmente-oculto {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Tela de aplicativo: ocupa a janela inteira; cada tela decide o que rola. */
+.app {
+  position: relative;
+  height: 100vh;
+  height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.icone {
+  flex: none;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* ---------- Botões ---------- */
+.botao {
+  height: 44px;
+  padding: 0 18px;
+  border: none;
+  border-radius: var(--raio-botao);
+  font-size: 15px;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  cursor: pointer;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background .15s, border-color .15s, color .15s;
+}
+
+.botao:disabled {
+  cursor: progress;
+}
+
+.botao--primario {
+  background: var(--primaria);
+  color: #fff;
+}
+
+.botao--primario:hover:not(:disabled) {
+  background: var(--primaria-hover);
+  color: #fff;
+}
+
+.botao--secundario {
+  border: 1.5px solid var(--primaria);
+  background: #fff;
+  color: var(--primaria);
+}
+
+.botao--secundario:hover:not(:disabled) {
+  background: var(--primaria-clara);
+}
+
+.botao--perigo {
+  background: var(--perigo);
+  color: #fff;
+}
+
+.botao--perigo:hover:not(:disabled) {
+  background: var(--perigo-hover);
+}
+
+.botao--fantasma {
+  background: transparent;
+  color: var(--texto);
+}
+
+.botao--fantasma:hover:not(:disabled) {
+  background: rgba(31, 111, 201, .08);
+}
+
+.botao--grande {
+  height: 48px;
+  font-size: 16px;
+}
+
+.botao--bloco {
+  width: 100%;
+}
+
+/* Botão "← Hangar" do topo das telas internas. */
+.botao-voltar {
+  height: 40px;
+  padding: 0 12px 0 8px;
+  gap: 6px;
+}
+
+/* Botão quadrado só com ícone (fechar, ⋯, olho da senha). */
+.botao-icone {
+  width: 36px;
+  height: 36px;
+  flex: none;
+  padding: 0;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--texto-suave);
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+}
+
+.botao-icone:hover {
+  background: var(--fundo-suave);
+  color: var(--texto);
+}
+
+.spinner {
+  width: 16px;
+  height: 16px;
+  flex: none;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, .4);
+  border-top-color: #fff;
+  animation: giro .8s linear infinite;
+}
+
+.botao--grande .spinner {
+  width: 18px;
+  height: 18px;
+  border-width: 2.5px;
+}
+
+@keyframes giro {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ---------- Campos de formulário ---------- */
+.formulario {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.campo {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.campo__rotulo {
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.campo__caixa {
+  position: relative;
+}
+
+.campo__entrada {
+  width: 100%;
+  height: 46px;
+  border-radius: var(--raio-input);
+  border: 1.5px solid var(--borda-input);
+  padding: 0 14px;
+  font-size: 15px;
+  color: var(--texto);
+  background: #fff;
+  outline: none;
+  transition: border-color .15s, box-shadow .15s;
+}
+
+.campo__entrada:focus {
+  border-color: var(--primaria);
+  box-shadow: 0 0 0 3px var(--primaria-foco);
+}
+
+.campo__entrada[aria-invalid="true"] {
+  border-color: var(--erro);
+}
+
+.campo__entrada:disabled {
+  background: var(--fundo-desabilitado);
+}
+
+.campo__entrada[readonly] {
+  border-color: #E1E9F2;
+  background: #F1F5F9;
+  color: var(--texto-suave);
+  cursor: not-allowed;
+}
+
+.campo__entrada--senha {
+  padding-right: 46px;
+}
+
+textarea.campo__entrada {
+  height: auto;
+  min-height: 96px;
+  padding: 10px 12px;
+  line-height: 1.5;
+  resize: vertical;
+}
+
+.campo__olho {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  width: 34px;
+  height: 34px;
+}
+
+.campo__erro {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.35;
+  color: var(--erro-texto);
+}
+
+.campo__erro .icone {
+  margin-top: 1px;
+  stroke-width: 2.2;
+}
+
+.campo__ajuda {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--texto-suave);
+}
+
+/* Barra de força da senha (fraca / média / forte). */
+.forca {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.forca__barras {
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 4px;
+}
+
+.forca__barra {
+  height: 5px;
+  border-radius: 3px;
+  background: #E3ECF5;
+}
+
+.forca__texto {
+  min-width: 92px;
+  text-align: right;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.forca[data-forca="1"] .forca__barra:nth-child(-n+1) { background: var(--erro); }
+.forca[data-forca="2"] .forca__barra:nth-child(-n+2) { background: var(--alerta); }
+.forca[data-forca="3"] .forca__barra:nth-child(-n+3) { background: var(--sucesso); }
+.forca[data-forca="1"] .forca__texto { color: var(--erro-texto); }
+.forca[data-forca="2"] .forca__texto { color: #8A5300; }
+.forca[data-forca="3"] .forca__texto { color: #1E7A4A; }
+
+/* ---------- Toasts ---------- */
+.toasts {
+  position: fixed;
+  z-index: 90;
+  right: 20px;
+  bottom: 20px;
+  left: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 10px;
+  pointer-events: none;
+}
+
+.toast {
+  pointer-events: auto;
+  width: 100%;
+  max-width: 360px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 10px 12px 14px;
+  background: #fff;
+  border: 1px solid var(--nuvem-borda);
+  border-radius: 12px;
+  box-shadow: var(--sombra-elevada);
+  animation: toast-entra .2s ease-out;
+}
+
+.toast__icone {
+  width: 28px;
+  height: 28px;
+  flex: none;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  color: #fff;
+}
+
+.toast[data-tipo="sucesso"] .toast__icone { background: var(--sucesso); }
+.toast[data-tipo="erro"] .toast__icone { background: var(--perigo); }
+.toast[data-tipo="info"] .toast__icone { background: var(--primaria); }
+
+.toast__mensagem {
+  flex: 1;
+  min-width: 0;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+.toast .botao-icone {
+  width: 32px;
+  height: 32px;
+}
+
+@keyframes toast-entra {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+
+/* ---------- Modais ---------- */
+.sobreposicao {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: rgba(30, 42, 58, .4);
+}
+
+.sobreposicao--confirmar {
+  z-index: 70;
+  padding: 16px;
+}
+
+.dialogo {
+  width: 100%;
+  max-height: 100%;
+  overflow-y: auto;
+  background: #fff;
+  border-radius: var(--raio-modal);
+  box-shadow: var(--sombra-elevada);
+}
+
+.dialogo__cabecalho {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.dialogo__titulo {
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.dialogo__botoes {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+/* Modal "Tem certeza?" (exclusões e descartar alterações). */
+.confirmar {
+  max-width: 420px;
+  padding: 32px 28px 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  text-align: center;
+}
+
+.confirmar__icone {
+  width: 56px;
+  height: 56px;
+  margin-bottom: 4px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: var(--erro-fundo);
+  color: var(--erro-texto);
+}
+
+.confirmar__texto {
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--texto-suave);
+  text-wrap: pretty;
+}
+
+.confirmar__botoes {
+  width: 100%;
+  margin-top: 14px;
+  display: flex;
+  gap: 12px;
+}
+
+.confirmar__botoes .botao {
+  flex: 1;
+  padding: 0 16px;
+}
+
+/* ---------- Menus "⋯" ---------- */
+.menu {
+  position: absolute;
+  z-index: 10;
+  padding: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  background: #fff;
+  border: 1px solid var(--nuvem-borda);
+  border-radius: 12px;
+  box-shadow: var(--sombra-elevada);
+}
+
+.menu__item {
+  height: 38px;
+  padding: 0 10px;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--texto);
+  text-align: left;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.menu__item:hover,
+.menu__item:focus-visible {
+  background: var(--primaria-clara);
+  color: var(--texto);
+}
+
+.menu__item--perigo {
+  color: var(--erro-texto);
+}
+
+.menu__item--perigo:hover,
+.menu__item--perigo:focus-visible {
+  background: var(--erro-fundo-hover);
+  color: var(--erro-texto);
+}
+
+.botao-menu {
+  width: 32px;
+  height: 32px;
+}
+
+/* ---------- Estados de tela ---------- */
+.esqueleto {
+  border-radius: 6px;
+  background: #E3EDF7;
+  animation: pulso 1.4s ease-in-out infinite;
+}
+
+@keyframes pulso {
+  0%, 100% { opacity: 1; }
+  50% { opacity: .45; }
+}
+
+.estado-erro {
+  max-width: 440px;
+  margin: 40px auto 0;
+  padding: 32px 28px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  text-align: center;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: var(--sombra);
+}
+
+.estado-erro__icone {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: var(--erro-fundo);
+  color: var(--erro-texto);
+}
+
+.estado-erro__titulo {
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.estado-erro__texto {
+  font-size: 14px;
+  color: var(--texto-suave);
+}
+
+.estado-erro .botao {
+  margin-top: 6px;
+}
+
+/* ---------- Celular ---------- */
+@media (max-width: 767px) {
+  .toasts {
+    align-items: center;
+  }
+
+  /* Modais de formulário ocupam a tela inteira; o "Tem certeza?" continua centralizado. */
+  .sobreposicao:not(.sobreposicao--confirmar) {
+    padding: 0;
+  }
+
+  .sobreposicao:not(.sobreposicao--confirmar) > .dialogo {
+    height: 100%;
+    max-width: none;
+    border-radius: 0;
+  }
+}
+
+/* ---------- Movimento reduzido ---------- */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

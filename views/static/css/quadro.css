@@ -1,0 +1,719 @@
+/* Tela do quadro (Kanban): barra do topo, colunas, cartões, arrastar e soltar e modal do cartão. */
+.tela-quadro {
+  background: linear-gradient(180deg, #5AB2F0 0%, #93CCF5 45%, #E8F5FF 100%);
+}
+
+/* ---------- Barra do topo ---------- */
+.barra-quadro {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: clamp(6px, 1vw, 14px);
+  padding: 14px clamp(12px, 2.2vw, 32px) 12px;
+}
+
+.barra-quadro .botao-voltar:hover {
+  background: rgba(255, 255, 255, .4);
+}
+
+.barra-quadro .botao-voltar .icone {
+  stroke-width: 2.2;
+}
+
+.quadro-titulo {
+  flex: 1;
+  min-width: 0;
+  font-size: clamp(20px, 2vw, 28px);
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.quadro-titulo__botao {
+  display: block;
+  max-width: 100%;
+  padding: 5px 10px;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  font: inherit;
+  color: inherit;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  cursor: text;
+}
+
+.quadro-titulo__botao:hover {
+  background: rgba(255, 255, 255, .4);
+}
+
+.quadro-titulo__entrada {
+  width: 100%;
+  max-width: 560px;
+  height: 44px;
+  padding: 0 10px;
+  border: 1.5px solid var(--primaria);
+  border-radius: 8px;
+  background: #fff;
+  box-shadow: 0 0 0 3px var(--primaria-foco);
+  font: inherit;
+  color: var(--texto);
+  outline: none;
+}
+
+.botao-nova-coluna {
+  flex: none;
+  padding: 0 16px 0 12px;
+}
+
+.botao-nova-coluna .icone,
+.nova-coluna .icone,
+.botao-adicionar-cartao .icone {
+  stroke-width: 2.4;
+}
+
+/* ---------- Pontinhos do celular (qual coluna está visível) ---------- */
+.quadro-pontos {
+  flex: none;
+  display: none;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  padding: 0 0 12px;
+}
+
+.quadro-pontos__ponto {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: rgba(30, 42, 58, .3);
+  transition: width .2s, background .2s;
+}
+
+.quadro-pontos__ponto--ativo {
+  width: 22px;
+  background: var(--texto);
+}
+
+/* ---------- Área das colunas ---------- */
+.quadro-colunas,
+.quadro-carregando {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 4px clamp(16px, 2.2vw, 32px) 20px;
+}
+
+.quadro-colunas {
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(30, 42, 58, .28) transparent;
+}
+
+.quadro-carregando {
+  overflow: hidden;
+}
+
+.coluna,
+.coluna-esqueleto,
+.nova-coluna,
+.nova-coluna-form {
+  flex: 0 0 280px;
+  scroll-snap-align: center;
+}
+
+.coluna {
+  max-height: 100%;
+  display: flex;
+  flex-direction: column;
+  border-radius: var(--raio-coluna);
+  background: rgba(255, 255, 255, .88);
+  box-shadow: var(--sombra);
+  backdrop-filter: blur(12px);
+  transition: background .15s, box-shadow .15s;
+}
+
+/* Coluna que vai receber o cartão arrastado. */
+.coluna--alvo {
+  background: rgba(214, 234, 251, .97);
+  box-shadow: inset 0 0 0 2px var(--ceu-topo), 0 8px 24px rgba(31, 111, 201, .18);
+}
+
+.coluna__topo {
+  position: relative;
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 12px 10px 8px 12px;
+}
+
+.coluna__titulo {
+  flex: 1;
+  min-width: 0;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.coluna__titulo-botao {
+  display: block;
+  width: 100%;
+  padding: 4px 6px;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  font: inherit;
+  color: inherit;
+  text-align: left;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  cursor: text;
+}
+
+.coluna__titulo-botao:hover,
+.coluna .botao-menu:hover {
+  background: rgba(31, 111, 201, .08);
+}
+
+.coluna__titulo-entrada {
+  width: 100%;
+  min-width: 0;
+  height: 34px;
+  padding: 0 8px;
+  border: 1.5px solid var(--primaria);
+  border-radius: 8px;
+  box-shadow: 0 0 0 3px rgba(31, 111, 201, .2);
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--texto);
+  outline: none;
+}
+
+.coluna__contagem {
+  flex: none;
+  min-width: 24px;
+  height: 22px;
+  padding: 0 8px;
+  border-radius: 999px;
+  background: #E1F0FC;
+  color: var(--primaria-hover);
+  font-size: 12px;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.coluna .menu {
+  top: 48px;
+  right: 10px;
+  width: 190px;
+}
+
+.coluna__cartoes {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 4px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(30, 42, 58, .2) transparent;
+}
+
+.coluna__vazia {
+  padding: 18px 8px;
+  border: 1.5px dashed var(--borda-input);
+  border-radius: 10px;
+  text-align: center;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--texto-suave);
+}
+
+.coluna__rodape {
+  flex: none;
+  padding: 8px 10px 10px;
+}
+
+.botao-adicionar-cartao {
+  width: 100%;
+  height: 38px;
+  padding: 0 8px;
+  border: none;
+  border-radius: 10px;
+  background: transparent;
+  color: var(--prazo-normal-texto);
+  font-size: 14px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+
+.botao-adicionar-cartao:hover {
+  background: rgba(31, 111, 201, .08);
+  color: var(--primaria);
+}
+
+/* Formulários pequenos dentro das colunas (novo cartão, nova coluna). */
+.form-rapido {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-rapido__entrada {
+  width: 100%;
+  border: 1.5px solid var(--primaria);
+  border-radius: 8px;
+  box-shadow: 0 0 0 3px rgba(31, 111, 201, .2);
+  color: var(--texto);
+  outline: none;
+}
+
+textarea.form-rapido__entrada {
+  padding: 10px 12px;
+  resize: none;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+input.form-rapido__entrada {
+  height: 40px;
+  padding: 0 10px;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.form-rapido__botoes {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.form-rapido__botoes .botao {
+  height: 36px;
+  padding: 0 14px;
+  font-size: 14px;
+}
+
+.form-rapido__botoes .botao-icone {
+  border-radius: 10px;
+}
+
+/* Botão tracejado "Nova coluna" no fim do quadro. */
+.nova-coluna {
+  min-height: 96px;
+  border: 2px dashed rgba(31, 111, 201, .45);
+  border-radius: var(--raio-coluna);
+  background: rgba(255, 255, 255, .5);
+  color: var(--texto);
+  font-size: 15px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: background .15s;
+}
+
+.nova-coluna:hover {
+  background: rgba(255, 255, 255, .8);
+}
+
+.nova-coluna-form {
+  padding: 12px;
+  border-radius: var(--raio-coluna);
+  background: rgba(255, 255, 255, .9);
+  box-shadow: var(--sombra);
+}
+
+/* ---------- Cartão ---------- */
+.cartao {
+  flex: none;
+  overflow: hidden;
+  background: #fff;
+  border: 1px solid #DCE9F5;
+  border-radius: var(--raio-card);
+  box-shadow: 0 1px 3px rgba(30, 42, 58, .08);
+  cursor: grab;
+  transition: transform .15s, box-shadow .15s;
+}
+
+.cartao:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(30, 42, 58, .12);
+}
+
+/* Aparência do cartão no momento em que o navegador "fotografa" o arrasto. */
+.cartao--pegando {
+  transform: rotate(2deg);
+  box-shadow: var(--sombra-elevada);
+}
+
+.cartao__etiqueta {
+  height: 4px;
+}
+
+.cartao__etiqueta[data-cor="verde"] { background: var(--etiqueta-verde); }
+.cartao__etiqueta[data-cor="amarelo"] { background: var(--etiqueta-amarelo); }
+.cartao__etiqueta[data-cor="laranja"] { background: var(--etiqueta-laranja); }
+.cartao__etiqueta[data-cor="vermelho"] { background: var(--etiqueta-vermelho); }
+.cartao__etiqueta[data-cor="roxo"] { background: var(--etiqueta-roxo); }
+.cartao__etiqueta[data-cor="azul"] { background: var(--etiqueta-azul); }
+
+.cartao__corpo {
+  padding: 10px 12px 11px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.cartao__titulo {
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.cartao__indicadores {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.prazo {
+  height: 22px;
+  padding: 0 8px;
+  border-radius: 6px;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.prazo .icone {
+  stroke-width: 2.2;
+}
+
+.prazo[data-status="normal"] { background: var(--prazo-normal-fundo); color: var(--prazo-normal-texto); }
+.prazo[data-status="em-breve"] { background: var(--prazo-breve-fundo); color: var(--prazo-breve-texto); }
+.prazo[data-status="atrasado"] { background: var(--prazo-atrasado-fundo); color: var(--prazo-atrasado-texto); }
+
+.cartao__tem-descricao {
+  display: inline-flex;
+  color: var(--texto-suave);
+}
+
+/* Espaço tracejado que mostra onde o cartão vai cair. */
+.cartao-espaco {
+  flex: none;
+  border: 2px dashed var(--ceu-topo);
+  border-radius: var(--raio-card);
+  background: rgba(90, 178, 240, .14);
+}
+
+.coluna__cartoes:has(.cartao-espaco) .coluna__vazia {
+  display: none;
+}
+
+/* ---------- Carregando, sem colunas ---------- */
+.coluna-esqueleto {
+  padding: 16px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  border-radius: var(--raio-coluna);
+  background: rgba(255, 255, 255, .86);
+  box-shadow: var(--sombra);
+}
+
+.coluna-esqueleto .esqueleto {
+  border-radius: 10px;
+  background: #E4EEF8;
+}
+
+.coluna-esqueleto .esqueleto--titulo {
+  height: 18px;
+  width: 52%;
+  margin: 0 2px 6px;
+  border-radius: 6px;
+  background: #D6E6F5;
+}
+
+.coluna-esqueleto .esqueleto--rodape {
+  height: 14px;
+  width: 40%;
+  margin: 6px 2px 0;
+  border-radius: 6px;
+}
+
+.quadro-sem-colunas {
+  flex: 1;
+  display: grid;
+  place-items: center;
+  padding: 16px;
+}
+
+.quadro-sem-colunas__cartao {
+  max-width: 440px;
+  padding: 28px 32px 32px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  text-align: center;
+  background: rgba(255, 255, 255, .92);
+  border-radius: var(--raio-modal);
+  box-shadow: var(--sombra);
+}
+
+.quadro-sem-colunas__cartao img {
+  width: 200px;
+  height: auto;
+}
+
+.quadro-sem-colunas__cartao p {
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1.4;
+  text-wrap: balance;
+}
+
+.quadro-sem-colunas__cartao .botao {
+  height: 46px;
+  padding: 0 22px;
+}
+
+.tela-quadro .estado-erro {
+  margin-top: 24px;
+}
+
+/* ---------- Modal do cartão ---------- */
+.modal-cartao {
+  max-width: 560px;
+  display: flex;
+  flex-direction: column;
+}
+
+.modal-cartao__cabecalho {
+  padding: 22px 20px 0 28px;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.modal-cartao__titulo-campo {
+  flex: 1;
+  min-width: 0;
+  gap: 2px;
+}
+
+.modal-cartao__titulo-campo .campo__rotulo {
+  margin-bottom: 4px;
+}
+
+.modal-cartao__titulo-entrada {
+  width: calc(100% + 10px);
+  margin-left: -10px;
+  height: 42px;
+  padding: 0 10px;
+  border-color: transparent;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.modal-cartao__titulo-entrada:hover {
+  border-color: var(--nuvem-borda);
+}
+
+.modal-cartao__titulo-campo .campo__erro {
+  margin-top: 4px;
+}
+
+.modal-cartao__coluna {
+  margin-top: 4px;
+  font-size: 14px;
+  color: var(--texto-suave);
+}
+
+.modal-cartao__coluna strong {
+  color: var(--texto);
+}
+
+.modal-cartao__cabecalho .botao-icone {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+}
+
+.modal-cartao__corpo {
+  padding: 20px 28px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.modal-cartao select.campo__entrada {
+  height: 44px;
+  padding: 0 12px;
+  cursor: pointer;
+}
+
+.modal-cartao__contador {
+  align-self: flex-end;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--texto-suave);
+}
+
+.modal-cartao__prazo {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.modal-cartao__prazo .campo__entrada {
+  flex: 1;
+  min-width: 170px;
+  height: 44px;
+  padding: 0 12px;
+}
+
+.botao-remover-prazo {
+  padding: 0 14px;
+  background: transparent;
+  color: var(--primaria);
+  font-size: 14px;
+}
+
+.botao-remover-prazo:hover:not(:disabled) {
+  background: rgba(31, 111, 201, .08);
+}
+
+.botao-remover-prazo:disabled {
+  opacity: .45;
+  cursor: default;
+}
+
+.etiquetas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.etiqueta-opcao {
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  color: #fff;
+  cursor: pointer;
+}
+
+.etiqueta-opcao[data-cor="verde"] { background: var(--etiqueta-verde); --anel: var(--etiqueta-verde); }
+.etiqueta-opcao[data-cor="amarelo"] { background: var(--etiqueta-amarelo); --anel: var(--etiqueta-amarelo); color: var(--texto); }
+.etiqueta-opcao[data-cor="laranja"] { background: var(--etiqueta-laranja); --anel: var(--etiqueta-laranja); }
+.etiqueta-opcao[data-cor="vermelho"] { background: var(--etiqueta-vermelho); --anel: var(--etiqueta-vermelho); }
+.etiqueta-opcao[data-cor="roxo"] { background: var(--etiqueta-roxo); --anel: var(--etiqueta-roxo); }
+.etiqueta-opcao[data-cor="azul"] { background: var(--etiqueta-azul); --anel: var(--etiqueta-azul); }
+
+.etiqueta-opcao[data-cor=""] {
+  border: 2px dashed #9FB3C8;
+  background: #fff;
+  color: var(--texto);
+  --anel: var(--texto);
+}
+
+.etiqueta-opcao[aria-checked="true"] {
+  box-shadow: 0 0 0 3px #fff, 0 0 0 5px var(--anel);
+}
+
+/* O ✓ só aparece na opção escolhida; o traço da "sem etiqueta" some quando ela está escolhida. */
+.etiqueta-opcao .etiqueta-opcao__check { display: none; }
+.etiqueta-opcao:not([data-cor=""]) .etiqueta-opcao__sem { display: none; }
+.etiqueta-opcao[aria-checked="true"] .etiqueta-opcao__check { display: block; }
+.etiqueta-opcao[aria-checked="true"] .etiqueta-opcao__sem { display: none; }
+
+.modal-cartao__rodape {
+  margin-top: auto;
+  padding: 16px 28px 22px;
+  border-top: 1px solid var(--fundo-suave);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.modal-cartao__rodape .botao--perigo {
+  padding: 0 16px 0 12px;
+}
+
+.modal-cartao__acoes {
+  display: flex;
+  gap: 10px;
+  margin-left: auto;
+}
+
+.modal-cartao__acoes .botao--primario {
+  padding: 0 22px;
+}
+
+/* ---------- Celular: uma coluna por vez (85%), com encaixe na rolagem ---------- */
+@media (max-width: 767px) {
+  .botao-nova-coluna {
+    width: 44px;
+    padding: 0;
+  }
+
+  .botao-nova-coluna__texto {
+    display: none;
+  }
+
+  .botao-nova-coluna .icone {
+    width: 20px;
+    height: 20px;
+  }
+
+  .quadro-pontos {
+    display: flex;
+  }
+
+  .quadro-colunas,
+  .quadro-carregando {
+    gap: 12px;
+  }
+
+  .quadro-colunas {
+    scroll-snap-type: x mandatory;
+  }
+
+  .coluna,
+  .coluna-esqueleto,
+  .nova-coluna,
+  .nova-coluna-form {
+    flex-basis: 85%;
+  }
+
+  .cartao {
+    cursor: pointer;
+  }
+}
