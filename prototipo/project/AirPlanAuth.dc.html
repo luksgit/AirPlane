@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>*{box-sizing:border-box}body{margin:0;font-family:Nunito,system-ui,sans-serif;color:#1E2A3A}a{color:#1F6FC9}a:hover{color:#185AA3}*:focus-visible{outline:3px solid rgba(31,111,201,.6);outline-offset:2px}
+@keyframes ap-flutua{0%,100%{transform:translateX(0)}50%{transform:translateX(48px)}}
+@keyframes ap-sobe{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+@keyframes ap-deriva{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(-1.5%,-1%) scale(1.03)}}
+@keyframes ap-giro{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion: reduce){[data-anim]{animation:none!important}}</style>
+</helmet>
+<div style="width:100%;height:100%;position:relative;overflow:auto;container-type:inline-size;background:#EEF4FA;display:flex;align-items:safe center;justify-content:safe center;gap:clamp(24px,5cqw,88px);flex-wrap:nowrap;padding:32px 16px;font-family:Nunito,system-ui,sans-serif;color:#1E2A3A">
+  <div aria-hidden="true" style="position:sticky;top:0;left:0;flex:none;width:0;height:0;align-self:flex-start;pointer-events:none"></div>
+  <div aria-hidden="true" style="position:absolute;inset:0;overflow:hidden;pointer-events:none"><div data-anim="true" style="position:absolute;inset:-4%;background-image:url(assets/fundo-nuvens.png);background-size:cover;background-position:center;animation:ap-deriva 60s ease-in-out infinite"></div></div>
+  <div aria-hidden="true" style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(90,178,240,.10) 0%,rgba(232,245,255,0) 60%);pointer-events:none"></div>
+  <sc-if value="{{ desktop }}" hint-placeholder-val="{{ true }}">
+    <div style="position:relative;z-index:1;flex:1 1 0;min-width:0;max-width:480px;display:flex;flex-direction:column;align-items:center;gap:20px;text-align:center">
+      <img data-anim="true" src="assets/mascote-nuvem.png" alt="" style="width:100%;max-width:440px;height:auto;filter:drop-shadow(0 18px 24px rgba(30,42,58,.16));animation:ap-sobe 6s ease-in-out infinite">
+      <p style="margin:0;font-size:24px;font-weight:800;line-height:1.3;color:#14385F;text-wrap:balance">Organize suas tarefas com a leveza de arrastar um cartão.</p>
+    </div>
+  </sc-if>
+  <main style="position:relative;z-index:1;flex:0 0 auto;width:100%;max-width:400px;margin:auto 0;background:#fff;border-radius:20px;padding:clamp(26px,3cqw,40px) clamp(22px,2.6cqw,36px);box-shadow:0 12px 32px rgba(30,42,58,.18),0 0 0 1px rgba(30,42,58,.06);display:flex;flex-direction:column;gap:22px">
+    <div style="display:flex;flex-direction:column;align-items:center;gap:12px;text-align:center">
+      <sc-if value="{{ mobile }}" hint-placeholder-val="{{ false }}">
+        <img src="assets/mascote-nuvem.png" alt="" style="width:150px;height:auto;margin:-8px 0 -4px">
+      </sc-if>
+      <div style="display:flex;align-items:center;gap:8px;font-weight:800;font-size:24px;letter-spacing:-0.01em">
+        <img src="assets/logo-nuvem.png" alt="" aria-hidden="true" style="height:52px;width:auto;display:block">
+        <span>Air<span style="color:#1F6FC9">Plan</span></span>
+      </div>
+      <sc-if value="{{ eLogin }}" hint-placeholder-val="{{ true }}">
+        <div><h1 style="margin:0;font-size:28px;font-weight:700;line-height:1.2">Bem-vindo de volta</h1><p style="margin:6px 0 0;font-size:15px;color:#5B6B7F">Entre para continuar seus planos de voo</p></div>
+      </sc-if>
+      <sc-if value="{{ eCadastro }}" hint-placeholder-val="{{ false }}">
+        <div><h1 style="margin:0;font-size:28px;font-weight:700;line-height:1.2">Embarque no AirPlan</h1><p style="margin:6px 0 0;font-size:15px;color:#5B6B7F">Crie sua conta em segundos</p></div>
+      </sc-if>
+    </div>
+    <sc-if value="{{ alerta }}" hint-placeholder-val="{{ false }}">
+      <div role="alert" style="display:flex;align-items:center;gap:10px;padding:12px 14px;border-radius:10px;background:#FDE8E8;border:1px solid #F6C3C5;color:#B4262B;font-size:14px;font-weight:700">
+        <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" style="flex:none;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round"><circle cx="12" cy="12" r="10"></circle><path d="M12 8v4"></path><path d="M12 16h.01"></path></svg>
+        E-mail ou senha incorretos
+      </div>
+    </sc-if>
+    <form noValidate="{{ true }}" onSubmit="{{ enviar }}" style="display:flex;flex-direction:column;gap:18px">
+      <sc-for list="{{ campos }}" as="c" hint-placeholder-count="2">
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <label for="{{ c.id }}" style="font-size:14px;font-weight:700">{{ c.label }}</label>
+          <div style="position:relative">
+            <input id="{{ c.id }}" type="{{ c.tipo }}" value="{{ c.valor }}" placeholder="{{ c.placeholder }}" onChange="{{ c.onChange }}" onBlur="{{ c.onBlur }}" disabled="{{ carregando }}" aria-invalid="{{ c.temErro }}" aria-describedby="{{ c.descr }}" autoComplete="{{ c.ac }}" maxLength="{{ c.max }}" style="width:100%;height:46px;border-radius:8px;border:1.5px solid {{ c.borda }};padding:0 {{ c.padDir }} 0 14px;font-family:Nunito,system-ui,sans-serif;font-size:15px;color:#1E2A3A;background:{{ c.fundo }};outline:none;transition:border-color .15s,box-shadow .15s" style-focus="border-color:#1F6FC9;box-shadow:0 0 0 3px rgba(31,111,201,.25)">
+            <sc-if value="{{ c.ehSenha }}" hint-placeholder-val="{{ false }}">
+              <button type="button" onClick="{{ c.onOlho }}" aria-label="{{ c.olhoLabel }}" aria-pressed="{{ c.mostrando }}" disabled="{{ carregando }}" style="position:absolute;right:6px;top:6px;width:34px;height:34px;border:none;border-radius:8px;background:transparent;color:#5B6B7F;display:grid;place-items:center;cursor:pointer" style-hover="background:#EEF3F8;color:#1E2A3A">
+                <sc-if value="{{ c.olhoFechado }}" hint-placeholder-val="{{ true }}"><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" style="fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path><circle cx="12" cy="12" r="3"></circle></svg></sc-if>
+                <sc-if value="{{ c.mostrando }}" hint-placeholder-val="{{ false }}"><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" style="fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><path d="M9.88 9.88a3 3 0 1 0 4.24 4.24"></path><path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"></path><path d="M6.61 6.61A13.53 13.53 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61"></path><path d="M2 2l20 20"></path></svg></sc-if>
+              </button>
+            </sc-if>
+          </div>
+          <sc-if value="{{ c.temForca }}" hint-placeholder-val="{{ false }}">
+            <div style="display:flex;align-items:center;gap:10px" aria-live="polite">
+              <div aria-hidden="true" style="flex:1;display:grid;grid-template-columns:repeat(3,1fr);gap:4px">
+                <span style="height:5px;border-radius:3px;background:{{ c.s1 }}"></span>
+                <span style="height:5px;border-radius:3px;background:{{ c.s2 }}"></span>
+                <span style="height:5px;border-radius:3px;background:{{ c.s3 }}"></span>
+              </div>
+              <span style="font-size:12px;font-weight:700;color:{{ c.forcaCor }};min-width:92px;text-align:right">Senha {{ c.forcaTexto }}</span>
+            </div>
+          </sc-if>
+          <sc-if value="{{ c.temErro }}" hint-placeholder-val="{{ false }}">
+            <p id="{{ c.descr }}" style="margin:0;display:flex;align-items:flex-start;gap:6px;font-size:13px;font-weight:600;line-height:1.35;color:#C42F35">
+              <svg width="15" height="15" viewBox="0 0 24 24" aria-hidden="true" style="flex:none;margin-top:1px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round"><circle cx="12" cy="12" r="10"></circle><path d="M12 8v4"></path><path d="M12 16h.01"></path></svg>
+              <span>{{ c.erro }}</span>
+            </p>
+          </sc-if>
+        </div>
+      </sc-for>
+      <button type="submit" disabled="{{ carregando }}" aria-busy="{{ carregando }}" style="height:48px;margin-top:4px;width:100%;border:none;border-radius:10px;background:#1F6FC9;color:#fff;font-family:Nunito,system-ui,sans-serif;font-size:16px;font-weight:700;display:inline-flex;align-items:center;justify-content:center;gap:10px;cursor:pointer;transition:background .15s" style-hover="background:#185AA3">
+        <sc-if value="{{ carregando }}" hint-placeholder-val="{{ false }}"><span data-anim="true" aria-hidden="true" style="width:18px;height:18px;border-radius:50%;border:2.5px solid rgba(255,255,255,.4);border-top-color:#fff;animation:ap-giro .8s linear infinite"></span></sc-if>
+        {{ botaoTexto }}
+      </button>
+    </form>
+    <sc-if value="{{ eLogin }}" hint-placeholder-val="{{ true }}">
+      <p style="margin:0;text-align:center;font-size:14px;color:#5B6B7F">Ainda não tem conta? <a href="#" onClick="{{ trocar }}" style="font-weight:700">Criar conta</a></p>
+    </sc-if>
+    <sc-if value="{{ eCadastro }}" hint-placeholder-val="{{ false }}">
+      <p style="margin:0;text-align:center;font-size:14px;color:#5B6B7F">Já tem conta? <a href="#" onClick="{{ trocar }}" style="font-weight:700">Entrar</a></p>
+    </sc-if>
+  </main>
+  <div aria-live="polite" style="position:absolute;z-index:80;bottom:20px;right:20px;left:20px;display:flex;flex-direction:column;align-items:{{ toastAlign }};gap:10px;pointer-events:none">
+    <sc-for list="{{ toasts }}" as="t" hint-placeholder-count="0">
+      <div style="pointer-events:auto;width:100%;max-width:360px"><dc-import name="AirPlanToast" tipo="{{ t.tipo }}" mensagem="{{ t.msg }}" on-fechar="{{ t.fechar }}" hint-size="100%,56px"></dc-import></div>
+    </sc-for>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:&quot;1440px&quot;,&quot;height&quot;:&quot;900px&quot;},&quot;modo&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;login&quot;,&quot;cadastro&quot;],&quot;default&quot;:&quot;login&quot;,&quot;tsType&quot;:&quot;'login'|'cadastro'&quot;},&quot;estado&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;normal&quot;,&quot;erros&quot;,&quot;credenciais&quot;,&quot;carregando&quot;,&quot;conexao&quot;,&quot;preenchido&quot;],&quot;default&quot;:&quot;normal&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;mobile&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;}}">
+class Component extends DCLogic {
+  uid = 'a' + Math.random().toString(36).slice(2, 8);
+  tid = 10;
+  state = this.inicial(this.props.modo || 'login', this.props.estado || 'normal');
+  componentDidUpdate() { const m = this.props.modo || 'login'; if (this.modoAnt && this.modoAnt !== m) this.setState(this.inicial(m, 'normal')); this.modoAnt = m; }
+  componentDidMount() { this.modoAnt = this.props.modo || 'login'; }
+  inicial(modo, e) {
+    let v = { nome: '', email: '', senha: '', confirmar: '' }, er = {}, alerta = false, carregando = false, toasts = [];
+    const cheio = { email: 'lucas@email.com', senha: 'voo12345' };
+    if (modo === 'login') {
+      if (e === 'erros') { v.email = 'lucas@email'; er = { email: 'Digite um e-mail válido', senha: 'Informe sua senha' }; }
+      if (e === 'credenciais') { v = { ...v, email: 'lucas@email.com', senha: 'senha1234' }; alerta = true; }
+      if (e === 'carregando') { v = { ...v, ...cheio }; carregando = true; }
+      if (e === 'conexao') { v = { ...v, ...cheio }; toasts = [{ id: 1, tipo: 'erro', msg: 'Não foi possível conectar. Tente novamente.' }]; }
+    } else {
+      if (e === 'preenchido' || e === 'carregando') { v = { nome: 'Lucas Santos', email: 'lucas.s@email.com', senha: 'aviao2026', confirmar: 'aviao2026' }; carregando = e === 'carregando'; }
+      if (e === 'erros') { v = { nome: 'L', email: 'lucas@email.com', senha: 'abc', confirmar: 'abd' }; er = { nome: 'O nome deve ter pelo menos 2 caracteres', email: 'Este e-mail já está cadastrado', senha: 'A senha deve ter no mínimo 8 caracteres, com letras e números', confirmar: 'As senhas não coincidem' }; }
+    }
+    return { modo, v, er, alerta, carregando, toasts, mostrar: {} };
+  }
+  forca(s) {
+    if (!s) return 0;
+    let n = 0;
+    if (s.length >= 8) n++;
+    if (/[a-z]/i.test(s) && /\d/.test(s)) n++;
+    if (n === 2 && (s.length >= 12 || /[^a-z0-9]/i.test(s) || (/[a-z]/.test(s) && /[A-Z]/.test(s)))) n++;
+    return Math.max(1, n);
+  }
+  validar(k, v, modo) {
+    const t = (v[k] || '').trim();
+    if (k === 'nome') { if (!t) return 'Informe seu nome'; if (t.length < 2) return 'O nome deve ter pelo menos 2 caracteres'; if (t.length > 100) return 'O nome deve ter no máximo 100 caracteres'; }
+    if (k === 'email') { if (!t) return 'Informe seu e-mail'; if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(t)) return 'Digite um e-mail válido'; if (modo === 'cadastro' && (this.props.emailExiste ? this.props.emailExiste(t) : t.toLowerCase() === 'lucas@email.com')) return 'Este e-mail já está cadastrado'; }
+    if (k === 'senha') { if (modo === 'login') { if (!v.senha) return 'Informe sua senha'; } else if (v.senha.length < 8 || !/[a-z]/i.test(v.senha) || !/\d/.test(v.senha)) return 'A senha deve ter no mínimo 8 caracteres, com letras e números'; }
+    if (k === 'confirmar') { if (!v.confirmar || v.confirmar !== v.senha) return 'As senhas não coincidem'; }
+    return '';
+  }
+  toast(tipo, msg) {
+    const id = ++this.tid;
+    this.setState(s => ({ toasts: [...s.toasts, { id, tipo, msg }].slice(-3) }));
+    setTimeout(() => this.setState(s => ({ toasts: s.toasts.filter(t => t.id !== id) })), 4000);
+  }
+  enviar(e) {
+    e.preventDefault();
+    const { modo, v } = this.state;
+    const ks = modo === 'login' ? ['email', 'senha'] : ['nome', 'email', 'senha', 'confirmar'];
+    const er = {};
+    ks.forEach(k => { const m = this.validar(k, v, modo); if (m) er[k] = m; });
+    this.setState({ er, alerta: false });
+    if (Object.keys(er).length) { const id = this.uid + '-' + Object.keys(er)[0]; setTimeout(() => { const el = document.getElementById(id); el && el.focus(); }, 0); return; }
+    this.setState({ carregando: true });
+    setTimeout(() => {
+      this.setState({ carregando: false });
+      if (modo === 'login') {
+        if (this.props.onEntrar) { if (!this.props.onEntrar(v.email.trim(), v.senha)) this.setState({ alerta: true }); }
+        else if (v.email.trim().toLowerCase() === 'lucas@email.com' && v.senha === 'voo12345') this.toast('info', 'Login realizado — indo para Meus planos de voo…');
+        else this.setState({ alerta: true });
+      } else if (this.props.onCadastrar) this.props.onCadastrar({ nome: v.nome.trim(), email: v.email.trim(), senha: v.senha });
+      else this.toast('sucesso', `Bem-vindo a bordo, ${v.nome.trim().split(' ')[0]}! ✈️`);
+    }, 1400);
+  }
+  renderVals() {
+    const st = this.state, mob = !!this.props.mobile, modo = st.modo;
+    const defs = modo === 'login'
+      ? [{ k: 'email', label: 'E-mail', tipo: 'email', ph: 'voce@email.com', ac: 'email', max: 150 },
+         { k: 'senha', label: 'Senha', senha: true, ph: 'Digite sua senha', ac: 'current-password', max: 128 }]
+      : [{ k: 'nome', label: 'Nome', tipo: 'text', ph: 'Como podemos te chamar?', ac: 'name', max: 100 },
+         { k: 'email', label: 'E-mail', tipo: 'email', ph: 'voce@email.com', ac: 'email', max: 150 },
+         { k: 'senha', label: 'Senha', senha: true, ph: 'Mínimo de 8 caracteres', ac: 'new-password', max: 128, forca: true },
+         { k: 'confirmar', label: 'Confirmar senha', senha: true, ph: 'Repita a senha', ac: 'new-password', max: 128 }];
+    const f = this.forca(st.v.senha);
+    const fc = ['#E3ECF5', '#E5484D', '#F5A524', '#2EAD6B'][f];
+    const campos = defs.map(d => {
+      const erro = st.er[d.k] || '', mostrando = !!st.mostrar[d.k];
+      return {
+        id: `${this.uid}-${d.k}`, descr: `${this.uid}-${d.k}-erro`, label: d.label, placeholder: d.ph, ac: d.ac, max: d.max,
+        tipo: d.senha ? (mostrando ? 'text' : 'password') : d.tipo,
+        valor: st.v[d.k], erro, temErro: !!erro, borda: erro ? '#E5484D' : '#C9DDF0',
+        fundo: st.carregando ? '#F3F7FB' : '#fff', padDir: d.senha ? '46px' : '14px',
+        ehSenha: !!d.senha, mostrando, olhoFechado: !mostrando, olhoLabel: mostrando ? 'Ocultar senha' : 'Mostrar senha',
+        temForca: !!d.forca && st.v.senha.length > 0,
+        s1: f >= 1 ? fc : '#E3ECF5', s2: f >= 2 ? fc : '#E3ECF5', s3: f >= 3 ? fc : '#E3ECF5',
+        forcaTexto: ['', 'fraca', 'média', 'forte'][f], forcaCor: ['#5B6B7F', '#C42F35', '#8A5300', '#1E7A4A'][f],
+        onChange: e => { const val = e.target.value; this.setState(s => { const er = { ...s.er }; delete er[d.k]; return { v: { ...s.v, [d.k]: val }, er, alerta: false }; }); },
+        onBlur: () => { if (modo !== 'cadastro') return; const m = this.validar(d.k, this.state.v, modo); if (this.state.v[d.k] || m) this.setState(s => ({ er: { ...s.er, [d.k]: m || undefined } })); },
+        onOlho: () => this.setState(s => ({ mostrar: { ...s.mostrar, [d.k]: !s.mostrar[d.k] } })),
+      };
+    });
+    return {
+      mobile: mob, desktop: !mob && !this.props.compacto, eLogin: modo === 'login', eCadastro: modo === 'cadastro',
+      alerta: st.alerta, carregando: st.carregando, campos,
+      botaoTexto: modo === 'login' ? (st.carregando ? 'Decolando…' : 'Decolar') : (st.carregando ? 'Criando conta…' : 'Criar conta'),
+      enviar: e => this.enviar(e),
+      trocar: e => { e.preventDefault(); const novo = modo === 'login' ? 'cadastro' : 'login'; if (this.props.onTrocarModo) this.props.onTrocarModo(novo); else this.setState(this.inicial(novo, 'normal')); },
+      toastAlign: mob ? 'center' : 'flex-end',
+      toasts: st.toasts.map(t => ({ ...t, fechar: () => this.setState(s => ({ toasts: s.toasts.filter(x => x.id !== t.id) })) })),
+      nuvens: (mob
+        ? [{ x: '-40px', y: '40px', w: '180px', o: .55, d: '46s' }, { x: '240px', y: '120px', w: '150px', o: .45, d: '58s' }, { x: '20px', y: '700px', w: '200px', o: .6, d: '52s' }]
+        : [{ x: '4%', y: '8%', w: '260px', o: .55, d: '48s' }, { x: '68%', y: '4%', w: '200px', o: .45, d: '60s' }, { x: '82%', y: '58%', w: '280px', o: .6, d: '54s' }, { x: '-3%', y: '72%', w: '320px', o: .65, d: '66s' }, { x: '40%', y: '86%', w: '220px', o: .5, d: '50s' }]),
+    };
+  }
+}
+</script>
+</body>
+</html>

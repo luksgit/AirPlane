@@ -1,0 +1,16 @@
+{
+  "name": "airplan",
+  "version": "1.0.0",
+  "description": "Gerenciador de tarefas Kanban com tema de aviação (Flask + PostgreSQL + JS puro)",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "setup": "python -m venv .venv && .venv\\Scripts\\pip install -r requirements.txt",
+    "start": "npm run dev",
+    "dev": ".venv\\Scripts\\flask --app app run --debug",
+    "prototipo": ".venv\\Scripts\\python -m http.server 8000 -d prototipo/project",
+    "test": "npm run test:back && npm run test:front",
+    "test:back": ".venv\\Scripts\\pytest -v",
+    "test:front": "node --test \"tests/front/**/*.test.js\""
+  }
+}

@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>*{box-sizing:border-box}html,body{margin:0;height:100%;overflow:hidden;font-family:Nunito,system-ui,sans-serif;color:#1E2A3A;background:#E8F5FF}a{color:#1F6FC9}a:hover{color:#185AA3}*:focus-visible{outline:3px solid rgba(31,111,201,.6);outline-offset:2px}</style>
+</helmet>
+<div ref="{{ raizRef }}" style="width:100vw;height:100vh;display:flex;flex-direction:column;position:relative;font-family:Nunito,system-ui,sans-serif;color:#1E2A3A">
+  <div style="flex:none;min-height:40px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:6px 14px;background:#1E2A3A;color:#fff;font-size:13px;font-weight:600">
+    <span style="font-weight:800;letter-spacing:.02em">AirPlan · protótipo</span>
+    <span style="display:inline-flex;align-items:center;gap:6px;height:26px;padding:0 10px;border-radius:999px;background:rgba(255,255,255,.12);font-family:ui-monospace,Menlo,monospace;font-size:12px">airplan.app{{ rotaExibida }}</span>
+    <sc-if value="{{ desktop }}" hint-placeholder-val="{{ true }}">
+      <span style="color:#C9DDF0">Conta de teste: <strong style="color:#fff">lucas@email.com</strong> · senha <strong style="color:#fff">voo12345</strong></span>
+    </sc-if>
+    <div style="margin-left:auto;display:flex;align-items:center;gap:8px">
+      <label for="ap-ir" style="color:#C9DDF0">Ir para</label>
+      <select id="ap-ir" value="" onChange="{{ irPara }}" style="height:28px;border-radius:6px;border:none;padding:0 8px;font-family:Nunito,system-ui,sans-serif;font-size:13px;font-weight:600;color:#1E2A3A;background:#fff;cursor:pointer">
+        <option value="">Escolha uma tela…</option>
+        <option value="/login">1 · Login</option>
+        <option value="/cadastro">2 · Cadastro</option>
+        <option value="/quadros">3 · Meus quadros</option>
+        <option value="/quadros/1">4 · Quadro “PIT II”</option>
+        <option value="/perfil">8 · Meu perfil</option>
+        <option value="/rota-que-nao-existe">9 · Página 404</option>
+      </select>
+      <button onClick="{{ reiniciar }}" style="height:28px;padding:0 10px;border:1px solid rgba(255,255,255,.35);border-radius:6px;background:transparent;color:#fff;font-family:Nunito,system-ui,sans-serif;font-size:13px;font-weight:700;cursor:pointer" style-hover="background:rgba(255,255,255,.12)">Reiniciar demo</button>
+    </div>
+  </div>
+  <div style="flex:1;min-height:0;position:relative">
+    <sc-if value="{{ eLogin }}" hint-placeholder-val="{{ true }}">
+      <dc-import name="AirPlanAuth" modo="{{ modoAuth }}" mobile="{{ mobile }}" compacto="{{ compacto }}" on-entrar="{{ entrar }}" on-cadastrar="{{ cadastrar }}" email-existe="{{ emailExiste }}" on-trocar-modo="{{ trocarModo }}" style="position:absolute;inset:0;width:100%;height:100%" hint-size="100%,100%"></dc-import>
+    </sc-if>
+    <sc-if value="{{ eHangar }}" hint-placeholder-val="{{ false }}">
+      <dc-import name="AirPlanHangar" quadros="{{ resumoQuadros }}" usuario="{{ usuario }}" mobile="{{ mobile }}" tablet="{{ tablet }}" carregar-ao-abrir="{{ true }}" on-abrir="{{ abrirQuadro }}" on-criar="{{ criarQuadro }}" on-renomear="{{ renomearQuadro }}" on-excluir="{{ excluirQuadro }}" on-sair="{{ sair }}" on-perfil="{{ irPerfil }}" on-hangar="{{ irHangar }}" style="position:absolute;inset:0;width:100%;height:100%" hint-size="100%,100%"></dc-import>
+    </sc-if>
+    <sc-if value="{{ eQuadro }}" hint-placeholder-val="{{ false }}">
+      <dc-import name="AirPlanKanban" quadro="{{ quadroAtual }}" usuario="{{ usuario }}" mobile="{{ mobile }}" carregar-ao-abrir="{{ true }}" on-alterar="{{ alterarQuadro }}" on-voltar="{{ irHangar }}" on-sair="{{ sair }}" on-perfil="{{ irPerfil }}" style="position:absolute;inset:0;width:100%;height:100%" hint-size="100%,100%"></dc-import>
+    </sc-if>
+    <sc-if value="{{ ePerfil }}" hint-placeholder-val="{{ false }}">
+      <dc-import name="AirPlanPerfil" usuario="{{ usuario }}" mobile="{{ mobile }}" on-voltar="{{ irHangar }}" on-sair="{{ sair }}" on-salvar-nome="{{ salvarNome }}" verificar-senha="{{ verificarSenha }}" on-alterar-senha="{{ alterarSenha }}" style="position:absolute;inset:0;width:100%;height:100%" hint-size="100%,100%"></dc-import>
+    </sc-if>
+    <sc-if value="{{ e404 }}" hint-placeholder-val="{{ false }}">
+      <dc-import name="AirPlan404" mobile="{{ mobile }}" logado="{{ logado }}" on-voltar="{{ voltar404 }}" style="position:absolute;inset:0;width:100%;height:100%" hint-size="100%,100%"></dc-import>
+    </sc-if>
+    <div aria-live="polite" style="position:absolute;z-index:90;bottom:20px;right:20px;left:20px;display:flex;flex-direction:column;align-items:{{ toastAlign }};gap:10px;pointer-events:none">
+      <sc-for list="{{ toasts }}" as="t" hint-placeholder-count="0">
+        <div style="pointer-events:auto;width:100%;max-width:360px"><dc-import name="AirPlanToast" tipo="{{ t.tipo }}" mensagem="{{ t.msg }}" on-fechar="{{ t.fechar }}" hint-size="100%,56px"></dc-import></div>
+      </sc-for>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  static CHAVE = 'airplan-app-v2';
+  raizRef = React.createRef();
+  tid = 0;
+  state = { ...this.carregar(), rota: this.lerRota(), largura: 1440, toasts: [] };
+
+  rel(n) { const d = new Date(); d.setHours(0, 0, 0, 0); d.setDate(d.getDate() + n); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); }
+  semente() {
+    return {
+      sessao: null,
+      usuarios: [{ id: 1, nome: 'Lucas Santos', email: 'lucas@email.com', senha: 'voo12345' }],
+      quadros: [
+        { id: 1, usuario_id: 1, titulo: 'PIT II – AirPlan', colunas: [
+          { id: 1, titulo: 'Embarque', cartoes: [
+            { id: 11, titulo: 'Revisar diagrama de classes', cor: 'roxo', prazo: this.rel(1) },
+            { id: 12, titulo: 'Criar dicionário de dados', cor: 'azul', prazo: this.rel(14) },
+            { id: 13, titulo: 'Gravar vídeo narrado', cor: 'vermelho' }] },
+          { id: 2, titulo: 'Em voo', cartoes: [
+            { id: 21, titulo: 'Codificar API de cartões', cor: 'laranja', prazo: this.rel(8), descricao: 'Implementar POST, PUT e DELETE em /api/cartoes e a rota PUT /api/cartoes/{id}/mover, validando coluna_id e posicao.' },
+            { id: 22, titulo: 'Layout da tela Kanban', cor: 'verde', prazo: this.rel(-4) }] },
+          { id: 3, titulo: 'Pousou', cartoes: [
+            { id: 31, titulo: 'Definir escopo do MVP', cor: 'verde' },
+            { id: 32, titulo: 'Criar repositório no GitHub' },
+            { id: 33, titulo: 'Escolher nome do app ✈️' }] }] },
+        { id: 2, usuario_id: 1, titulo: 'Treino da semana', colunas: [
+          { id: 4, titulo: 'Embarque', cartoes: [
+            { id: 41, titulo: 'Corrida leve de 5 km', cor: 'verde', prazo: this.rel(5) },
+            { id: 42, titulo: 'Treino de pernas', cor: 'laranja' }] },
+          { id: 5, titulo: 'Em voo', cartoes: [
+            { id: 51, titulo: 'Alongamento diário', cor: 'azul', descricao: '10 minutos ao acordar e antes de dormir.' },
+            { id: 52, titulo: 'Natação terça e quinta' }] },
+          { id: 6, titulo: 'Pousou', cartoes: [{ id: 61, titulo: 'Treino de costas', cor: 'verde' }] }] },
+        { id: 3, usuario_id: 1, titulo: 'Estudos de Banco de Dados', colunas: [
+          { id: 7, titulo: 'Embarque', cartoes: [
+            { id: 71, titulo: 'Normalização até a 3FN', cor: 'roxo', prazo: this.rel(6) },
+            { id: 72, titulo: 'Exercícios de JOIN' }] },
+          { id: 8, titulo: 'Em voo', cartoes: [{ id: 81, titulo: 'Modelo ER do projeto', cor: 'azul', descricao: 'Entidades: usuario, quadro, coluna e cartao (1:N em cascata).' }] },
+          { id: 9, titulo: 'Pousou', cartoes: [{ id: 91, titulo: 'Revisar chaves primárias e estrangeiras', cor: 'verde' }] }] },
+      ],
+    };
+  }
+  carregar() {
+    try { const s = JSON.parse(localStorage.getItem(Component.CHAVE)); if (s && s.usuarios && s.quadros) return s; } catch (_) {}
+    return this.semente();
+  }
+  salvar() {
+    const { sessao, usuarios, quadros } = this.state;
+    try { localStorage.setItem(Component.CHAVE, JSON.stringify({ sessao, usuarios, quadros })); } catch (_) {}
+  }
+  lerRota() { return (window.location.hash || '').replace(/^#/, '') || ''; }
+  navegar(r, substituir) {
+    try { if (substituir) history.replaceState(null, '', '#' + r); else window.location.hash = r; } catch (_) {}
+    this.setState({ rota: r });
+  }
+  normalizar() {
+    const r = this.state.rota, logado = !!this.state.sessao;
+    const interna = r === '/quadros' || r === '/perfil' || /^\/quadros\/[^/]+$/.test(r);
+    const auth = r === '/login' || r === '/cadastro';
+    if (r === '' || r === '/') return this.navegar(logado ? '/quadros' : '/login', true);
+    if (!logado && interna) return this.navegar('/login', true);
+    if (logado && auth) return this.navegar('/quadros', true);
+  }
+  componentDidMount() {
+    this.onHash = () => this.setState({ rota: this.lerRota() });
+    window.addEventListener('hashchange', this.onHash);
+    const medir = () => { const el = this.raizRef.current; const w = el ? Math.round(el.getBoundingClientRect().width) : window.innerWidth; if (w && w !== this.state.largura) this.setState({ largura: w }); };
+    this.onResize = () => medir();
+    window.addEventListener('resize', this.onResize);
+    setTimeout(medir, 0);
+    this.normalizar();
+  }
+  componentWillUnmount() { window.removeEventListener('hashchange', this.onHash); window.removeEventListener('resize', this.onResize); }
+  componentDidUpdate() {
+    const ps = this.anterior || {}, s = this.state;
+    this.anterior = { rota: s.rota, sessao: s.sessao, quadros: s.quadros, usuarios: s.usuarios };
+    if (ps.rota !== s.rota || ps.sessao !== s.sessao) this.normalizar();
+    if (ps.quadros !== s.quadros || ps.usuarios !== s.usuarios || ps.sessao !== s.sessao) this.salvar();
+  }
+  toast(tipo, msg) {
+    const id = ++this.tid;
+    this.setState(s => ({ toasts: [...s.toasts, { id, tipo, msg }].slice(-3) }));
+    setTimeout(() => this.setState(s => ({ toasts: s.toasts.filter(t => t.id !== id) })), 4000);
+  }
+  novoId() { return Date.now() + Math.floor(Math.random() * 1000); }
+
+  renderVals() {
+    const st = this.state, logado = !!st.sessao, r = st.rota;
+    const usuario = st.usuarios.find(u => u.id === st.sessao) || null;
+    const meus = st.quadros.filter(q => q.usuario_id === st.sessao);
+    const mQ = r.match(/^\/quadros\/([^/]+)$/);
+    const quadroAtual = mQ ? meus.find(q => String(q.id) === mQ[1]) || null : null;
+    const eAuth = r === '/login' || r === '/cadastro';
+    const conhecida = eAuth || r === '/quadros' || r === '/perfil' || !!mQ || r === '' || r === '/';
+    const mobile = st.largura < 768, tablet = st.largura >= 768 && st.largura < 1024;
+    const mudarQuadros = fn => this.setState(s => ({ quadros: fn(s.quadros) }));
+    return {
+      mobile, tablet, desktop: !mobile, logado, compacto: st.largura < 1000,
+      rotaExibida: r ? '/' + r.replace(/^\//, '') : '/',
+      usuario: usuario ? { nome: usuario.nome, email: usuario.email } : null,
+      eLogin: eAuth && !logado, modoAuth: r === '/cadastro' ? 'cadastro' : 'login',
+      eHangar: logado && r === '/quadros',
+      eQuadro: logado && !!quadroAtual,
+      ePerfil: logado && r === '/perfil',
+      e404: !conhecida || (logado && !!mQ && !quadroAtual),
+      resumoQuadros: meus.map(q => ({ id: q.id, titulo: q.titulo, colunas: q.colunas.length, cartoes: q.colunas.reduce((n, c) => n + c.cartoes.length, 0) })),
+      quadroAtual,
+      entrar: (email, senha) => {
+        const u = st.usuarios.find(x => x.email.toLowerCase() === email.toLowerCase() && x.senha === senha);
+        if (!u) return false;
+        this.setState({ sessao: u.id }); this.navegar('/quadros');
+        return true;
+      },
+      emailExiste: email => st.usuarios.some(u => u.email.toLowerCase() === email.trim().toLowerCase()),
+      cadastrar: ({ nome, email, senha }) => {
+        const id = this.novoId();
+        this.setState(s => ({ usuarios: [...s.usuarios, { id, nome, email, senha }], sessao: id }));
+        this.navegar('/quadros');
+        this.toast('sucesso', `Bem-vindo a bordo, ${nome}! ✈️`);
+      },
+      trocarModo: m => this.navegar('/' + m),
+      sair: () => { this.setState({ sessao: null }); this.navegar('/login'); this.toast('info', 'Até a próxima viagem! 👋'); },
+      irHangar: () => this.navegar('/quadros'),
+      irPerfil: () => this.navegar('/perfil'),
+      abrirQuadro: id => this.navegar('/quadros/' + id),
+      criarQuadro: titulo => {
+        const id = this.novoId(), b = id * 10;
+        mudarQuadros(qs => [...qs, { id, usuario_id: st.sessao, titulo, colunas: [{ id: b + 1, titulo: 'Embarque', cartoes: [] }, { id: b + 2, titulo: 'Em voo', cartoes: [] }, { id: b + 3, titulo: 'Pousou', cartoes: [] }] }]);
+        this.navegar('/quadros/' + id);
+        this.toast('sucesso', 'Quadro criado');
+      },
+      renomearQuadro: (id, titulo) => mudarQuadros(qs => qs.map(q => q.id === id ? { ...q, titulo } : q)),
+      excluirQuadro: id => mudarQuadros(qs => qs.filter(q => q.id !== id)),
+      alterarQuadro: dados => { const id = quadroAtual && quadroAtual.id; if (id == null) return; mudarQuadros(qs => qs.map(q => q.id === id ? { ...q, titulo: dados.titulo, colunas: dados.colunas } : q)); },
+      salvarNome: nome => this.setState(s => ({ usuarios: s.usuarios.map(u => u.id === s.sessao ? { ...u, nome } : u) })),
+      verificarSenha: senha => !!usuario && usuario.senha === senha,
+      alterarSenha: senha => this.setState(s => ({ usuarios: s.usuarios.map(u => u.id === s.sessao ? { ...u, senha } : u) })),
+      voltar404: () => this.navegar(logado ? '/quadros' : '/login'),
+      irPara: e => { const v = e.target.value; if (v) this.navegar(v); e.target.value = ''; },
+      reiniciar: () => { try { localStorage.removeItem(Component.CHAVE); } catch (_) {} this.setState({ ...this.semente(), toasts: [] }); this.navegar('/login'); },
+      raizRef: this.raizRef,
+      toastAlign: mobile ? 'center' : 'flex-end',
+      toasts: st.toasts.map(t => ({ ...t, fechar: () => this.setState(s => ({ toasts: s.toasts.filter(x => x.id !== t.id) })) })),
+    };
+  }
+}
+</script>
+</body>
+</html>

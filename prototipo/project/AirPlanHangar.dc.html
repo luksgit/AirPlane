@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>*{box-sizing:border-box}body{margin:0;font-family:Nunito,system-ui,sans-serif;color:#1E2A3A}a{color:#1F6FC9}a:hover{color:#185AA3}*:focus-visible{outline:3px solid rgba(31,111,201,.6);outline-offset:2px}
+@keyframes ap-pulso{0%,100%{opacity:1}50%{opacity:.45}}
+@keyframes ap-giro{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion: reduce){[data-anim]{animation:none!important}}</style>
+</helmet>
+<div style="width:100%;height:100%;position:relative;overflow:hidden;display:flex;flex-direction:column;container-type:inline-size;background:linear-gradient(180deg,#CBE6FB 0%,#EAF6FF 45%,#F7FBFF 100%);font-family:Nunito,system-ui,sans-serif;color:#1E2A3A">
+  <dc-import name="AirPlanHeader" mobile="{{ mobile }}" menu-aberto="{{ avatarAberto }}" on-sair="{{ sair }}" on-perfil="{{ perfil }}" on-hangar="{{ hangar }}" usuario="{{ usuario }}" hint-size="100%,64px"></dc-import>
+  <main style="flex:1;min-height:0;overflow-y:auto;padding:clamp(24px,2.8cqw,40px) clamp(16px,3.4cqw,48px) 40px">
+    <div style="max-width:1280px;margin:0 auto">
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:28px">
+        <h1 style="margin:0;font-size:28px;font-weight:700;line-height:1.2">Meus planos de voo</h1>
+        <button onClick="{{ abrirNovo }}" style="height:44px;padding:0 18px 0 14px;border:none;border-radius:10px;background:#1F6FC9;color:#fff;font-family:Nunito,system-ui,sans-serif;font-size:15px;font-weight:700;display:inline-flex;align-items:center;gap:8px;cursor:pointer;box-shadow:0 4px 12px rgba(31,111,201,.25)" style-hover="background:#185AA3">
+          <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" style="fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round"><path d="M12 5v14"></path><path d="M5 12h14"></path></svg>Novo quadro</button>
+      </div>
+
+      <sc-if value="{{ eLista }}" hint-placeholder-val="{{ true }}">
+        <div style="display:grid;grid-template-columns:{{ gridCols }};gap:20px">
+          <sc-for list="{{ quadros }}" as="q" hint-placeholder-count="3">
+            <article style="position:relative;min-width:0">
+              <div role="link" tabindex="0" aria-label="{{ q.ariaLabel }}" onClick="{{ q.onAbrir }}" onKeyDown="{{ q.onKey }}" style="height:100%;display:flex;flex-direction:column;background:#fff;border-radius:10px;overflow:hidden;box-shadow:0 4px 12px rgba(30,42,58,.08);cursor:pointer;transition:transform .18s ease,box-shadow .18s ease" style-hover="transform:translateY(-2px);box-shadow:0 12px 28px rgba(30,42,58,.14)">
+                <div aria-hidden="true" style="height:72px;flex:none;position:relative;overflow:hidden;background:#5AB2F0">
+                  <svg viewBox="0 0 200 100" style="position:absolute;width:110px;left:18px;bottom:-26px;opacity:.5"><g style="fill:#fff"><circle cx="62" cy="62" r="32"></circle><circle cx="104" cy="44" r="40"></circle><circle cx="148" cy="64" r="28"></circle><rect x="36" y="58" width="134" height="36" rx="18"></rect></g></svg>
+                  <svg viewBox="0 0 200 100" style="position:absolute;width:64px;left:118px;top:10px;opacity:.35"><g style="fill:#fff"><circle cx="62" cy="62" r="32"></circle><circle cx="104" cy="44" r="40"></circle><circle cx="148" cy="64" r="28"></circle><rect x="36" y="58" width="134" height="36" rx="18"></rect></g></svg>
+                </div>
+                <div style="padding:14px 16px 16px;display:flex;flex-direction:column;gap:8px;flex:1">
+                  <h2 style="margin:0;font-size:16px;font-weight:700;line-height:1.35;min-height:43px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;overflow-wrap:anywhere">{{ q.titulo }}</h2>
+                  <p style="margin:0;font-size:13px;font-weight:600;color:#5B6B7F">{{ q.resumo }}</p>
+                </div>
+              </div>
+              <button data-menu-area="true" onClick="{{ q.onMenu }}" aria-label="{{ q.menuLabel }}" aria-haspopup="menu" aria-expanded="{{ q.menuAberto }}" style="position:absolute;top:10px;right:10px;width:32px;height:32px;border:none;border-radius:8px;background:rgba(255,255,255,.9);color:#1E2A3A;display:grid;place-items:center;cursor:pointer" style-hover="background:#fff">
+                <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" style="fill:currentColor"><circle cx="5" cy="12" r="1.8"></circle><circle cx="12" cy="12" r="1.8"></circle><circle cx="19" cy="12" r="1.8"></circle></svg>
+              </button>
+              <sc-if value="{{ q.menuAberto }}" hint-placeholder-val="{{ false }}">
+                <div role="menu" data-menu-area="true" style="position:absolute;top:48px;right:10px;z-index:5;width:180px;background:#fff;border:1px solid #D6E8F7;border-radius:12px;box-shadow:0 12px 32px rgba(30,42,58,.18);padding:6px;display:flex;flex-direction:column;gap:2px">
+                  <button role="menuitem" onClick="{{ q.onRenomear }}" style="display:flex;align-items:center;gap:10px;height:38px;padding:0 10px;border:none;border-radius:8px;background:transparent;font-family:Nunito,system-ui,sans-serif;font-size:14px;font-weight:600;color:#1E2A3A;cursor:pointer;text-align:left" style-hover="background:#EEF6FE">
+                    <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" style="fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><path d="M17 3a2.85 2.85 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"></path></svg>Renomear</button>
+                  <button role="menuitem" onClick="{{ q.onExcluir }}" style="display:flex;align-items:center;gap:10px;height:38px;padding:0 10px;border:none;border-radius:8px;background:transparent;font-family:Nunito,system-ui,sans-serif;font-size:14px;font-weight:600;color:#C42F35;cursor:pointer;text-align:left" style-hover="background:#FDEEEE">
+                    <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" style="fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><path d="M3 6h18"></path><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"></path><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>Excluir</button>
+                </div>
+              </sc-if>
+            </article>
+          </sc-for>
+          <button onClick="{{ abrirNovo }}" style="min-height:171px;border:2px dashed #8DBFE8;border-radius:10px;background:rgba(255,255,255,.55);color:#1F6FC9;font-family:Nunito,system-ui,sans-serif;font-size:15px;font-weight:700;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;cursor:pointer;transition:background .15s,border-color .15s" style-hover="background:rgba(255,255,255,.9);border-color:#1F6FC9">
+            <span aria-hidden="true" style="width:40px;height:40px;border-radius:50%;background:#E8F5FF;display:grid;place-items:center"><svg width="20" height="20" viewBox="0 0 24 24" style="fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round"><path d="M12 5v14"></path><path d="M5 12h14"></path></svg></span>
+            Criar novo quadro
+          </button>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ eCarregando }}" hint-placeholder-val="{{ false }}">
+        <div aria-busy="true" aria-label="Carregando seus quadros" style="display:grid;grid-template-columns:{{ gridCols }};gap:20px">
+          <sc-for list="{{ skeletons }}" as="s" hint-placeholder-count="4">
+            <div style="background:#fff;border-radius:10px;overflow:hidden;box-shadow:0 4px 12px rgba(30,42,58,.06)">
+              <div data-anim="true" style="height:72px;background:#DCE9F5;animation:ap-pulso 1.4s ease-in-out infinite;animation-delay:{{ s.d }}"></div>
+              <div style="padding:16px;display:flex;flex-direction:column;gap:10px">
+                <div data-anim="true" style="height:16px;width:{{ s.w }};border-radius:6px;background:#E3EDF7;animation:ap-pulso 1.4s ease-in-out infinite;animation-delay:{{ s.d }}"></div>
+                <div data-anim="true" style="height:12px;width:45%;border-radius:6px;background:#E9F1F9;animation:ap-pulso 1.4s ease-in-out infinite;animation-delay:{{ s.d }}"></div>
+                <div style="height:20px"></div>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ eVazio }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;flex-direction:column;align-items:center;text-align:center;gap:10px;padding:clamp(8px,2cqw,32px) 16px 40px">
+          <img src="assets/mascote-nuvem.png" alt="" style="width:clamp(220px,24cqw,340px);height:auto;filter:drop-shadow(0 14px 20px rgba(30,42,58,.12))">
+          <h2 style="margin:8px 0 0;font-size:20px;font-weight:700">Nenhum plano de voo ainda ☁️</h2>
+          <p style="margin:0;max-width:380px;font-size:15px;line-height:1.5;color:#5B6B7F;text-wrap:pretty">Crie seu primeiro quadro para começar a organizar suas tarefas</p>
+          <button onClick="{{ abrirNovo }}" style="margin-top:10px;height:46px;padding:0 22px;border:none;border-radius:10px;background:#1F6FC9;color:#fff;font-family:Nunito,system-ui,sans-serif;font-size:15px;font-weight:700;cursor:pointer" style-hover="background:#185AA3">Criar meu primeiro quadro</button>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ eErro }}" hint-placeholder-val="{{ false }}">
+        <div role="alert" style="max-width:440px;margin:40px auto 0;background:#fff;border-radius:16px;padding:32px 28px;box-shadow:0 4px 12px rgba(30,42,58,.08);display:flex;flex-direction:column;align-items:center;text-align:center;gap:12px">
+          <span aria-hidden="true" style="width:52px;height:52px;border-radius:50%;background:#FDE8E8;color:#C42F35;display:grid;place-items:center">
+            <svg width="26" height="26" viewBox="0 0 24 24" style="fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round"><circle cx="12" cy="12" r="10"></circle><path d="M12 8v4"></path><path d="M12 16h.01"></path></svg>
+          </span>
+          <h2 style="margin:0;font-size:18px;font-weight:700">Não foi possível carregar seus quadros</h2>
+          <p style="margin:0;font-size:14px;color:#5B6B7F">Verifique sua conexão e tente de novo.</p>
+          <button onClick="{{ tentar }}" style="margin-top:6px;height:44px;padding:0 20px;border:1.5px solid #1F6FC9;border-radius:10px;background:#fff;color:#1F6FC9;font-family:Nunito,system-ui,sans-serif;font-size:15px;font-weight:700;cursor:pointer" style-hover="background:#EEF6FE">Tentar novamente</button>
+        </div>
+      </sc-if>
+    </div>
+  </main>
+
+  <sc-if value="{{ temModal }}" hint-placeholder-val="{{ false }}">
+    <div onClick="{{ fora }}" style="position:absolute;inset:0;z-index:60;background:rgba(30,42,58,.4);display:flex;align-items:center;justify-content:center;padding:{{ overlayPad }}">
+      <sc-if value="{{ eModalForm }}" hint-placeholder-val="{{ false }}">
+        <form role="dialog" aria-modal="true" aria-labelledby="{{ ids.titulo }}" ref="{{ modalRef }}" onKeyDown="{{ trap }}" onSubmit="{{ salvar }}" noValidate="{{ true }}" style="width:100%;max-width:{{ mMax }};height:{{ mAlt }};background:#fff;border-radius:{{ mRaio }};padding:28px;box-shadow:0 12px 32px rgba(30,42,58,.18);display:flex;flex-direction:column;gap:22px">
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:12px">
+            <h2 id="{{ ids.titulo }}" style="margin:0;font-size:20px;font-weight:700">{{ modal.tituloModal }}</h2>
+            <button type="button" onClick="{{ fechar }}" aria-label="Fechar" style="width:36px;height:36px;border:none;border-radius:8px;background:transparent;color:#5B6B7F;display:grid;place-items:center;cursor:pointer" style-hover="background:#EEF3F8;color:#1E2A3A">
+              <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true" style="fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg>
+            </button>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:6px">
+            <label for="{{ ids.campo }}" style="font-size:14px;font-weight:700">Título do quadro</label>
+            <input id="{{ ids.campo }}" value="{{ modal.valor }}" onChange="{{ mudar }}" maxLength="100" placeholder="Ex.: TCC, Mudança de casa, Estudos" aria-invalid="{{ modal.temErro }}" aria-describedby="{{ ids.erro }}" style="width:100%;height:46px;border-radius:8px;border:1.5px solid {{ modal.borda }};padding:0 14px;font-family:Nunito,system-ui,sans-serif;font-size:15px;color:#1E2A3A;outline:none" style-focus="border-color:#1F6FC9;box-shadow:0 0 0 3px rgba(31,111,201,.25)">
+            <div style="display:flex;justify-content:space-between;gap:12px">
+              <sc-if value="{{ modal.temErro }}" hint-placeholder-val="{{ false }}">
+                <p id="{{ ids.erro }}" style="margin:0;display:flex;align-items:center;gap:6px;font-size:13px;font-weight:600;color:#C42F35">
+                  <svg width="15" height="15" viewBox="0 0 24 24" aria-hidden="true" style="flex:none;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round"><circle cx="12" cy="12" r="10"></circle><path d="M12 8v4"></path><path d="M12 16h.01"></path></svg>{{ modal.erro }}</p>
+              </sc-if>
+              <span style="margin-left:auto;font-size:12px;font-weight:600;color:#5B6B7F">{{ modal.contador }}</span>
+            </div>
+          </div>
+          <div style="display:flex;gap:12px;justify-content:flex-end;margin-top:{{ mBotoesTopo }}">
+            <button type="button" onClick="{{ fechar }}" style="height:44px;padding:0 18px;border:1.5px solid #1F6FC9;border-radius:10px;background:#fff;color:#1F6FC9;font-family:Nunito,system-ui,sans-serif;font-size:15px;font-weight:700;cursor:pointer;flex:{{ mBotaoFlex }}" style-hover="background:#EEF6FE">Cancelar</button>
+            <button type="submit" style="height:44px;padding:0 20px;border:none;border-radius:10px;background:#1F6FC9;color:#fff;font-family:Nunito,system-ui,sans-serif;font-size:15px;font-weight:700;cursor:pointer;flex:{{ mBotaoFlex }}" style-hover="background:#185AA3">{{ modal.botao }}</button>
+          </div>
+        </form>
+      </sc-if>
+      <sc-if value="{{ eModalExcluir }}" hint-placeholder-val="{{ false }}">
+        <div style="width:100%;max-width:420px;padding:0 16px">
+          <dc-import name="AirPlanConfirmar" texto="{{ modal.texto }}" carregando="{{ modal.carregando }}" on-cancelar="{{ fechar }}" on-confirmar="{{ confirmarExcluir }}" focar="{{ modal.focar }}" hint-size="100%,270px"></dc-import>
+        </div>
+      </sc-if>
+    </div>
+  </sc-if>
+
+  <div aria-live="polite" style="position:absolute;z-index:80;bottom:20px;right:20px;left:20px;display:flex;flex-direction:column;align-items:{{ toastAlign }};gap:10px;pointer-events:none">
+    <sc-for list="{{ toasts }}" as="t" hint-placeholder-count="0">
+      <div style="pointer-events:auto;width:100%;max-width:360px"><dc-import name="AirPlanToast" tipo="{{ t.tipo }}" mensagem="{{ t.msg }}" on-fechar="{{ t.fechar }}" hint-size="100%,56px"></dc-import></div>
+    </sc-for>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:&quot;1440px&quot;,&quot;height&quot;:&quot;900px&quot;},&quot;estado&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;preenchido&quot;,&quot;carregando&quot;,&quot;vazio&quot;,&quot;erro&quot;],&quot;default&quot;:&quot;preenchido&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;modal&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;nenhum&quot;,&quot;novo&quot;,&quot;novoErro&quot;,&quot;renomear&quot;,&quot;excluir&quot;],&quot;default&quot;:&quot;nenhum&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;mobile&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;},&quot;tablet&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;},&quot;menuAberto&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;},&quot;avatarAberto&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;},&quot;toast&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;&quot;,&quot;tsType&quot;:&quot;string&quot;}}">
+class Component extends DCLogic {
+  uid = 'h' + Math.random().toString(36).slice(2, 8);
+  tid = 50;
+  modalRef = React.createRef();
+  state = this.inicial();
+  componentDidMount() {
+    if (this.props.carregarAoAbrir) { this.setState({ estado: 'carregando' }); this.t0 = setTimeout(() => this.setState({ estado: 'preenchido' }), 700); }
+    if (this.props.toastInicial) this.toast('sucesso', this.props.toastInicial);
+    this.fora = e => { if (this.state.menu != null && !(e.target.closest && e.target.closest('[data-menu-area]'))) this.setState({ menu: null }); };
+    this.esc = e => { if (e.key === 'Escape' && this.state.menu != null) this.setState({ menu: null }); };
+    document.addEventListener('mousedown', this.fora); document.addEventListener('keydown', this.esc);
+  }
+  componentWillUnmount() { clearTimeout(this.t0); document.removeEventListener('mousedown', this.fora); document.removeEventListener('keydown', this.esc); }
+  mock() {
+    return [
+      { id: 1, titulo: 'PIT II – AirPlan', colunas: 3, cartoes: 8 },
+      { id: 2, titulo: 'Treino da semana', colunas: 3, cartoes: 5 },
+      { id: 3, titulo: 'Estudos de Banco de Dados', colunas: 3, cartoes: 4 },
+    ];
+  }
+  inicial() {
+    const p = this.props, e = p.estado || 'preenchido', md = p.modal || 'nenhum';
+    let modal = null;
+    if (md === 'novo') modal = { tipo: 'novo', valor: '', erro: '' };
+    if (md === 'novoErro') modal = { tipo: 'novo', valor: '', erro: 'Dê um nome ao seu quadro' };
+    if (md === 'renomear') modal = { tipo: 'renomear', id: 2, valor: 'Treino da semana', erro: '' };
+    if (md === 'excluir') modal = { tipo: 'excluir', id: 1 };
+    return {
+      estado: e === 'vazio' ? 'preenchido' : e,
+      quadros: e === 'vazio' ? [] : this.mock(),
+      modal, menu: p.menuAberto ? 1 : null,
+      toasts: p.toast ? [{ id: 0, tipo: 'sucesso', msg: p.toast }] : [],
+    };
+  }
+  toast(tipo, msg) {
+    const id = ++this.tid;
+    this.setState(s => ({ toasts: [...s.toasts, { id, tipo, msg }].slice(-3) }));
+    setTimeout(() => this.setState(s => ({ toasts: s.toasts.filter(t => t.id !== id) })), 4000);
+  }
+  abrirModal(modal) {
+    this.retorno = document.activeElement;
+    this.setState({ modal, menu: null }, () => setTimeout(() => {
+      const r = this.modalRef.current; const i = r && r.querySelector('input'); i && i.focus();
+    }, 30));
+  }
+  fechar() {
+    this.setState({ modal: null });
+    if (this.retorno && this.retorno.focus) setTimeout(() => this.retorno.focus(), 0);
+  }
+  salvar(e) {
+    e.preventDefault();
+    const m = this.state.modal, t = m.valor.trim();
+    if (!t) return this.setState({ modal: { ...m, erro: 'Dê um nome ao seu quadro' } });
+    if (m.tipo === 'novo') {
+      if (this.props.onCriar) { this.setState({ modal: null }); return this.props.onCriar(t); }
+      const id = ++this.tid;
+      this.setState(s => ({ quadros: [...s.quadros, { id, titulo: t, colunas: 3, cartoes: 0 }], modal: null }));
+      this.toast('sucesso', 'Quadro criado');
+    } else {
+      if (this.props.onRenomear) this.props.onRenomear(m.id, t);
+      this.setState(s => ({ quadros: s.quadros.map(q => q.id === m.id ? { ...q, titulo: t } : q), modal: null }));
+      this.toast('sucesso', 'Quadro renomeado');
+    }
+  }
+  renderVals() {
+    const st = this.state, mob = !!this.props.mobile;
+    const fonte = this.props.quadros || st.quadros;
+    const quadros = fonte.map(q => {
+      const resumo = `${q.colunas} ${q.colunas === 1 ? 'coluna' : 'colunas'} · ${q.cartoes} ${q.cartoes === 1 ? 'cartão' : 'cartões'}`;
+      const abrir = () => this.props.onAbrir ? this.props.onAbrir(q.id) : this.toast('info', `Abrindo “${q.titulo}”…`);
+      return {
+        ...q, resumo, ariaLabel: `${q.titulo}, ${resumo}`,
+        menuAberto: st.menu === q.id, menuLabel: `Opções do quadro ${q.titulo}`,
+        onAbrir: abrir, onKey: e => { if (e.key === 'Enter') abrir(); },
+        onMenu: e => { e.stopPropagation(); this.setState({ menu: st.menu === q.id ? null : q.id }); },
+        onRenomear: () => this.abrirModal({ tipo: 'renomear', id: q.id, valor: q.titulo, erro: '' }),
+        onExcluir: () => { this.retorno = document.activeElement; this.setState({ modal: { tipo: 'excluir', id: q.id, focar: true }, menu: null }); },
+      };
+    });
+    let modal = null;
+    if (st.modal) {
+      const m = st.modal;
+      if (m.tipo === 'excluir') {
+        const q = fonte.find(x => x.id === m.id) || { titulo: '', colunas: 0, cartoes: 0 };
+        modal = { ...m, texto: q.colunas === 0 ? `Excluir o quadro '${q.titulo}'? Essa ação não pode ser desfeita.` : `Excluir o quadro '${q.titulo}'? ${q.colunas === 1 ? 'A única coluna' : 'Todas as ' + q.colunas + ' colunas'} e ${q.cartoes === 1 ? '1 cartão' : q.cartoes + ' cartões'} serão apagados. Essa ação não pode ser desfeita.`, carregando: !!m.carregando, focar: !!m.focar };
+      } else {
+        modal = { ...m, tituloModal: m.tipo === 'novo' ? 'Novo plano de voo' : 'Renomear quadro', botao: m.tipo === 'novo' ? 'Criar quadro' : 'Salvar', temErro: !!m.erro, borda: m.erro ? '#E5484D' : '#C9DDF0', contador: `${m.valor.length}/100` };
+      }
+    }
+    const lista = st.estado === 'preenchido';
+    return {
+      mobile: mob, avatarAberto: !!this.props.avatarAberto,
+      gridCols: mob ? 'minmax(0,1fr)' : (this.props.tablet ? 'repeat(2,minmax(0,1fr))' : 'repeat(4,minmax(0,1fr))'),
+      eLista: lista && fonte.length > 0, eVazio: lista && fonte.length === 0,
+      eCarregando: st.estado === 'carregando', eErro: st.estado === 'erro',
+      quadros,
+      skeletons: [{ w: '78%', d: '0s' }, { w: '62%', d: '.15s' }, { w: '84%', d: '.3s' }, { w: '55%', d: '.45s' }],
+      abrirNovo: () => this.abrirModal({ tipo: 'novo', valor: '', erro: '' }),
+      tentar: () => { this.setState({ estado: 'carregando' }); setTimeout(() => this.setState({ estado: 'preenchido', quadros: this.mock() }), 1200); },
+      sair: () => this.props.onSair ? this.props.onSair() : this.toast('info', 'Até a próxima viagem! 👋'),
+      perfil: () => this.props.onPerfil && this.props.onPerfil(),
+      hangar: () => this.props.onHangar && this.props.onHangar(),
+      usuario: this.props.usuario || null,
+      temModal: !!modal, modal: modal || {}, eModalForm: !!modal && modal.tipo !== 'excluir', eModalExcluir: !!modal && modal.tipo === 'excluir',
+      ids: { titulo: this.uid + '-mt', campo: this.uid + '-mc', erro: this.uid + '-me' },
+      modalRef: this.modalRef,
+      overlayPad: mob ? '0' : '24px', mMax: mob ? '100%' : '480px', mAlt: mob ? '100%' : 'auto', mRaio: mob ? '0' : '20px',
+      mBotoesTopo: mob ? 'auto' : '0', mBotaoFlex: mob ? '1' : '0 0 auto',
+      mudar: e => { const v = e.target.value; this.setState(s => ({ modal: { ...s.modal, valor: v, erro: '' } })); },
+      salvar: e => this.salvar(e),
+      fechar: () => this.fechar(),
+      fora: e => { if (e.target === e.currentTarget) this.fechar(); },
+      trap: e => {
+        if (e.key === 'Escape') return this.fechar();
+        if (e.key !== 'Tab') return;
+        const f = [...this.modalRef.current.querySelectorAll('button,input')];
+        const a = f[0], z = f[f.length - 1];
+        if (e.shiftKey && document.activeElement === a) { e.preventDefault(); z.focus(); }
+        else if (!e.shiftKey && document.activeElement === z) { e.preventDefault(); a.focus(); }
+      },
+      confirmarExcluir: () => {
+        const m = st.modal;
+        this.setState({ modal: { ...m, carregando: true } });
+        setTimeout(() => { if (this.props.onExcluir) this.props.onExcluir(m.id); this.setState(s => ({ quadros: s.quadros.filter(q => q.id !== m.id), modal: null })); this.toast('sucesso', 'Quadro excluído'); }, 900);
+      },
+      toastAlign: mob ? 'center' : 'flex-end',
+      toasts: st.toasts.map(t => ({ ...t, fechar: () => this.setState(s => ({ toasts: s.toasts.filter(x => x.id !== t.id) })) })),
+    };
+  }
+}
+</script>
+</body>
+</html>

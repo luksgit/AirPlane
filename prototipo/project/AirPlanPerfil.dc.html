@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>*{box-sizing:border-box}body{margin:0;font-family:Nunito,system-ui,sans-serif;color:#1E2A3A}a{color:#1F6FC9}a:hover{color:#185AA3}*:focus-visible{outline:3px solid rgba(31,111,201,.6);outline-offset:2px}
+@keyframes ap-giro{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion: reduce){[data-anim]{animation:none!important}}</style>
+</helmet>
+<div style="width:100%;height:100%;position:relative;overflow:hidden;display:flex;flex-direction:column;container-type:inline-size;background:linear-gradient(180deg,#CBE6FB 0%,#EAF6FF 45%,#F7FBFF 100%);font-family:Nunito,system-ui,sans-serif;color:#1E2A3A">
+  <dc-import name="AirPlanHeader" mobile="{{ mobile }}" on-sair="{{ sair }}" on-hangar="{{ voltar }}" usuario="{{ usuario }}" hint-size="100%,64px"></dc-import>
+  <main style="flex:1;min-height:0;overflow-y:auto;padding:20px clamp(16px,3cqw,40px) 48px">
+    <div style="max-width:640px;margin:0 auto;display:flex;flex-direction:column;gap:20px">
+      <div style="display:flex;flex-direction:column;gap:8px;align-items:flex-start">
+        <button onClick="{{ voltar }}" style="height:40px;padding:0 12px 0 8px;margin-left:-8px;border:none;border-radius:10px;background:transparent;color:#1E2A3A;font-family:Nunito,system-ui,sans-serif;font-size:15px;font-weight:700;display:inline-flex;align-items:center;gap:6px;cursor:pointer" style-hover="background:rgba(31,111,201,.08)">
+          <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" style="fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round"><path d="M19 12H5"></path><path d="m12 19-7-7 7-7"></path></svg>Hangar</button>
+        <h1 style="margin:0;font-size:28px;font-weight:700">Meu perfil</h1>
+      </div>
+
+      <form noValidate="{{ true }}" onSubmit="{{ salvarDados }}" aria-labelledby="{{ ids.s1 }}" style="background:#fff;border-radius:16px;padding:clamp(20px,2.2cqw,28px);box-shadow:0 4px 12px rgba(30,42,58,.08);display:flex;flex-direction:column;gap:18px">
+        <div style="display:flex;align-items:center;gap:14px">
+          <span aria-hidden="true" style="width:52px;height:52px;border-radius:50%;background:#1F6FC9;color:#fff;font-size:18px;font-weight:800;display:grid;place-items:center">{{ iniciais }}</span>
+          <h2 id="{{ ids.s1 }}" style="margin:0;font-size:20px;font-weight:700">Dados pessoais</h2>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <label for="{{ ids.nome }}" style="font-size:14px;font-weight:700">Nome</label>
+          <input id="{{ ids.nome }}" value="{{ nome }}" onChange="{{ onNome }}" disabled="{{ salvandoDados }}" maxLength="100" autoComplete="name" aria-invalid="{{ temErroNome }}" aria-describedby="{{ ids.nomeErro }}" style="width:100%;height:46px;border-radius:8px;border:1.5px solid {{ bordaNome }};padding:0 14px;font-family:Nunito,system-ui,sans-serif;font-size:15px;color:#1E2A3A;outline:none" style-focus="border-color:#1F6FC9;box-shadow:0 0 0 3px rgba(31,111,201,.25)">
+          <sc-if value="{{ temErroNome }}" hint-placeholder-val="{{ false }}">
+            <p id="{{ ids.nomeErro }}" style="margin:0;display:flex;align-items:center;gap:6px;font-size:13px;font-weight:600;color:#C42F35"><svg width="15" height="15" viewBox="0 0 24 24" aria-hidden="true" style="flex:none;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round"><circle cx="12" cy="12" r="10"></circle><path d="M12 8v4"></path><path d="M12 16h.01"></path></svg>{{ erroNome }}</p>
+          </sc-if>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <label for="{{ ids.email }}" style="font-size:14px;font-weight:700">E-mail</label>
+          <input id="{{ ids.email }}" value="{{ email }}" readOnly="{{ true }}" aria-describedby="{{ ids.emailAj }}" style="width:100%;height:46px;border-radius:8px;border:1.5px solid #E1E9F2;padding:0 14px;font-family:Nunito,system-ui,sans-serif;font-size:15px;color:#5B6B7F;background:#F1F5F9;cursor:not-allowed;outline:none">
+          <span id="{{ ids.emailAj }}" style="font-size:12px;font-weight:600;color:#5B6B7F">O e-mail não pode ser alterado.</span>
+        </div>
+        <button type="submit" disabled="{{ salvandoDados }}" aria-busy="{{ salvandoDados }}" style="align-self:flex-start;height:44px;padding:0 20px;border:none;border-radius:10px;background:#1F6FC9;color:#fff;font-family:Nunito,system-ui,sans-serif;font-size:15px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:8px" style-hover="background:#185AA3">
+          <sc-if value="{{ salvandoDados }}" hint-placeholder-val="{{ false }}"><span data-anim="true" aria-hidden="true" style="width:16px;height:16px;border-radius:50%;border:2px solid rgba(255,255,255,.4);border-top-color:#fff;animation:ap-giro .8s linear infinite"></span></sc-if>{{ textoDados }}</button>
+      </form>
+
+      <form noValidate="{{ true }}" onSubmit="{{ salvarSenha }}" aria-labelledby="{{ ids.s2 }}" style="background:#fff;border-radius:16px;padding:clamp(20px,2.2cqw,28px);box-shadow:0 4px 12px rgba(30,42,58,.08);display:flex;flex-direction:column;gap:18px">
+        <h2 id="{{ ids.s2 }}" style="margin:0;font-size:20px;font-weight:700">Alterar senha</h2>
+        <sc-for list="{{ campos }}" as="c" hint-placeholder-count="3">
+          <div style="display:flex;flex-direction:column;gap:6px">
+            <label for="{{ c.id }}" style="font-size:14px;font-weight:700">{{ c.label }}</label>
+            <div style="position:relative">
+            <input id="{{ c.id }}" type="{{ c.tipo }}" value="{{ c.valor }}" onChange="{{ c.onChange }}" disabled="{{ salvandoSenha }}" autoComplete="{{ c.ac }}" placeholder="{{ c.ph }}" aria-invalid="{{ c.temErro }}" aria-describedby="{{ c.descr }}" style="width:100%;height:46px;border-radius:8px;border:1.5px solid {{ c.borda }};padding:0 46px 0 14px;font-family:Nunito,system-ui,sans-serif;font-size:15px;color:#1E2A3A;outline:none" style-focus="border-color:#1F6FC9;box-shadow:0 0 0 3px rgba(31,111,201,.25)">
+            <button type="button" onClick="{{ c.onOlho }}" aria-label="{{ c.olhoLabel }}" aria-pressed="{{ c.mostrando }}" style="position:absolute;right:6px;top:6px;width:34px;height:34px;border:none;border-radius:8px;background:transparent;color:#5B6B7F;display:grid;place-items:center;cursor:pointer" style-hover="background:#EEF3F8;color:#1E2A3A">
+              <sc-if value="{{ c.olhoFechado }}" hint-placeholder-val="{{ true }}"><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" style="fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path><circle cx="12" cy="12" r="3"></circle></svg></sc-if>
+              <sc-if value="{{ c.mostrando }}" hint-placeholder-val="{{ false }}"><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" style="fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><path d="M9.88 9.88a3 3 0 1 0 4.24 4.24"></path><path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"></path><path d="M6.61 6.61A13.53 13.53 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61"></path><path d="M2 2l20 20"></path></svg></sc-if>
+            </button>
+            </div>
+            <sc-if value="{{ c.temForca }}" hint-placeholder-val="{{ false }}">
+              <div style="display:flex;align-items:center;gap:10px">
+                <div aria-hidden="true" style="flex:1;display:grid;grid-template-columns:repeat(3,1fr);gap:4px">
+                  <span style="height:5px;border-radius:3px;background:{{ c.s1 }}"></span><span style="height:5px;border-radius:3px;background:{{ c.s2 }}"></span><span style="height:5px;border-radius:3px;background:{{ c.s3 }}"></span>
+                </div>
+                <span style="font-size:12px;font-weight:700;color:{{ c.forcaCor }};min-width:92px;text-align:right">Senha {{ c.forcaTexto }}</span>
+              </div>
+            </sc-if>
+            <sc-if value="{{ c.temErro }}" hint-placeholder-val="{{ false }}">
+              <p id="{{ c.descr }}" style="margin:0;display:flex;align-items:flex-start;gap:6px;font-size:13px;font-weight:600;line-height:1.35;color:#C42F35"><svg width="15" height="15" viewBox="0 0 24 24" aria-hidden="true" style="flex:none;margin-top:1px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round"><circle cx="12" cy="12" r="10"></circle><path d="M12 8v4"></path><path d="M12 16h.01"></path></svg><span>{{ c.erro }}</span></p>
+            </sc-if>
+          </div>
+        </sc-for>
+        <button type="submit" disabled="{{ salvandoSenha }}" aria-busy="{{ salvandoSenha }}" style="align-self:flex-start;height:44px;padding:0 20px;border:none;border-radius:10px;background:#1F6FC9;color:#fff;font-family:Nunito,system-ui,sans-serif;font-size:15px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:8px" style-hover="background:#185AA3">
+          <sc-if value="{{ salvandoSenha }}" hint-placeholder-val="{{ false }}"><span data-anim="true" aria-hidden="true" style="width:16px;height:16px;border-radius:50%;border:2px solid rgba(255,255,255,.4);border-top-color:#fff;animation:ap-giro .8s linear infinite"></span></sc-if>{{ textoSenha }}</button>
+      </form>
+
+      <section aria-labelledby="{{ ids.s3 }}" style="background:#fff;border-radius:16px;padding:clamp(20px,2.2cqw,28px);box-shadow:0 4px 12px rgba(30,42,58,.08);display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap">
+        <div>
+          <h2 id="{{ ids.s3 }}" style="margin:0;font-size:20px;font-weight:700">Sessão</h2>
+          <p style="margin:4px 0 0;font-size:14px;color:#5B6B7F">Você está conectado como {{ email }}</p>
+        </div>
+        <button onClick="{{ sair }}" style="height:44px;padding:0 18px 0 14px;border:1.5px solid #1F6FC9;border-radius:10px;background:#fff;color:#1F6FC9;font-family:Nunito,system-ui,sans-serif;font-size:15px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:8px" style-hover="background:#EEF6FE">
+          <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" style="fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><path d="m16 17 5-5-5-5"></path><path d="M21 12H9"></path></svg>Sair da conta</button>
+      </section>
+    </div>
+  </main>
+  <div aria-live="polite" style="position:absolute;z-index:80;bottom:20px;right:20px;left:20px;display:flex;flex-direction:column;align-items:{{ toastAlign }};gap:10px;pointer-events:none">
+    <sc-for list="{{ toasts }}" as="t" hint-placeholder-count="0">
+      <div style="pointer-events:auto;width:100%;max-width:360px"><dc-import name="AirPlanToast" tipo="{{ t.tipo }}" mensagem="{{ t.msg }}" on-fechar="{{ t.fechar }}" hint-size="100%,56px"></dc-import></div>
+    </sc-for>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:&quot;1440px&quot;,&quot;height&quot;:&quot;1000px&quot;},&quot;estado&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;normal&quot;,&quot;erros&quot;,&quot;sucesso&quot;],&quot;default&quot;:&quot;normal&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;mobile&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;}}">
+class Component extends DCLogic {
+  uid = 'p' + Math.random().toString(36).slice(2, 8);
+  tid = 10;
+  state = this.inicial();
+  inicial() {
+    const e = this.props.estado || 'normal';
+    const st = { mostrar: {}, nome: (this.props.usuario && this.props.usuario.nome) || 'Lucas Santos', erroNome: '', v: { atual: '', nova: '', conf: '' }, er: {}, toasts: [], salvandoDados: false, salvandoSenha: false };
+    if (e === 'erros') { st.v = { atual: 'voo123', nova: 'aviao', conf: 'aviao1' }; st.er = { atual: 'Senha atual incorreta', nova: 'A senha deve ter no mínimo 8 caracteres, com letras e números', conf: 'As senhas não coincidem' }; }
+    if (e === 'sucesso') st.toasts = [{ id: 1, tipo: 'sucesso', msg: 'Senha alterada com sucesso' }];
+    return st;
+  }
+  forca(s) { if (!s) return 0; let n = 0; if (s.length >= 8) n++; if (/[a-z]/i.test(s) && /\d/.test(s)) n++; if (n === 2 && (s.length >= 12 || /[^a-z0-9]/i.test(s) || (/[a-z]/.test(s) && /[A-Z]/.test(s)))) n++; return Math.max(1, n); }
+  toast(tipo, msg) {
+    const id = ++this.tid;
+    this.setState(s => ({ toasts: [...s.toasts, { id, tipo, msg }].slice(-3) }));
+    setTimeout(() => this.setState(s => ({ toasts: s.toasts.filter(t => t.id !== id) })), 4000);
+  }
+  renderVals() {
+    const st = this.state, mob = !!this.props.mobile, f = this.forca(st.v.nova);
+    const fc = ['#E3ECF5', '#E5484D', '#F5A524', '#2EAD6B'][f];
+    const defs = [
+      { k: 'atual', label: 'Senha atual', ac: 'current-password', ph: 'Sua senha atual' },
+      { k: 'nova', label: 'Nova senha', ac: 'new-password', ph: 'Mínimo de 8 caracteres', forca: true },
+      { k: 'conf', label: 'Confirmar nova senha', ac: 'new-password', ph: 'Repita a nova senha' },
+    ];
+    return {
+      usuario: this.props.usuario || null,
+      email: (this.props.usuario && this.props.usuario.email) || 'lucas@email.com',
+      iniciais: (() => { const p = st.nome.trim().split(/\s+/); return (((p[0] || '?')[0]) + (p.length > 1 ? p[p.length - 1][0] : '')).toUpperCase(); })(),
+      mobile: mob, ids: { s1: this.uid + 's1', s2: this.uid + 's2', s3: this.uid + 's3', nome: this.uid + 'n', nomeErro: this.uid + 'ne', email: this.uid + 'em', emailAj: this.uid + 'ea' },
+      nome: st.nome, erroNome: st.erroNome, temErroNome: !!st.erroNome, bordaNome: st.erroNome ? '#E5484D' : '#C9DDF0',
+      onNome: e => this.setState({ nome: e.target.value, erroNome: '' }),
+      salvandoDados: st.salvandoDados, textoDados: st.salvandoDados ? 'Salvando…' : 'Salvar alterações',
+      salvandoSenha: st.salvandoSenha, textoSenha: st.salvandoSenha ? 'Alterando…' : 'Alterar senha',
+      salvarDados: e => {
+        e.preventDefault();
+        if (st.salvandoDados) return;
+        const t = st.nome.trim();
+        if (!t) return this.setState({ erroNome: 'Informe seu nome' });
+        if (t.length < 2) return this.setState({ erroNome: 'O nome deve ter pelo menos 2 caracteres' });
+        this.setState({ salvandoDados: true });
+        setTimeout(() => { this.setState({ salvandoDados: false, nome: t }); if (this.props.onSalvarNome) this.props.onSalvarNome(t); this.toast('sucesso', 'Dados atualizados'); }, 900);
+      },
+      salvarSenha: e => {
+        e.preventDefault();
+        if (st.salvandoSenha) return;
+        const v = st.v, er = {};
+        if (!v.atual) er.atual = 'Informe sua senha atual'; else if (!(this.props.verificarSenha ? this.props.verificarSenha(v.atual) : v.atual === 'voo12345')) er.atual = 'Senha atual incorreta';
+        if (v.nova.length < 8 || !/[a-z]/i.test(v.nova) || !/\d/.test(v.nova)) er.nova = 'A senha deve ter no mínimo 8 caracteres, com letras e números';
+        if (!er.nova && !er.atual && v.nova === v.atual) er.nova = 'A nova senha deve ser diferente da atual';
+        if (!v.conf || v.conf !== v.nova) er.conf = 'As senhas não coincidem';
+        this.setState({ er });
+        if (Object.keys(er).length) return;
+        this.setState({ salvandoSenha: true });
+        setTimeout(() => { if (this.props.onAlterarSenha) this.props.onAlterarSenha(v.nova); this.setState({ salvandoSenha: false, v: { atual: '', nova: '', conf: '' } }); this.toast('sucesso', 'Senha alterada com sucesso'); }, 900);
+      },
+      campos: defs.map(d => {
+        const erro = st.er[d.k] || '', mostrando = !!(st.mostrar && st.mostrar[d.k]);
+        return {
+          tipo: mostrando ? 'text' : 'password', mostrando, olhoFechado: !mostrando, olhoLabel: mostrando ? 'Ocultar senha' : 'Mostrar senha',
+          onOlho: () => this.setState(s => ({ mostrar: { ...s.mostrar, [d.k]: !(s.mostrar || {})[d.k] } })),
+          id: this.uid + d.k, descr: this.uid + d.k + 'e', label: d.label, ac: d.ac, ph: d.ph, valor: st.v[d.k],
+          erro, temErro: !!erro, borda: erro ? '#E5484D' : '#C9DDF0',
+          temForca: !!d.forca && st.v.nova.length > 0,
+          s1: f >= 1 ? fc : '#E3ECF5', s2: f >= 2 ? fc : '#E3ECF5', s3: f >= 3 ? fc : '#E3ECF5',
+          forcaTexto: ['', 'fraca', 'média', 'forte'][f], forcaCor: ['#5B6B7F', '#C42F35', '#8A5300', '#1E7A4A'][f],
+          onChange: e => { const val = e.target.value; this.setState(s => { const er = { ...s.er }; delete er[d.k]; return { v: { ...s.v, [d.k]: val }, er }; }); },
+        };
+      }),
+      voltar: () => this.props.onVoltar ? this.props.onVoltar() : this.toast('info', 'Voltando para o Hangar…'),
+      sair: () => this.props.onSair ? this.props.onSair() : this.toast('info', 'Até a próxima viagem! 👋'),
+      toastAlign: mob ? 'center' : 'flex-end',
+      toasts: st.toasts.map(t => ({ ...t, fechar: () => this.setState(s => ({ toasts: s.toasts.filter(x => x.id !== t.id) })) })),
+    };
+  }
+}
+</script>
+</body>
+</html>

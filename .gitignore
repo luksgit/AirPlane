@@ -1,0 +1,22 @@
+# Python
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# Segredos
+.env
+
+# Node (testes do front usam só o runner nativo, mas por garantia)
+node_modules/
+
+# Editores e sistema
+.vscode/
+.idea/
+Thumbs.db
+.DS_Store
+
+# Configuração pessoal do Claude Code
+.claude/settings.local.json
+.claude/skills/
+skills-lock.json

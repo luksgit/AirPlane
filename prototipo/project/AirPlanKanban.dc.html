@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&amp;display=swap" rel="stylesheet">
+<style>*{box-sizing:border-box}body{margin:0;font-family:Nunito,system-ui,sans-serif;color:#1E2A3A}a{color:#1F6FC9}a:hover{color:#185AA3}*:focus-visible{outline:3px solid rgba(31,111,201,.6);outline-offset:2px}
+@keyframes ap-pulso{0%,100%{opacity:1}50%{opacity:.45}}
+@keyframes ap-giro{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion: reduce){[data-anim]{animation:none!important}}</style>
+</helmet>
+<div style="width:100%;height:100%;position:relative;overflow:hidden;display:flex;flex-direction:column;container-type:inline-size;background:linear-gradient(180deg,#5AB2F0 0%,#93CCF5 45%,#E8F5FF 100%);font-family:Nunito,system-ui,sans-serif;color:#1E2A3A">
+  <dc-import name="AirPlanHeader" mobile="{{ mobile }}" on-sair="{{ sairH }}" on-perfil="{{ perfilH }}" on-hangar="{{ hangarH }}" usuario="{{ usuario }}" hint-size="100%,64px"></dc-import>
+
+  <div style="flex:none;display:flex;align-items:center;gap:clamp(6px,1cqw,14px);padding:14px clamp(12px,2.2cqw,32px) 12px">
+    <button onClick="{{ voltar }}" aria-label="Voltar para o Hangar" style="flex:none;height:40px;padding:0 12px 0 8px;border:none;border-radius:10px;background:transparent;color:#1E2A3A;font-family:Nunito,system-ui,sans-serif;font-size:15px;font-weight:700;display:inline-flex;align-items:center;gap:6px;cursor:pointer" style-hover="background:rgba(255,255,255,.4)">
+      <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" style="fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round"><path d="M19 12H5"></path><path d="m12 19-7-7 7-7"></path></svg>Hangar</button>
+    <div style="flex:1;min-width:0">
+      <sc-if value="{{ editTitulo }}" hint-placeholder-val="{{ false }}">
+        <input aria-label="Título do quadro" value="{{ rasTitulo }}" maxLength="100" onChange="{{ onTituloChange }}" onKeyDown="{{ onTituloKey }}" onBlur="{{ salvarTitulo }}" autoFocus="{{ true }}" style="width:100%;max-width:560px;height:44px;border:1.5px solid #1F6FC9;border-radius:8px;padding:0 10px;font-family:Nunito,system-ui,sans-serif;font-size:clamp(20px,2cqw,28px);font-weight:700;color:#1E2A3A;background:#fff;box-shadow:0 0 0 3px rgba(31,111,201,.25);outline:none">
+      </sc-if>
+      <sc-if value="{{ naoEditTitulo }}" hint-placeholder-val="{{ true }}">
+        <h1 style="margin:0;font-size:clamp(20px,2cqw,28px);font-weight:700;line-height:1.2;min-width:0">
+          <button onClick="{{ editarTitulo }}" title="Clique para editar o título" style="max-width:100%;background:transparent;border:none;padding:5px 10px;border-radius:8px;font:inherit;color:inherit;cursor:text;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;display:block" style-hover="background:rgba(255,255,255,.4)">{{ titulo }}</button>
+        </h1>
+      </sc-if>
+    </div>
+    <sc-if value="{{ desktop }}" hint-placeholder-val="{{ true }}">
+      <button onClick="{{ abrirNovaCol }}" style="flex:none;height:44px;padding:0 16px 0 12px;border:1.5px solid #1F6FC9;border-radius:10px;background:#fff;color:#1F6FC9;font-family:Nunito,system-ui,sans-serif;font-size:15px;font-weight:700;display:inline-flex;align-items:center;gap:8px;cursor:pointer" style-hover="background:#EEF6FE">
+        <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" style="fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round"><path d="M12 5v14"></path><path d="M5 12h14"></path></svg>Nova coluna</button>
+    </sc-if>
+    <sc-if value="{{ mobile }}" hint-placeholder-val="{{ false }}">
+      <button onClick="{{ abrirNovaCol }}" aria-label="Nova coluna" style="flex:none;width:44px;height:44px;border:1.5px solid #1F6FC9;border-radius:10px;background:#fff;color:#1F6FC9;display:grid;place-items:center;cursor:pointer">
+        <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true" style="fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round"><path d="M12 5v14"></path><path d="M5 12h14"></path></svg></button>
+    </sc-if>
+  </div>
+
+  <sc-if value="{{ carregando }}" hint-placeholder-val="{{ false }}">
+    <div aria-busy="true" aria-label="Carregando quadro" style="flex:1;min-height:0;display:flex;align-items:flex-start;gap:16px;padding:4px clamp(16px,2.2cqw,32px) 20px;overflow:hidden">
+      <sc-for list="{{ skelCols }}" as="s" hint-placeholder-count="3">
+        <div style="flex:{{ colFlex }};background:rgba(255,255,255,.86);border-radius:16px;padding:16px 12px;display:flex;flex-direction:column;gap:10px;box-shadow:0 4px 12px rgba(30,42,58,.08)">
+          <div data-anim="true" style="height:18px;width:52%;margin:0 2px 6px;border-radius:6px;background:#D6E6F5;animation:ap-pulso 1.4s ease-in-out infinite"></div>
+          <sc-for list="{{ s.cards }}" as="h" hint-placeholder-count="2">
+            <div data-anim="true" style="height:{{ h.h }};border-radius:10px;background:#E4EEF8;animation:ap-pulso 1.4s ease-in-out infinite;animation-delay:{{ h.d }}"></div>
+          </sc-for>
+          <div data-anim="true" style="height:14px;width:40%;margin:6px 2px 0;border-radius:6px;background:#E4EEF8;animation:ap-pulso 1.4s ease-in-out infinite"></div>
+        </div>
+      </sc-for>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ semColunas }}" hint-placeholder-val="{{ false }}">
+    <div style="flex:1;display:grid;place-items:center;padding:16px">
+      <div style="max-width:440px;text-align:center;background:rgba(255,255,255,.92);border-radius:20px;padding:28px 32px 32px;box-shadow:0 4px 12px rgba(30,42,58,.08);display:flex;flex-direction:column;align-items:center;gap:14px">
+        <img src="assets/mascote-nuvem.png" alt="" style="width:200px;height:auto">
+        <p style="margin:0;font-size:18px;font-weight:700;line-height:1.4;text-wrap:balance">Este plano de voo ainda não tem rotas. Crie sua primeira coluna!</p>
+        <button onClick="{{ abrirNovaCol }}" style="height:46px;padding:0 22px;border:none;border-radius:10px;background:#1F6FC9;color:#fff;font-family:Nunito,system-ui,sans-serif;font-size:15px;font-weight:700;cursor:pointer" style-hover="background:#185AA3">Criar primeira coluna</button>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ mostrarColunas }}" hint-placeholder-val="{{ true }}">
+    <sc-if value="{{ mobile }}" hint-placeholder-val="{{ false }}">
+      <div role="status" aria-label="{{ dotsLabel }}" style="flex:none;display:flex;justify-content:center;align-items:center;gap:8px;padding:0 0 12px">
+        <sc-for list="{{ dots }}" as="d" hint-placeholder-count="3">
+          <span aria-hidden="true" style="width:{{ d.w }};height:8px;border-radius:999px;background:{{ d.bg }};transition:width .2s,background .2s"></span>
+        </sc-for>
+      </div>
+    </sc-if>
+    <div onScroll="{{ onScroll }}" style="flex:1;min-height:0;display:flex;align-items:flex-start;gap:{{ gap }};overflow-x:auto;overflow-y:hidden;padding:4px clamp(16px,2.2cqw,32px) 20px;scroll-snap-type:{{ snap }};scrollbar-width:thin;scrollbar-color:rgba(30,42,58,.28) transparent">
+      <sc-for list="{{ colunas }}" as="col" hint-placeholder-count="3">
+        <section aria-label="{{ col.ariaLabel }}" onDragOver="{{ col.onDragOver }}" onDrop="{{ col.onDrop }}" style="flex:{{ colFlex }};max-height:100%;display:flex;flex-direction:column;border-radius:16px;background:{{ col.bg }};box-shadow:{{ col.sombra }};backdrop-filter:blur(12px);scroll-snap-align:center;transition:background .15s,box-shadow .15s">
+          <div style="flex:none;display:flex;align-items:center;gap:6px;padding:12px 10px 8px 12px;position:relative">
+            <sc-if value="{{ col.editando }}" hint-placeholder-val="{{ false }}">
+              <input aria-label="Título da coluna" value="{{ col.editTexto }}" maxLength="50" onChange="{{ col.onEditChange }}" onKeyDown="{{ col.onEditKey }}" onBlur="{{ col.onEditBlur }}" autoFocus="{{ true }}" style="flex:1;min-width:0;height:34px;border:1.5px solid #1F6FC9;border-radius:8px;padding:0 8px;font-family:Nunito,system-ui,sans-serif;font-size:16px;font-weight:700;color:#1E2A3A;box-shadow:0 0 0 3px rgba(31,111,201,.2);outline:none">
+            </sc-if>
+            <sc-if value="{{ col.naoEditando }}" hint-placeholder-val="{{ true }}">
+              <h2 style="margin:0;flex:1;min-width:0;font-size:16px;font-weight:700">
+                <button onClick="{{ col.onEditar }}" title="Clique para renomear" style="width:100%;text-align:left;background:transparent;border:none;padding:4px 6px;border-radius:6px;font:inherit;color:inherit;cursor:text;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;display:block" style-hover="background:rgba(31,111,201,.08)">{{ col.titulo }}</button>
+              </h2>
+            </sc-if>
+            <span aria-label="{{ col.contagemLabel }}" style="flex:none;min-width:24px;height:22px;padding:0 8px;border-radius:999px;background:#E1F0FC;color:#185AA3;font-size:12px;font-weight:700;display:inline-flex;align-items:center;justify-content:center">{{ col.contagem }}</span>
+            <button data-menu-area="true" onClick="{{ col.onMenu }}" aria-label="{{ col.menuLabel }}" aria-haspopup="menu" aria-expanded="{{ col.menuAberto }}" style="flex:none;width:32px;height:32px;border:none;border-radius:8px;background:transparent;color:#5B6B7F;display:grid;place-items:center;cursor:pointer" style-hover="background:rgba(31,111,201,.08);color:#1E2A3A">
+              <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" style="fill:currentColor"><circle cx="5" cy="12" r="1.8"></circle><circle cx="12" cy="12" r="1.8"></circle><circle cx="19" cy="12" r="1.8"></circle></svg>
+            </button>
+            <sc-if value="{{ col.menuAberto }}" hint-placeholder-val="{{ false }}">
+              <div role="menu" data-menu-area="true" style="position:absolute;top:48px;right:10px;z-index:10;width:190px;background:#fff;border:1px solid #D6E8F7;border-radius:12px;box-shadow:0 12px 32px rgba(30,42,58,.18);padding:6px;display:flex;flex-direction:column;gap:2px">
+                <button role="menuitem" onClick="{{ col.onEditar }}" style="display:flex;align-items:center;gap:10px;height:38px;padding:0 10px;border:none;border-radius:8px;background:transparent;font-family:Nunito,system-ui,sans-serif;font-size:14px;font-weight:600;color:#1E2A3A;cursor:pointer;text-align:left" style-hover="background:#EEF6FE">
+                  <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" style="fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><path d="M17 3a2.85 2.85 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"></path></svg>Renomear</button>
+                <button role="menuitem" onClick="{{ col.onExcluir }}" style="display:flex;align-items:center;gap:10px;height:38px;padding:0 10px;border:none;border-radius:8px;background:transparent;font-family:Nunito,system-ui,sans-serif;font-size:14px;font-weight:600;color:#C42F35;cursor:pointer;text-align:left" style-hover="background:#FDEEEE">
+                  <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" style="fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><path d="M3 6h18"></path><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"></path><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>Excluir coluna</button>
+              </div>
+            </sc-if>
+          </div>
+
+          <div style="flex:1 1 auto;min-height:0;overflow-y:auto;padding:4px 10px;display:flex;flex-direction:column;gap:8px;scrollbar-width:thin;scrollbar-color:rgba(30,42,58,.2) transparent">
+            <sc-if value="{{ col.vazia }}" hint-placeholder-val="{{ false }}">
+              <p style="margin:0;padding:18px 8px;text-align:center;font-size:14px;font-weight:600;color:#5B6B7F;border:1.5px dashed #C9DDF0;border-radius:10px">Céu limpo por aqui ☁️</p>
+            </sc-if>
+            <sc-for list="{{ col.itens }}" as="k" hint-placeholder-count="2">
+              <sc-if value="{{ k.ehPlaceholder }}" hint-placeholder-val="{{ false }}">
+                <div aria-hidden="true" style="flex:none;height:{{ k.altura }};border:2px dashed #5AB2F0;border-radius:10px;background:rgba(90,178,240,.14)"></div>
+              </sc-if>
+              <sc-if value="{{ k.ehCartao }}" hint-placeholder-val="{{ true }}">
+                <div data-cartao="true" data-oculto="{{ k.oculto }}" role="button" tabindex="0" aria-label="{{ k.ariaLabel }}" draggable="{{ k.arrastavel }}" onDragStart="{{ k.onDragStart }}" onDragEnd="{{ k.onDragEnd }}" onClick="{{ k.onClick }}" onKeyDown="{{ k.onKeyDown }}" style="flex:none;display:{{ k.display }};background:#fff;border-radius:10px;border:1px solid #DCE9F5;box-shadow:0 1px 3px rgba(30,42,58,.08);overflow:hidden;cursor:{{ k.cursor }};transition:transform .15s,box-shadow .15s" style-hover="transform:translateY(-1px);box-shadow:0 4px 12px rgba(30,42,58,.12)">
+                  <sc-if value="{{ k.temCor }}" hint-placeholder-val="{{ false }}"><div aria-hidden="true" style="height:4px;background:{{ k.corHex }}"></div></sc-if>
+                  <div style="padding:10px 12px 11px;display:flex;flex-direction:column;gap:8px">
+                    <span style="font-size:14px;font-weight:600;line-height:1.4;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;overflow-wrap:anywhere">{{ k.titulo }}</span>
+                    <sc-if value="{{ k.temIndicadores }}" hint-placeholder-val="{{ false }}">
+                      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+                        <sc-if value="{{ k.temPrazo }}" hint-placeholder-val="{{ false }}">
+                          <span style="display:inline-flex;align-items:center;gap:5px;height:22px;padding:0 8px;border-radius:6px;background:{{ k.prazoBg }};color:{{ k.prazoCor }};font-size:12px;font-weight:700">
+                            <svg width="13" height="13" viewBox="0 0 24 24" aria-hidden="true" style="fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round"><rect x="3" y="4" width="18" height="18" rx="2"></rect><path d="M16 2v4"></path><path d="M8 2v4"></path><path d="M3 10h18"></path></svg>{{ k.prazoTexto }}</span>
+                        </sc-if>
+                        <sc-if value="{{ k.temDescricao }}" hint-placeholder-val="{{ false }}">
+                          <span title="Este cartão tem descrição" style="display:inline-flex;color:#5B6B7F">
+                            <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" style="fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round"><path d="M21 6H3"></path><path d="M15 12H3"></path><path d="M17 18H3"></path></svg></span>
+                        </sc-if>
+                      </div>
+                    </sc-if>
+                  </div>
+                </div>
+              </sc-if>
+            </sc-for>
+          </div>
+
+          <div style="flex:none;padding:8px 10px 10px">
+            <sc-if value="{{ col.adicionando }}" hint-placeholder-val="{{ false }}">
+              <div style="display:flex;flex-direction:column;gap:8px">
+                <textarea aria-label="Título do novo cartão" value="{{ addTexto }}" onChange="{{ onAddChange }}" onKeyDown="{{ col.onAddKey }}" autoFocus="{{ true }}" rows="3" maxLength="100" placeholder="Digite o título do cartão…" style="width:100%;resize:none;border:1.5px solid #1F6FC9;border-radius:8px;padding:10px 12px;font-family:Nunito,system-ui,sans-serif;font-size:14px;line-height:1.4;color:#1E2A3A;box-shadow:0 0 0 3px rgba(31,111,201,.2);outline:none"></textarea>
+                <div style="display:flex;align-items:center;gap:6px">
+                  <button onClick="{{ col.onAdd }}" style="height:36px;padding:0 14px;border:none;border-radius:10px;background:#1F6FC9;color:#fff;font-family:Nunito,system-ui,sans-serif;font-size:14px;font-weight:700;cursor:pointer" style-hover="background:#185AA3">Adicionar</button>
+                  <button onClick="{{ fecharAdd }}" aria-label="Cancelar novo cartão" style="width:36px;height:36px;border:none;border-radius:10px;background:transparent;color:#5B6B7F;display:grid;place-items:center;cursor:pointer" style-hover="background:rgba(31,111,201,.08);color:#1E2A3A">
+                    <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" style="fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg></button>
+                </div>
+              </div>
+            </sc-if>
+            <sc-if value="{{ col.naoAdicionando }}" hint-placeholder-val="{{ true }}">
+              <button onClick="{{ col.onAbrirAdd }}" style="width:100%;height:38px;padding:0 8px;border:none;border-radius:10px;background:transparent;color:#4A5A6E;font-family:Nunito,system-ui,sans-serif;font-size:14px;font-weight:700;display:flex;align-items:center;gap:8px;cursor:pointer" style-hover="background:rgba(31,111,201,.08);color:#1F6FC9">
+                <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" style="fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round"><path d="M12 5v14"></path><path d="M5 12h14"></path></svg>Adicionar cartão</button>
+            </sc-if>
+          </div>
+        </section>
+      </sc-for>
+
+      <sc-if value="{{ novaColAberta }}" hint-placeholder-val="{{ false }}">
+        <div style="flex:{{ colFlex }};border-radius:16px;background:rgba(255,255,255,.9);padding:12px;display:flex;flex-direction:column;gap:8px;scroll-snap-align:center;box-shadow:0 4px 12px rgba(30,42,58,.08)">
+          <input aria-label="Título da nova coluna" placeholder="Título da coluna" value="{{ novaColTexto }}" onChange="{{ onNovaColChange }}" onKeyDown="{{ onNovaColKey }}" autoFocus="{{ true }}" maxLength="50" style="width:100%;height:40px;border:1.5px solid #1F6FC9;border-radius:8px;padding:0 10px;font-family:Nunito,system-ui,sans-serif;font-size:15px;font-weight:700;color:#1E2A3A;box-shadow:0 0 0 3px rgba(31,111,201,.2);outline:none">
+          <div style="display:flex;align-items:center;gap:6px">
+            <button onClick="{{ criarColuna }}" style="height:36px;padding:0 14px;border:none;border-radius:10px;background:#1F6FC9;color:#fff;font-family:Nunito,system-ui,sans-serif;font-size:14px;font-weight:700;cursor:pointer" style-hover="background:#185AA3">Criar coluna</button>
+            <button onClick="{{ fecharNovaCol }}" aria-label="Cancelar nova coluna" style="width:36px;height:36px;border:none;border-radius:10px;background:transparent;color:#5B6B7F;display:grid;place-items:center;cursor:pointer" style-hover="background:rgba(31,111,201,.08)">
+              <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" style="fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg></button>
+          </div>
+        </div>
+      </sc-if>
+      <sc-if value="{{ novaColFechada }}" hint-placeholder-val="{{ true }}">
+        <button onClick="{{ abrirNovaCol }}" style="flex:{{ colFlex }};min-height:96px;border:2px dashed rgba(31,111,201,.45);border-radius:16px;background:rgba(255,255,255,.5);color:#1E2A3A;font-family:Nunito,system-ui,sans-serif;font-size:15px;font-weight:700;display:flex;align-items:center;justify-content:center;gap:8px;cursor:pointer;scroll-snap-align:center;transition:background .15s" style-hover="background:rgba(255,255,255,.8)">
+          <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" style="fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round"><path d="M12 5v14"></path><path d="M5 12h14"></path></svg>Nova coluna</button>
+      </sc-if>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ flutuante }}" hint-placeholder-val="{{ false }}">
+    <div aria-hidden="true" style="position:absolute;left:642px;top:262px;width:262px;z-index:40;background:#fff;border-radius:10px;border:1px solid #DCE9F5;overflow:hidden;transform:rotate(2deg);box-shadow:0 12px 32px rgba(30,42,58,.18);cursor:grabbing;pointer-events:none">
+      <div style="height:4px;background:#2EAD6B"></div>
+      <div style="padding:10px 12px 11px;display:flex;flex-direction:column;gap:8px">
+        <span style="font-size:14px;font-weight:600;line-height:1.4">Layout da tela Kanban</span>
+        <span style="align-self:flex-start;display:inline-flex;align-items:center;gap:5px;height:22px;padding:0 8px;border-radius:6px;background:#FDE8E8;color:#B4262B;font-size:12px;font-weight:700">
+          <svg width="13" height="13" viewBox="0 0 24 24" style="fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round"><rect x="3" y="4" width="18" height="18" rx="2"></rect><path d="M16 2v4"></path><path d="M8 2v4"></path><path d="M3 10h18"></path></svg>Atrasado · 18 out</span>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ temModal }}" hint-placeholder-val="{{ false }}">
+    <div onClick="{{ modalFora }}" style="position:absolute;inset:0;z-index:60;background:rgba(30,42,58,.4);display:flex;align-items:center;justify-content:center;padding:{{ overlayPad }}">
+      <div role="dialog" aria-modal="true" aria-labelledby="{{ ids.titulo }}" ref="{{ modalRef }}" onKeyDown="{{ trap }}" style="width:100%;max-width:{{ mMax }};height:{{ mAlt }};max-height:100%;overflow-y:auto;background:#fff;border-radius:{{ mRaio }};box-shadow:0 12px 32px rgba(30,42,58,.18);display:flex;flex-direction:column">
+        <div style="padding:22px 20px 0 28px;display:flex;gap:12px;align-items:flex-start">
+          <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:2px">
+            <label for="{{ ids.titulo }}" style="font-size:14px;font-weight:700;color:#1E2A3A;margin-bottom:4px">Título do cartão</label>
+            <input id="{{ ids.titulo }}" value="{{ m.titulo }}" onChange="{{ m.onTitulo }}" maxLength="100" aria-invalid="{{ m.temErro }}" aria-describedby="{{ ids.erro }}" style="width:calc(100% + 10px);margin-left:-10px;height:42px;border:1.5px solid {{ m.bordaTitulo }};border-radius:8px;padding:0 10px;font-family:Nunito,system-ui,sans-serif;font-size:20px;font-weight:700;color:#1E2A3A;background:#fff;outline:none" style-hover="border-color:#D6E8F7" style-focus="border-color:#1F6FC9;box-shadow:0 0 0 3px rgba(31,111,201,.25)">
+            <sc-if value="{{ m.temErro }}" hint-placeholder-val="{{ false }}">
+              <p id="{{ ids.erro }}" style="margin:4px 0 0;display:flex;align-items:center;gap:6px;font-size:13px;font-weight:600;color:#C42F35">
+                <svg width="15" height="15" viewBox="0 0 24 24" aria-hidden="true" style="flex:none;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round"><circle cx="12" cy="12" r="10"></circle><path d="M12 8v4"></path><path d="M12 16h.01"></path></svg>{{ m.erro }}</p>
+            </sc-if>
+            <p style="margin:4px 0 0;font-size:14px;color:#5B6B7F">na coluna <strong style="color:#1E2A3A">{{ m.colNome }}</strong></p>
+          </div>
+          <button onClick="{{ fecharModal }}" aria-label="Fechar" style="flex:none;width:40px;height:40px;border:none;border-radius:10px;background:transparent;color:#5B6B7F;display:grid;place-items:center;cursor:pointer" style-hover="background:#EEF3F8;color:#1E2A3A">
+            <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true" style="fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg></button>
+        </div>
+        <div style="padding:20px 28px 24px;display:flex;flex-direction:column;gap:20px">
+          <div style="display:flex;flex-direction:column;gap:6px">
+            <label for="{{ ids.mover }}" style="font-size:14px;font-weight:700">Mover para</label>
+            <select id="{{ ids.mover }}" value="{{ m.destino }}" onChange="{{ m.onDestino }}" style="width:100%;height:44px;border:1.5px solid #C9DDF0;border-radius:8px;padding:0 12px;font-family:Nunito,system-ui,sans-serif;font-size:15px;color:#1E2A3A;background:#fff;cursor:pointer" style-focus="border-color:#1F6FC9;box-shadow:0 0 0 3px rgba(31,111,201,.25);outline:none">
+              <sc-for list="{{ m.opcoes }}" as="o" hint-placeholder-count="3"><option value="{{ o.id }}">{{ o.titulo }}</option></sc-for>
+            </select>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:6px">
+            <label for="{{ ids.desc }}" style="font-size:14px;font-weight:700">Descrição</label>
+            <textarea id="{{ ids.desc }}" value="{{ m.descricao }}" onChange="{{ m.onDescricao }}" maxLength="2000" rows="4" placeholder="Adicione mais detalhes sobre esta tarefa…" aria-describedby="{{ ids.cont }}" style="width:100%;resize:vertical;min-height:96px;border:1.5px solid #C9DDF0;border-radius:8px;padding:10px 12px;font-family:Nunito,system-ui,sans-serif;font-size:15px;line-height:1.5;color:#1E2A3A;outline:none" style-focus="border-color:#1F6FC9;box-shadow:0 0 0 3px rgba(31,111,201,.25)"></textarea>
+            <span id="{{ ids.cont }}" style="align-self:flex-end;font-size:12px;font-weight:600;color:#5B6B7F">{{ m.descLen }}/2000</span>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:6px">
+            <label for="{{ ids.prazo }}" style="font-size:14px;font-weight:700">Prazo</label>
+            <div style="display:flex;gap:8px;flex-wrap:wrap">
+              <input id="{{ ids.prazo }}" type="date" lang="pt-BR" value="{{ m.prazo }}" onChange="{{ m.onPrazo }}" style="flex:1;min-width:170px;height:44px;border:1.5px solid #C9DDF0;border-radius:8px;padding:0 12px;font-family:Nunito,system-ui,sans-serif;font-size:15px;color:#1E2A3A;background:#fff;outline:none" style-focus="border-color:#1F6FC9;box-shadow:0 0 0 3px rgba(31,111,201,.25)">
+              <button onClick="{{ m.onRemoverPrazo }}" disabled="{{ m.semPrazo }}" style="height:44px;padding:0 14px;border:none;border-radius:10px;background:transparent;color:#1F6FC9;font-family:Nunito,system-ui,sans-serif;font-size:14px;font-weight:700;cursor:pointer;opacity:{{ m.removerOpac }}" style-hover="background:rgba(31,111,201,.08)">Remover prazo</button>
+            </div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:10px">
+            <span id="{{ ids.etq }}" style="font-size:14px;font-weight:700">Etiqueta</span>
+            <div role="radiogroup" aria-labelledby="{{ ids.etq }}" style="display:flex;flex-wrap:wrap;gap:12px">
+              <sc-for list="{{ m.cores }}" as="cr" hint-placeholder-count="7">
+                <button role="radio" aria-checked="{{ cr.sel }}" aria-label="{{ cr.nome }}" title="{{ cr.nome }}" onClick="{{ cr.escolher }}" style="width:34px;height:34px;padding:0;border-radius:50%;border:{{ cr.borda }};background:{{ cr.bg }};box-shadow:{{ cr.anel }};display:grid;place-items:center;cursor:pointer;color:{{ cr.check }}">
+                  <sc-if value="{{ cr.sel }}" hint-placeholder-val="{{ false }}"><svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" style="fill:none;stroke:currentColor;stroke-width:3;stroke-linecap:round;stroke-linejoin:round"><path d="M20 6 9 17l-5-5"></path></svg></sc-if>
+                  <sc-if value="{{ cr.semCorLivre }}" hint-placeholder-val="{{ false }}"><svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" style="fill:none;stroke:#8193A8;stroke-width:2;stroke-linecap:round"><path d="M5 19 19 5"></path></svg></sc-if>
+                </button>
+              </sc-for>
+            </div>
+          </div>
+        </div>
+        <div style="margin-top:auto;padding:16px 28px 22px;border-top:1px solid #EEF3F8;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap">
+          <button onClick="{{ excluirCartao }}" style="height:44px;padding:0 16px 0 12px;border:none;border-radius:10px;background:#D13B40;color:#fff;font-family:Nunito,system-ui,sans-serif;font-size:15px;font-weight:700;display:inline-flex;align-items:center;gap:8px;cursor:pointer" style-hover="background:#B52F34">
+            <svg width="17" height="17" viewBox="0 0 24 24" aria-hidden="true" style="fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><path d="M3 6h18"></path><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"></path><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>Excluir cartão</button>
+          <div style="display:flex;gap:10px;margin-left:auto">
+            <button onClick="{{ fecharModal }}" style="height:44px;padding:0 18px;border:1.5px solid #1F6FC9;border-radius:10px;background:#fff;color:#1F6FC9;font-family:Nunito,system-ui,sans-serif;font-size:15px;font-weight:700;cursor:pointer" style-hover="background:#EEF6FE">Cancelar</button>
+            <button onClick="{{ salvar }}" style="height:44px;padding:0 22px;border:none;border-radius:10px;background:#1F6FC9;color:#fff;font-family:Nunito,system-ui,sans-serif;font-size:15px;font-weight:700;cursor:pointer" style-hover="background:#185AA3">Salvar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ temConf }}" hint-placeholder-val="{{ false }}">
+    <div onClick="{{ confFora }}" style="position:absolute;inset:0;z-index:70;background:rgba(30,42,58,.4);display:flex;align-items:center;justify-content:center;padding:16px">
+      <div style="width:100%;max-width:420px">
+        <dc-import name="AirPlanConfirmar" titulo="{{ conf.titulo }}" texto="{{ conf.texto }}" botao-texto="{{ conf.botao }}" carregando="{{ conf.carregando }}" focar="{{ conf.focar }}" on-cancelar="{{ conf.cancelar }}" on-confirmar="{{ conf.confirmar }}" hint-size="100%,260px"></dc-import>
+      </div>
+    </div>
+  </sc-if>
+
+  <div aria-live="polite" style="position:absolute;z-index:80;bottom:20px;right:20px;left:20px;display:flex;flex-direction:column;align-items:{{ toastAlign }};gap:10px;pointer-events:none">
+    <sc-for list="{{ toasts }}" as="t" hint-placeholder-count="0">
+      <div style="pointer-events:auto;width:100%;max-width:360px"><dc-import name="AirPlanToast" tipo="{{ t.tipo }}" mensagem="{{ t.msg }}" on-fechar="{{ t.fechar }}" hint-size="100%,56px"></dc-import></div>
+    </sc-for>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:&quot;1440px&quot;,&quot;height&quot;:&quot;900px&quot;},&quot;estado&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;preenchido&quot;,&quot;arraste&quot;,&quot;carregando&quot;,&quot;semColunas&quot;,&quot;adicionando&quot;,&quot;menuColuna&quot;,&quot;editandoTitulo&quot;],&quot;default&quot;:&quot;preenchido&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;modal&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;nenhum&quot;,&quot;cartao&quot;,&quot;descartar&quot;,&quot;excluirCartao&quot;,&quot;excluirColuna&quot;],&quot;default&quot;:&quot;nenhum&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;mobile&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;},&quot;falharMover&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;},&quot;toast&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;&quot;,&quot;erroMover&quot;,&quot;salvo&quot;],&quot;default&quot;:&quot;&quot;,&quot;tsType&quot;:&quot;string&quot;}}">
+class Component extends DCLogic {
+  static CORES = { verde: '#2EAD6B', amarelo: '#F5C524', laranja: '#F5822A', vermelho: '#E5484D', roxo: '#8B5CF6', azul: '#1F6FC9' };
+  static NOMES = { verde: 'Verde', amarelo: 'Amarelo', laranja: 'Laranja', vermelho: 'Vermelho', roxo: 'Roxo', azul: 'Azul' };
+  static MESES = ['jan', 'fev', 'mar', 'abr', 'mai', 'jun', 'jul', 'ago', 'set', 'out', 'nov', 'dez'];
+  uid = 'k' + Math.random().toString(36).slice(2, 8);
+  tid = 100;
+  modalRef = React.createRef();
+  state = this.inicial();
+  componentDidMount() {
+    this.anterior = { colunas: this.state.colunas, titulo: this.state.titulo };
+    if (this.props.carregarAoAbrir) { this.setState({ carregando: true }); this.t0 = setTimeout(() => this.setState({ carregando: false }), 700); }
+    this.fora = e => { if (this.state.menuCol != null && !(e.target.closest && e.target.closest('[data-menu-area]'))) this.setState({ menuCol: null }); };
+    this.esc = e => { if (e.key === 'Escape' && this.state.menuCol != null) this.setState({ menuCol: null }); };
+    document.addEventListener('mousedown', this.fora); document.addEventListener('keydown', this.esc);
+  }
+  componentWillUnmount() { clearTimeout(this.t0); document.removeEventListener('mousedown', this.fora); document.removeEventListener('keydown', this.esc); }
+  componentDidUpdate() {
+    const s = this.state, a = this.anterior;
+    this.anterior = { colunas: s.colunas, titulo: s.titulo };
+    if (a && this.props.onAlterar && (a.colunas !== s.colunas || a.titulo !== s.titulo)) this.props.onAlterar({ titulo: s.titulo, colunas: s.colunas });
+  }
+
+  rel(n) { const d = new Date(); d.setHours(0, 0, 0, 0); d.setDate(d.getDate() + n); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); }
+  mock() {
+    return [
+      { id: 1, titulo: 'Embarque', cartoes: [
+        { id: 11, titulo: 'Revisar diagrama de classes', cor: 'roxo', prazo: this.rel(1) },
+        { id: 12, titulo: 'Criar dicionário de dados', cor: 'azul', prazo: this.rel(14) },
+        { id: 13, titulo: 'Gravar vídeo narrado', cor: 'vermelho' }] },
+      { id: 2, titulo: 'Em voo', cartoes: [
+        { id: 21, titulo: 'Codificar API de cartões', cor: 'laranja', prazo: this.rel(8), descricao: 'Implementar POST, PUT e DELETE em /api/cartoes e a rota PUT /api/cartoes/{id}/mover, validando coluna_id e posicao.' },
+        { id: 22, titulo: 'Layout da tela Kanban', cor: 'verde', prazo: this.rel(-4) }] },
+      { id: 3, titulo: 'Pousou', cartoes: [
+        { id: 31, titulo: 'Definir escopo do MVP', cor: 'verde' },
+        { id: 32, titulo: 'Criar repositório no GitHub' },
+        { id: 33, titulo: 'Escolher nome do app ✈️' }] },
+    ];
+  }
+  clone(x) { return JSON.parse(JSON.stringify(x)); }
+  inicial() {
+    const p = this.props, e = p.estado || 'preenchido', md = p.modal || 'nenhum';
+    const q = p.quadro;
+    const colunas = q ? this.clone(q.colunas) : (e === 'semColunas' ? [] : this.mock());
+    const st = { colunas, titulo: q ? q.titulo : 'PIT II – AirPlan', editTitulo: false, rasTitulo: '', drag: null, alvo: null, ocultar: null, phAlt: 62, flutuante: false,
+      addCol: null, addTexto: '', novaCol: false, novaColTexto: '', menuCol: null, editCol: null, editColTexto: '',
+      modal: null, conf: null, toasts: [], carregando: e === 'carregando', slide: 0 };
+    if (e === 'arraste') Object.assign(st, { drag: { id: 22, origem: 2 }, ocultar: 22, alvo: { colId: 3, idx: 1 }, flutuante: true, phAlt: 70 });
+    if (e === 'adicionando') Object.assign(st, { addCol: 1, addTexto: 'Testar o app no celular', novaCol: true, novaColTexto: 'Revisão' });
+    if (e === 'menuColuna') st.menuCol = 2;
+    if (e === 'editandoTitulo') Object.assign(st, { editTitulo: true, rasTitulo: 'PIT II – AirPlan' });
+    if (md === 'cartao' || md === 'descartar' || md === 'excluirCartao') {
+      st.modal = this.dadosModal(colunas, 2, 21);
+      if (md === 'descartar') { st.modal.titulo = 'Codificar API de cartões e colunas'; st.conf = { tipo: 'descartar' }; }
+      if (md === 'excluirCartao') st.conf = { tipo: 'cartao' };
+    }
+    if (md === 'excluirColuna') st.conf = { tipo: 'coluna', colId: 3 };
+    if (p.toast === 'erroMover') st.toasts = [{ id: 1, tipo: 'erro', msg: 'Não foi possível mover o cartão' }];
+    if (p.toast === 'salvo') st.toasts = [{ id: 1, tipo: 'sucesso', msg: 'Cartão salvo' }];
+    return st;
+  }
+  prazo(iso) {
+    if (!iso) return null;
+    const [y, m, d] = iso.split('-').map(Number);
+    const hoje = new Date(); hoje.setHours(0, 0, 0, 0); const dt = new Date(y, m - 1, d);
+    const dias = Math.round((dt - hoje) / 864e5);
+    const txt = String(d).padStart(2, '0') + ' ' + Component.MESES[m - 1];
+    if (dias < 0) return { txt: 'Atrasado · ' + txt, bg: '#FDE8E8', cor: '#B4262B', desc: 'atrasado, venceu em ' + txt };
+    if (dias <= 2) return { txt, bg: '#FEF0D6', cor: '#8A5300', desc: 'vence em breve, ' + txt };
+    return { txt, bg: '#EEF3F8', cor: '#4A5A6E', desc: 'prazo ' + txt };
+  }
+  dadosModal(colunas, colId, cid) {
+    const col = colunas.find(c => c.id === colId), k = col.cartoes.find(x => x.id === cid);
+    const base = { titulo: k.titulo, descricao: k.descricao || '', prazo: k.prazo || '', cor: k.cor || null, destino: String(colId) };
+    return { colId, cid, ...base, erro: '', original: { ...base } };
+  }
+  toast(tipo, msg) {
+    const id = ++this.tid;
+    this.setState(s => ({ toasts: [...s.toasts, { id, tipo, msg }].slice(-3) }));
+    setTimeout(() => this.setState(s => ({ toasts: s.toasts.filter(t => t.id !== id) })), 4000);
+  }
+  // drag and drop
+  iniciarArraste(e, col, k, idx) {
+    if (this.props.mobile) { e.preventDefault(); return; }
+    e.dataTransfer.effectAllowed = 'move';
+    try { e.dataTransfer.setData('text/plain', String(k.id)); } catch (_) {}
+    const el = e.currentTarget, h = el.offsetHeight;
+    el.style.transform = 'rotate(2deg)'; el.style.boxShadow = '0 12px 32px rgba(30,42,58,.18)';
+    setTimeout(() => { el.style.transform = ''; el.style.boxShadow = ''; this.setState({ drag: { id: k.id, origem: col.id }, ocultar: k.id, alvo: { colId: col.id, idx }, phAlt: h, flutuante: false }); }, 0);
+  }
+  sobre(e, col) {
+    if (!this.state.drag || this.state.flutuante) return;
+    e.preventDefault(); e.dataTransfer.dropEffect = 'move';
+    const els = [...e.currentTarget.querySelectorAll('[data-cartao="true"]')].filter(x => x.getAttribute('data-oculto') !== 'true');
+    let idx = els.length;
+    for (let i = 0; i < els.length; i++) { const r = els[i].getBoundingClientRect(); if (e.clientY < r.top + r.height / 2) { idx = i; break; } }
+    const a = this.state.alvo;
+    if (!a || a.colId !== col.id || a.idx !== idx) this.setState({ alvo: { colId: col.id, idx } });
+  }
+  soltar(e) {
+    e && e.preventDefault();
+    const { drag, alvo, colunas } = this.state;
+    if (!drag || !alvo) return this.limparArraste();
+    const antes = this.clone(colunas), novo = this.clone(colunas);
+    const o = novo.find(c => c.id === drag.origem), i = o.cartoes.findIndex(k => k.id === drag.id);
+    const [k] = o.cartoes.splice(i, 1);
+    novo.find(c => c.id === alvo.colId).cartoes.splice(alvo.idx, 0, k);
+    this.setState({ colunas: novo, drag: null, alvo: null, ocultar: null });
+    if (this.props.falharMover) setTimeout(() => { this.setState({ colunas: antes }); this.toast('erro', 'Não foi possível mover o cartão'); }, 700);
+  }
+  limparArraste() { if (this.state.drag && !this.state.flutuante) this.setState({ drag: null, alvo: null, ocultar: null }); }
+  // modal
+  abrir(col, k) {
+    this.retorno = document.activeElement;
+    this.setState({ modal: this.dadosModal(this.state.colunas, col.id, k.id), menuCol: null }, () => setTimeout(() => {
+      const r = this.modalRef.current; const i = r && r.querySelector('input'); i && i.focus();
+    }, 30));
+  }
+  sujo(m) { const o = m.original; return m.titulo !== o.titulo || m.descricao !== o.descricao || m.prazo !== o.prazo || m.cor !== o.cor || m.destino !== o.destino; }
+  fecharModal(forcar) {
+    const m = this.state.modal;
+    if (!m) return;
+    if (!forcar && this.sujo(m)) return this.setState({ conf: { tipo: 'descartar', focar: true } });
+    this.setState({ modal: null, conf: null });
+    if (this.retorno && this.retorno.focus) setTimeout(() => this.retorno.focus(), 0);
+  }
+  mudar(campo, valor) { this.setState(s => ({ modal: { ...s.modal, [campo]: valor, erro: campo === 'titulo' ? '' : s.modal.erro } })); }
+  salvar() {
+    const m = this.state.modal, t = m.titulo.trim();
+    if (!t) return this.setState({ modal: { ...m, erro: 'Dê um título ao cartão' } });
+    const cols = this.clone(this.state.colunas);
+    const o = cols.find(c => c.id === m.colId), i = o.cartoes.findIndex(k => k.id === m.cid);
+    const k = { ...o.cartoes[i], titulo: t, descricao: m.descricao, prazo: m.prazo || null, cor: m.cor };
+    const dest = Number(m.destino);
+    if (dest !== m.colId) { o.cartoes.splice(i, 1); cols.find(c => c.id === dest).cartoes.push(k); } else o.cartoes[i] = k;
+    this.setState({ colunas: cols, modal: null });
+    this.toast('sucesso', 'Cartão salvo');
+  }
+  excluirConf() {
+    const c = this.state.conf;
+    this.setState({ conf: { ...c, carregando: true } });
+    setTimeout(() => {
+      if (c.tipo === 'coluna') { this.setState(s => ({ colunas: s.colunas.filter(x => x.id !== c.colId), conf: null })); this.toast('sucesso', 'Coluna excluída'); }
+      if (c.tipo === 'cartao') {
+        const m = this.state.modal;
+        this.setState(s => ({ colunas: s.colunas.map(x => x.id === m.colId ? { ...x, cartoes: x.cartoes.filter(k => k.id !== m.cid) } : x), conf: null, modal: null }));
+        this.toast('sucesso', 'Cartão excluído');
+      }
+    }, 800);
+  }
+  // titles
+  salvarTitulo() {
+    if (this.cancelTit) { this.cancelTit = false; return; }
+    if (!this.state.editTitulo) return;
+    const t = this.state.rasTitulo.trim(), antes = this.state.titulo;
+    this.setState({ editTitulo: false, titulo: t || antes });
+    if (!t) this.toast('erro', 'O título do quadro não pode ficar vazio');
+    else if (t !== antes) this.toast('sucesso', 'Quadro renomeado');
+  }
+  salvarCol() {
+    if (this.cancelCol) { this.cancelCol = false; return; }
+    const id = this.state.editCol; if (id == null) return;
+    const t = this.state.editColTexto.trim(), antes = (this.state.colunas.find(c => c.id === id) || {}).titulo;
+    this.setState(s => ({ editCol: null, colunas: t ? s.colunas.map(c => c.id === id ? { ...c, titulo: t } : c) : s.colunas }));
+    if (!t) this.toast('erro', 'O título da coluna não pode ficar vazio');
+    else if (t !== antes) this.toast('sucesso', 'Coluna renomeada');
+  }
+  adicionarCartao(colId) {
+    const t = this.state.addTexto.trim();
+    if (!t) return;
+    const id = Date.now() + Math.floor(Math.random() * 1000);
+    this.setState(s => ({ addTexto: '', colunas: s.colunas.map(c => c.id === colId ? { ...c, cartoes: [...c.cartoes, { id, titulo: t }] } : c) }));
+  }
+  criarColuna() {
+    const t = this.state.novaColTexto.trim();
+    if (!t) return;
+    const id = Date.now() + Math.floor(Math.random() * 1000) + 1;
+    this.setState(s => ({ novaColTexto: '', novaCol: false, colunas: [...s.colunas, { id, titulo: t, cartoes: [] }] }));
+    this.toast('sucesso', 'Coluna criada');
+  }
+
+  renderVals() {
+    const st = this.state, mob = !!this.props.mobile, C = Component.CORES;
+    const colunas = st.colunas.map(col => {
+      const alvoAqui = !!st.alvo && st.alvo.colId === col.id;
+      const PH = { ehPlaceholder: true, ehCartao: false, altura: st.phAlt + 'px' };
+      const itens = []; let vi = 0, ph = false;
+      col.cartoes.forEach(k => {
+        const oc = st.ocultar === k.id;
+        if (!oc && alvoAqui && !ph && vi === st.alvo.idx) { itens.push(PH); ph = true; }
+        const p = this.prazo(k.prazo), idx = vi;
+        itens.push({
+          ehCartao: true, ehPlaceholder: false, titulo: k.titulo, oculto: oc, display: oc ? 'none' : 'block',
+          temCor: !!k.cor, corHex: C[k.cor] || 'transparent',
+          temPrazo: !!p, prazoTexto: p ? p.txt : '', prazoBg: p ? p.bg : '', prazoCor: p ? p.cor : '',
+          temDescricao: !!(k.descricao && k.descricao.trim()), temIndicadores: !!p || !!(k.descricao && k.descricao.trim()),
+          arrastavel: !mob, cursor: mob ? 'pointer' : 'grab',
+          ariaLabel: k.titulo + (p ? ', ' + p.desc : '') + (k.descricao ? ', tem descrição' : '') + '. Enter para abrir',
+          onDragStart: e => this.iniciarArraste(e, col, k, idx),
+          onDragEnd: () => this.limparArraste(),
+          onClick: () => this.abrir(col, k),
+          onKeyDown: e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); this.abrir(col, k); } },
+        });
+        if (!oc) vi++;
+      });
+      if (alvoAqui && !ph) itens.push(PH);
+      const destaque = !!st.drag && alvoAqui;
+      const n = col.cartoes.length;
+      return {
+        titulo: col.titulo, ariaLabel: `Coluna ${col.titulo}, ${n} ${n === 1 ? 'cartão' : 'cartões'}`,
+        contagem: n, contagemLabel: `${n} ${n === 1 ? 'cartão' : 'cartões'}`,
+        itens, vazia: itens.filter(x => x.ehPlaceholder || !x.oculto).length === 0,
+        bg: destaque ? 'rgba(214,234,251,.97)' : 'rgba(255,255,255,.88)',
+        sombra: destaque ? 'inset 0 0 0 2px #5AB2F0, 0 8px 24px rgba(31,111,201,.18)' : '0 4px 12px rgba(30,42,58,.08)',
+        menuAberto: st.menuCol === col.id, menuLabel: `Opções da coluna ${col.titulo}`,
+        editando: st.editCol === col.id, naoEditando: st.editCol !== col.id, editTexto: st.editColTexto,
+        adicionando: st.addCol === col.id, naoAdicionando: st.addCol !== col.id,
+        onDragOver: e => this.sobre(e, col), onDrop: e => this.soltar(e),
+        onMenu: () => this.setState({ menuCol: st.menuCol === col.id ? null : col.id }),
+        onEditar: () => this.setState({ editCol: col.id, editColTexto: col.titulo, menuCol: null }),
+        onEditChange: e => this.setState({ editColTexto: e.target.value }),
+        onEditKey: e => { if (e.key === 'Enter') { e.preventDefault(); this.salvarCol(); } if (e.key === 'Escape') { this.cancelCol = true; this.setState({ editCol: null }); } },
+        onEditBlur: () => this.salvarCol(),
+        onExcluir: () => {
+          this.setState({ conf: { tipo: 'coluna', colId: col.id, focar: true }, menuCol: null });
+        },
+        onAbrirAdd: () => this.setState({ addCol: col.id, addTexto: '' }),
+        onAdd: () => this.adicionarCartao(col.id),
+        onAddKey: e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); this.adicionarCartao(col.id); } if (e.key === 'Escape') this.setState({ addCol: null, addTexto: '' }); },
+      };
+    });
+
+    let m = {};
+    if (st.modal) {
+      const md = st.modal, colNome = (st.colunas.find(c => c.id === md.colId) || {}).titulo || '';
+      const chaves = [null, 'verde', 'amarelo', 'laranja', 'vermelho', 'roxo', 'azul'];
+      m = {
+        ...md, colNome, descLen: md.descricao.length, temErro: !!md.erro, bordaTitulo: md.erro ? '#E5484D' : 'transparent',
+        semPrazo: !md.prazo, removerOpac: md.prazo ? '1' : '.45',
+        opcoes: st.colunas.map(c => ({ id: String(c.id), titulo: c.titulo })),
+        cores: chaves.map(ch => {
+          const sel = md.cor === ch, hex = ch ? C[ch] : null;
+          return {
+            nome: ch ? 'Etiqueta ' + Component.NOMES[ch].toLowerCase() : 'Sem etiqueta', sel, semCorLivre: !ch && !sel,
+            bg: hex || '#fff', borda: ch ? 'none' : '2px dashed #9FB3C8',
+            anel: sel ? `0 0 0 3px #fff, 0 0 0 5px ${hex || '#1E2A3A'}` : 'none',
+            check: ch === 'amarelo' || !ch ? '#1E2A3A' : '#fff',
+            escolher: () => this.mudar('cor', ch),
+          };
+        }),
+        onTitulo: e => this.mudar('titulo', e.target.value),
+        onDestino: e => this.mudar('destino', e.target.value),
+        onDescricao: e => this.mudar('descricao', e.target.value.slice(0, 2000)),
+        onPrazo: e => this.mudar('prazo', e.target.value),
+        onRemoverPrazo: () => this.mudar('prazo', ''),
+      };
+    }
+
+    let conf = {};
+    const c = st.conf;
+    if (c) {
+      const base = { carregando: !!c.carregando, focar: !!c.focar, cancelar: () => this.setState({ conf: null }), confirmar: () => this.excluirConf() };
+      if (c.tipo === 'descartar') conf = { ...base, titulo: 'Descartar alterações?', texto: 'As alterações feitas neste cartão ainda não foram salvas e serão perdidas.', botao: 'Descartar', confirmar: () => this.fecharModal(true) };
+      if (c.tipo === 'coluna') { const col = st.colunas.find(x => x.id === c.colId) || { titulo: '', cartoes: [] }; conf = { ...base, titulo: 'Tem certeza?', texto: col.cartoes.length === 0 ? `Excluir a coluna '${col.titulo}'?` : col.cartoes.length === 1 ? `Excluir a coluna '${col.titulo}' e seu único cartão?` : `Excluir a coluna '${col.titulo}' e seus ${col.cartoes.length} cartões?`, botao: 'Excluir' }; }
+      if (c.tipo === 'cartao') conf = { ...base, titulo: 'Tem certeza?', texto: `Excluir o cartão '${(st.modal ? st.modal.titulo : '').trim()}'?`, botao: 'Excluir' };
+    }
+
+    const nDots = st.colunas.length;
+    return {
+      mobile: mob, desktop: !mob,
+      titulo: st.titulo, editTitulo: st.editTitulo, naoEditTitulo: !st.editTitulo, rasTitulo: st.rasTitulo,
+      editarTitulo: () => this.setState({ editTitulo: true, rasTitulo: st.titulo }),
+      onTituloChange: e => this.setState({ rasTitulo: e.target.value }),
+      onTituloKey: e => { if (e.key === 'Enter') { e.preventDefault(); this.salvarTitulo(); } if (e.key === 'Escape') { this.cancelTit = true; this.setState({ editTitulo: false }); } },
+      salvarTitulo: () => this.salvarTitulo(),
+      voltar: () => this.props.onVoltar ? this.props.onVoltar() : this.toast('info', 'Voltando para o Hangar…'),
+      sairH: () => this.props.onSair && this.props.onSair(),
+      perfilH: () => this.props.onPerfil && this.props.onPerfil(),
+      hangarH: () => this.props.onVoltar && this.props.onVoltar(),
+      usuario: this.props.usuario || null,
+      carregando: st.carregando,
+      semColunas: !st.carregando && st.colunas.length === 0 && !st.novaCol,
+      mostrarColunas: !st.carregando && (st.colunas.length > 0 || st.novaCol),
+      colFlex: mob ? '0 0 85%' : '0 0 280px', gap: mob ? '12px' : '16px', snap: mob ? 'x mandatory' : 'none',
+      skelCols: [{ cards: [{ h: '64px', d: '0s' }, { h: '48px', d: '.15s' }, { h: '72px', d: '.3s' }] }, { cards: [{ h: '80px', d: '.1s' }, { h: '52px', d: '.25s' }] }, { cards: [{ h: '48px', d: '.2s' }, { h: '64px', d: '.35s' }, { h: '48px', d: '.5s' }] }],
+      colunas,
+      dots: Array.from({ length: nDots }, (_, i) => ({ w: i === st.slide ? '22px' : '8px', bg: i === st.slide ? '#1E2A3A' : 'rgba(30,42,58,.3)' })),
+      dotsLabel: `Coluna ${Math.min(st.slide + 1, nDots)} de ${nDots}`,
+      onScroll: e => { if (!mob) return; const el = e.currentTarget, f = el.querySelector('section'); if (!f) return; const i = Math.min(nDots - 1, Math.round(el.scrollLeft / (f.offsetWidth + 12))); if (i !== st.slide) this.setState({ slide: i }); },
+      addTexto: st.addTexto, onAddChange: e => this.setState({ addTexto: e.target.value }), fecharAdd: () => this.setState({ addCol: null, addTexto: '' }),
+      novaColAberta: st.novaCol, novaColFechada: !st.novaCol, novaColTexto: st.novaColTexto,
+      abrirNovaCol: () => this.setState({ novaCol: true }),
+      fecharNovaCol: () => this.setState({ novaCol: false, novaColTexto: '' }),
+      onNovaColChange: e => this.setState({ novaColTexto: e.target.value }),
+      onNovaColKey: e => { if (e.key === 'Enter') { e.preventDefault(); this.criarColuna(); } if (e.key === 'Escape') this.setState({ novaCol: false, novaColTexto: '' }); },
+      criarColuna: () => this.criarColuna(),
+      flutuante: st.flutuante && !mob,
+      temModal: !!st.modal, m, modalRef: this.modalRef,
+      ids: { titulo: this.uid + '-t', erro: this.uid + '-e', mover: this.uid + '-m', desc: this.uid + '-d', cont: this.uid + '-c', prazo: this.uid + '-p', etq: this.uid + '-q' },
+      overlayPad: mob ? '0' : '24px', mMax: mob ? '100%' : '560px', mAlt: mob ? '100%' : 'auto', mRaio: mob ? '0' : '20px',
+      modalFora: e => { if (e.target === e.currentTarget) this.fecharModal(false); },
+      fecharModal: () => this.fecharModal(false),
+      salvar: () => this.salvar(),
+      excluirCartao: () => this.setState({ conf: { tipo: 'cartao', focar: true } }),
+      trap: e => {
+        if (e.key === 'Escape') { e.stopPropagation(); if (!this.state.conf) this.fecharModal(false); return; }
+        if (e.key !== 'Tab') return;
+        const r = this.modalRef.current; if (!r) return;
+        const f = [...r.querySelectorAll('button,input,select,textarea')].filter(x => !x.disabled);
+        const a = f[0], z = f[f.length - 1];
+        if (e.shiftKey && document.activeElement === a) { e.preventDefault(); z.focus(); }
+        else if (!e.shiftKey && document.activeElement === z) { e.preventDefault(); a.focus(); }
+      },
+      temConf: !!st.conf, conf,
+      confFora: e => { if (e.target === e.currentTarget) this.setState({ conf: null }); },
+      toastAlign: mob ? 'center' : 'flex-end',
+      toasts: st.toasts.map(t => ({ ...t, fechar: () => this.setState(s => ({ toasts: s.toasts.filter(x => x.id !== t.id) })) })),
+    };
+  }
+}
+</script>
+</body>
+</html>

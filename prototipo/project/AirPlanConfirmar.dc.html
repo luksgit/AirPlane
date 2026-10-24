@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+</helmet>
+<div role="alertdialog" aria-modal="true" aria-labelledby="{{ idTitulo }}" aria-describedby="{{ idTexto }}" onKeyDown="{{ teclas }}" style="width:100%;background:#fff;border-radius:20px;padding:32px 28px 24px;box-shadow:0 12px 32px rgba(30,42,58,.18);display:flex;flex-direction:column;align-items:center;text-align:center;gap:10px;font-family:Nunito,system-ui,sans-serif;color:#1E2A3A">
+  <span aria-hidden="true" style="width:56px;height:56px;border-radius:50%;background:#FDE8E8;color:#C42F35;display:grid;place-items:center;margin-bottom:4px">
+    <svg width="28" height="28" viewBox="0 0 24 24" style="fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"></path><path d="M12 9v4"></path><path d="M12 17h.01"></path></svg>
+  </span>
+  <h2 id="{{ idTitulo }}" style="margin:0;font-size:20px;font-weight:700">{{ titulo }}</h2>
+  <p id="{{ idTexto }}" style="margin:0;font-size:15px;line-height:1.5;color:#5B6B7F;text-wrap:pretty">{{ texto }}</p>
+  <div style="display:flex;gap:12px;width:100%;margin-top:14px">
+    <button ref="{{ cancelarRef }}" onClick="{{ cancelar }}" style="flex:1;height:44px;padding:0 16px;border:1.5px solid #1F6FC9;border-radius:10px;background:#fff;color:#1F6FC9;font-family:Nunito,system-ui,sans-serif;font-size:15px;font-weight:700;cursor:pointer" style-hover="background:#EEF6FE">Cancelar</button>
+    <button onClick="{{ confirmar }}" disabled="{{ carregando }}" aria-busy="{{ carregando }}" style="flex:1;height:44px;padding:0 16px;border:none;border-radius:10px;background:#D13B40;color:#fff;font-family:Nunito,system-ui,sans-serif;font-size:15px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px" style-hover="background:#B52F34">
+      <sc-if value="{{ carregando }}" hint-placeholder-val="{{ false }}"><span data-anim="true" aria-hidden="true" style="width:16px;height:16px;border-radius:50%;border:2px solid rgba(255,255,255,.4);border-top-color:#fff;animation:ap-giro .8s linear infinite"></span></sc-if>
+      {{ botao }}
+    </button>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:&quot;420px&quot;,&quot;height&quot;:&quot;300px&quot;},&quot;titulo&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;Tem certeza?&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;texto&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;Excluir o cartão 'Gravar vídeo narrado'?&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;botaoTexto&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;Excluir&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;carregando&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;},&quot;focar&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;},&quot;onCancelar&quot;:{&quot;editor&quot;:null,&quot;tsType&quot;:&quot;() =&gt; void&quot;},&quot;onConfirmar&quot;:{&quot;editor&quot;:null,&quot;tsType&quot;:&quot;() =&gt; void&quot;}}">
+class Component extends DCLogic {
+  uid = 'c' + Math.random().toString(36).slice(2, 8);
+  cancelarRef = React.createRef();
+  componentDidMount() { if (this.props.focar && this.cancelarRef.current) this.cancelarRef.current.focus(); }
+  renderVals() {
+    const carregando = !!this.props.carregando;
+    return {
+      idTitulo: this.uid + '-t', idTexto: this.uid + '-x',
+      titulo: this.props.titulo ?? 'Tem certeza?',
+      texto: this.props.texto ?? "Excluir o cartão 'Gravar vídeo narrado'?",
+      botao: carregando ? 'Excluindo…' : (this.props.botaoTexto ?? 'Excluir'),
+      carregando, cancelarRef: this.cancelarRef,
+      cancelar: () => this.props.onCancelar && this.props.onCancelar(),
+      confirmar: () => this.props.onConfirmar && this.props.onConfirmar(),
+      teclas: (e) => { if (e.key === 'Escape') { e.stopPropagation(); this.props.onCancelar && this.props.onCancelar(); } },
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>*{box-sizing:border-box}body{margin:0;font-family:Nunito,system-ui,sans-serif;color:#1E2A3A}a{color:#1F6FC9}a:hover{color:#185AA3}*:focus-visible{outline:3px solid rgba(31,111,201,.6);outline-offset:2px}</style>
+</helmet>
+<header style="height:64px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:0 clamp(16px,2.2cqw,32px);background:rgba(255,255,255,.9);backdrop-filter:blur(10px);border-bottom:1px solid #D6E8F7;position:relative;z-index:30;font-family:Nunito,system-ui,sans-serif;color:#1E2A3A">
+  <a href="#" onClick="{{ irHangar }}" aria-label="AirPlan — ir para Meus planos de voo" style="display:flex;align-items:center;gap:8px;text-decoration:none;color:#1E2A3A;font-weight:800;font-size:22px;letter-spacing:-0.01em;border-radius:8px">
+    <img src="assets/logo-nuvem.png" alt="" aria-hidden="true" style="height:38px;width:auto;display:block">
+    <span>Air<span style="color:#1F6FC9">Plan</span></span>
+  </a>
+  <div data-menu-area="true" style="position:relative">
+    <button onClick="{{ alternar }}" aria-label="Menu do usuário {{ nome }}" aria-haspopup="menu" aria-expanded="{{ aberto }}" style="width:40px;height:40px;border-radius:50%;border:2px solid #fff;background:#1F6FC9;color:#fff;font-family:Nunito,system-ui,sans-serif;font-size:14px;font-weight:800;cursor:pointer;box-shadow:0 0 0 1px #D6E8F7;display:grid;place-items:center" style-hover="background:#185AA3">{{ iniciais }}</button>
+    <sc-if value="{{ aberto }}" hint-placeholder-val="{{ false }}">
+      <div role="menu" style="position:absolute;right:0;top:50px;width:240px;background:#fff;border-radius:12px;border:1px solid #D6E8F7;box-shadow:0 12px 32px rgba(30,42,58,.18);padding:8px;display:flex;flex-direction:column;gap:2px">
+        <div style="padding:10px 12px 12px;border-bottom:1px solid #EEF3F8;margin-bottom:4px">
+          <div style="font-size:15px;font-weight:700">{{ nome }}</div>
+          <div style="font-size:13px;color:#5B6B7F;overflow:hidden;text-overflow:ellipsis">{{ email }}</div>
+        </div>
+        <button role="menuitem" onClick="{{ perfil }}" style="display:flex;align-items:center;gap:10px;height:40px;padding:0 12px;border:none;border-radius:8px;background:transparent;font-family:Nunito,system-ui,sans-serif;font-size:14px;font-weight:600;color:#1E2A3A;cursor:pointer;text-align:left" style-hover="background:#EEF6FE">
+          <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" style="fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><circle cx="12" cy="8" r="4"></circle><path d="M4 21v-1a6 6 0 0 1 6-6h4a6 6 0 0 1 6 6v1"></path></svg>Meu perfil</button>
+        <button role="menuitem" onClick="{{ sair }}" style="display:flex;align-items:center;gap:10px;height:40px;padding:0 12px;border:none;border-radius:8px;background:transparent;font-family:Nunito,system-ui,sans-serif;font-size:14px;font-weight:600;color:#C42F35;cursor:pointer;text-align:left" style-hover="background:#FDEEEE">
+          <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" style="fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><path d="m16 17 5-5-5-5"></path><path d="M21 12H9"></path></svg>Sair</button>
+      </div>
+    </sc-if>
+  </div>
+</header>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:&quot;100%&quot;,&quot;height&quot;:&quot;320px&quot;},&quot;mobile&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;},&quot;menuAberto&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;},&quot;onSair&quot;:{&quot;editor&quot;:null,&quot;tsType&quot;:&quot;() =&gt; void&quot;},&quot;onPerfil&quot;:{&quot;editor&quot;:null,&quot;tsType&quot;:&quot;() =&gt; void&quot;},&quot;onHangar&quot;:{&quot;editor&quot;:null,&quot;tsType&quot;:&quot;() =&gt; void&quot;}}">
+class Component extends DCLogic {
+  state = { aberto: null };
+  aberto() { return this.state.aberto ?? !!this.props.menuAberto; }
+  componentDidMount() {
+    this.fora = e => { if (this.aberto() && !(e.target.closest && e.target.closest('[data-menu-area]'))) this.setState({ aberto: false }); };
+    this.esc = e => { if (e.key === 'Escape' && this.aberto()) this.setState({ aberto: false }); };
+    document.addEventListener('mousedown', this.fora); document.addEventListener('keydown', this.esc);
+  }
+  componentWillUnmount() { document.removeEventListener('mousedown', this.fora); document.removeEventListener('keydown', this.esc); }
+  renderVals() {
+    const aberto = this.state.aberto ?? !!this.props.menuAberto;
+    const call = (fn) => { this.setState({ aberto: false }); fn && fn(); };
+    const u = this.props.usuario || { nome: 'Lucas Santos', email: 'lucas@email.com' };
+    const partes = u.nome.trim().split(/\s+/);
+    return {
+      nome: u.nome, email: u.email,
+      iniciais: ((partes[0] || '')[0] + (partes.length > 1 ? partes[partes.length - 1][0] : '')).toUpperCase(),
+      aberto,
+      alternar: () => this.setState({ aberto: !aberto }),
+      irHangar: (e) => { e.preventDefault(); this.props.onHangar && this.props.onHangar(); },
+      perfil: () => call(this.props.onPerfil),
+      sair: () => call(this.props.onSair),
+    };
+  }
+}
+</script>
+</body>
+</html>

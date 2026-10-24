@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>*{box-sizing:border-box}body{margin:0;font-family:Nunito,system-ui,sans-serif;color:#1E2A3A}a{color:#1F6FC9}a:hover{color:#185AA3}
+@keyframes ap-pulso{0%,100%{opacity:1}50%{opacity:.45}}
+@keyframes ap-giro{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion: reduce){[data-anim]{animation:none!important}}</style>
+</helmet>
+<div style="width:100%;background:#F7FBFF;padding:56px 64px 72px;display:flex;flex-direction:column;gap:56px;font-family:Nunito,system-ui,sans-serif;color:#1E2A3A">
+  <div style="display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:48px;align-items:center;background:linear-gradient(180deg,#5AB2F0 0%,#A8D8F8 60%,#E8F5FF 100%);border-radius:24px;padding:48px 56px">
+    <div style="display:flex;flex-direction:column;gap:18px">
+      <span style="font-size:12px;font-weight:800;letter-spacing:.14em;color:#14385F">GUIA DE ESTILO · V1</span>
+      <div style="display:flex;align-items:center;gap:12px;font-weight:800;font-size:56px;letter-spacing:-0.02em;line-height:1">
+        <img src="assets/logo-nuvem.png" alt="" aria-hidden="true" style="height:110px;width:auto;display:block">
+        <span>Air<span style="color:#14559E">Plan</span></span>
+      </div>
+      <p style="margin:0;font-size:24px;font-weight:700;line-height:1.35;color:#14385F;max-width:520px;text-wrap:balance">Organize suas tarefas com a leveza de arrastar um cartão.</p>
+      <p style="margin:0;font-size:15px;line-height:1.5;color:#1E2A3A;max-width:500px">Leve, arejado, “acima das nuvens”: céu em degradê, superfícies brancas arredondadas e sombras suaves. O mascote aparece no Login, Cadastro e estados vazios.</p>
+    </div>
+    <img src="assets/mascote-nuvem.png" alt="Mascote AirPlan: nuvem sorridente segurando lápis e checklist" style="width:100%;max-width:420px;justify-self:center;height:auto;filter:drop-shadow(0 18px 24px rgba(30,42,58,.16))">
+  </div>
+
+  <section style="display:flex;flex-direction:column;gap:20px">
+    <h2 style="margin:0;font-size:20px;font-weight:700">Paleta</h2>
+    <div style="display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:16px">
+      <sc-for list="{{ paleta }}" as="c" hint-placeholder-count="12">
+        <div style="background:#fff;border-radius:12px;overflow:hidden;border:1px solid #D6E8F7">
+          <div style="height:72px;background:{{ c.hex }};border-bottom:1px solid #EEF3F8"></div>
+          <div style="padding:10px 12px 12px;display:flex;flex-direction:column;gap:2px">
+            <span style="font-size:13px;font-weight:700;font-family:ui-monospace,Menlo,monospace">{{ c.token }}</span>
+            <span style="font-size:12px;font-weight:600;color:#5B6B7F">{{ c.hex }} · {{ c.uso }}</span>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+    <p style="margin:0;font-size:13px;color:#5B6B7F;max-width:900px;line-height:1.5">Ajustes de acessibilidade (AA 4.5:1): texto de erro usa <strong style="color:#C42F35">#C42F35</strong> e o botão perigo usa fundo <strong style="color:#C42F35">#D13B40</strong>, pois branco sobre #E5484D fica em 3.9:1. Badges usam fundos claros com texto escurecido. #E5484D segue nas bordas de erro e na etiqueta vermelha.</p>
+  </section>
+
+  <div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:32px">
+    <section style="display:flex;flex-direction:column;gap:20px">
+      <h2 style="margin:0;font-size:20px;font-weight:700">Tipografia — Nunito</h2>
+      <div style="background:#fff;border-radius:16px;border:1px solid #D6E8F7;padding:24px;display:flex;flex-direction:column;gap:16px">
+        <div style="display:flex;align-items:baseline;justify-content:space-between;gap:16px"><span style="font-size:28px;font-weight:700">Meus planos de voo</span><span style="font-size:12px;font-weight:600;color:#5B6B7F">Página · 28/700</span></div>
+        <div style="display:flex;align-items:baseline;justify-content:space-between;gap:16px"><span style="font-size:20px;font-weight:700">Dados pessoais</span><span style="font-size:12px;font-weight:600;color:#5B6B7F">Seção · 20/700</span></div>
+        <div style="display:flex;align-items:baseline;justify-content:space-between;gap:16px"><span style="font-size:16px;font-weight:700">Em voo</span><span style="font-size:12px;font-weight:600;color:#5B6B7F">Coluna · 16/700</span></div>
+        <div style="display:flex;align-items:baseline;justify-content:space-between;gap:16px"><span style="font-size:15px;font-weight:400">Adicione mais detalhes sobre esta tarefa.</span><span style="font-size:12px;font-weight:600;color:#5B6B7F">Texto · 14–16/400</span></div>
+        <div style="display:flex;align-items:baseline;justify-content:space-between;gap:16px"><span style="font-size:12px;font-weight:600;color:#5B6B7F">3 colunas · 12 cartões</span><span style="font-size:12px;font-weight:600;color:#5B6B7F">Legenda · 12/600</span></div>
+      </div>
+    </section>
+    <section style="display:flex;flex-direction:column;gap:20px">
+      <h2 style="margin:0;font-size:20px;font-weight:700">Etiquetas e formas</h2>
+      <div style="background:#fff;border-radius:16px;border:1px solid #D6E8F7;padding:24px;display:flex;flex-direction:column;gap:20px">
+        <div style="display:flex;gap:16px;flex-wrap:wrap">
+          <sc-for list="{{ etiquetas }}" as="e" hint-placeholder-count="7">
+            <div style="display:flex;flex-direction:column;align-items:center;gap:6px;width:64px">
+              <span style="width:34px;height:34px;border-radius:50%;background:{{ e.hex }};border:{{ e.borda }};box-shadow:{{ e.anel }}"></span>
+              <span style="font-size:12px;font-weight:600;color:#5B6B7F">{{ e.nome }}</span>
+            </div>
+          </sc-for>
+        </div>
+        <div style="display:flex;gap:14px;flex-wrap:wrap;align-items:flex-end">
+          <div style="display:flex;flex-direction:column;gap:6px;align-items:center"><span style="width:64px;height:44px;border-radius:10px;background:#E8F5FF;border:1px solid #D6E8F7"></span><span style="font-size:12px;font-weight:600;color:#5B6B7F">Cartão 10</span></div>
+          <div style="display:flex;flex-direction:column;gap:6px;align-items:center"><span style="width:64px;height:44px;border-radius:16px;background:#E8F5FF;border:1px solid #D6E8F7"></span><span style="font-size:12px;font-weight:600;color:#5B6B7F">Coluna 16</span></div>
+          <div style="display:flex;flex-direction:column;gap:6px;align-items:center"><span style="width:64px;height:44px;border-radius:20px;background:#E8F5FF;border:1px solid #D6E8F7"></span><span style="font-size:12px;font-weight:600;color:#5B6B7F">Modal 20</span></div>
+          <div style="display:flex;flex-direction:column;gap:6px;align-items:center"><span style="width:64px;height:44px;border-radius:8px;background:#E8F5FF;border:1px solid #D6E8F7"></span><span style="font-size:12px;font-weight:600;color:#5B6B7F">Input 8</span></div>
+          <div style="display:flex;flex-direction:column;gap:6px;align-items:center"><span style="width:96px;height:44px;border-radius:10px;background:#fff;box-shadow:0 4px 12px rgba(30,42,58,.08)"></span><span style="font-size:12px;font-weight:600;color:#5B6B7F">Sombra padrão</span></div>
+          <div style="display:flex;flex-direction:column;gap:6px;align-items:center"><span style="width:96px;height:44px;border-radius:10px;background:#fff;box-shadow:0 12px 32px rgba(30,42,58,.18)"></span><span style="font-size:12px;font-weight:600;color:#5B6B7F">Sombra elevada</span></div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <section style="display:flex;flex-direction:column;gap:20px">
+    <h2 style="margin:0;font-size:20px;font-weight:700">Botões</h2>
+    <div style="background:#fff;border-radius:16px;border:1px solid #D6E8F7;padding:24px 28px;display:grid;grid-template-columns:120px repeat(5,minmax(0,1fr));gap:18px 20px;align-items:center">
+      <span></span>
+      <span style="font-size:12px;font-weight:700;color:#5B6B7F">Normal</span><span style="font-size:12px;font-weight:700;color:#5B6B7F">Hover</span><span style="font-size:12px;font-weight:700;color:#5B6B7F">Foco</span><span style="font-size:12px;font-weight:700;color:#5B6B7F">Desabilitado</span><span style="font-size:12px;font-weight:700;color:#5B6B7F">Carregando</span>
+
+      <span style="font-size:14px;font-weight:700">Primário</span>
+      <button style="height:44px;padding:0 18px;border:none;border-radius:10px;background:#1F6FC9;color:#fff;font:700 15px Nunito,system-ui,sans-serif">Decolar</button>
+      <button style="height:44px;padding:0 18px;border:none;border-radius:10px;background:#185AA3;color:#fff;font:700 15px Nunito,system-ui,sans-serif">Decolar</button>
+      <button style="height:44px;padding:0 18px;border:none;border-radius:10px;background:#1F6FC9;color:#fff;font:700 15px Nunito,system-ui,sans-serif;outline:3px solid rgba(31,111,201,.6);outline-offset:2px">Decolar</button>
+      <button disabled="{{ true }}" style="height:44px;padding:0 18px;border:none;border-radius:10px;background:#B9CCE2;color:#fff;font:700 15px Nunito,system-ui,sans-serif">Decolar</button>
+      <button style="height:44px;padding:0 18px;border:none;border-radius:10px;background:#1F6FC9;color:#fff;font:700 15px Nunito,system-ui,sans-serif;display:inline-flex;align-items:center;justify-content:center;gap:8px"><span data-anim="true" style="width:16px;height:16px;border-radius:50%;border:2px solid rgba(255,255,255,.4);border-top-color:#fff;animation:ap-giro .8s linear infinite"></span>Decolando…</button>
+
+      <span style="font-size:14px;font-weight:700">Secundário</span>
+      <button style="height:44px;padding:0 18px;border:1.5px solid #1F6FC9;border-radius:10px;background:#fff;color:#1F6FC9;font:700 15px Nunito,system-ui,sans-serif">Cancelar</button>
+      <button style="height:44px;padding:0 18px;border:1.5px solid #1F6FC9;border-radius:10px;background:#EEF6FE;color:#1F6FC9;font:700 15px Nunito,system-ui,sans-serif">Cancelar</button>
+      <button style="height:44px;padding:0 18px;border:1.5px solid #1F6FC9;border-radius:10px;background:#fff;color:#1F6FC9;font:700 15px Nunito,system-ui,sans-serif;outline:3px solid rgba(31,111,201,.6);outline-offset:2px">Cancelar</button>
+      <button disabled="{{ true }}" style="height:44px;padding:0 18px;border:1.5px solid #C9D6E4;border-radius:10px;background:#fff;color:#8193A8;font:700 15px Nunito,system-ui,sans-serif">Cancelar</button>
+      <button style="height:44px;padding:0 18px;border:1.5px solid #1F6FC9;border-radius:10px;background:#fff;color:#1F6FC9;font:700 15px Nunito,system-ui,sans-serif;display:inline-flex;align-items:center;justify-content:center;gap:8px"><span data-anim="true" style="width:16px;height:16px;border-radius:50%;border:2px solid rgba(31,111,201,.25);border-top-color:#1F6FC9;animation:ap-giro .8s linear infinite"></span>Salvando…</button>
+
+      <span style="font-size:14px;font-weight:700">Perigo</span>
+      <button style="height:44px;padding:0 18px;border:none;border-radius:10px;background:#D13B40;color:#fff;font:700 15px Nunito,system-ui,sans-serif">Excluir</button>
+      <button style="height:44px;padding:0 18px;border:none;border-radius:10px;background:#B52F34;color:#fff;font:700 15px Nunito,system-ui,sans-serif">Excluir</button>
+      <button style="height:44px;padding:0 18px;border:none;border-radius:10px;background:#D13B40;color:#fff;font:700 15px Nunito,system-ui,sans-serif;outline:3px solid rgba(31,111,201,.6);outline-offset:2px">Excluir</button>
+      <button disabled="{{ true }}" style="height:44px;padding:0 18px;border:none;border-radius:10px;background:#EDB5B7;color:#fff;font:700 15px Nunito,system-ui,sans-serif">Excluir</button>
+      <button style="height:44px;padding:0 18px;border:none;border-radius:10px;background:#D13B40;color:#fff;font:700 15px Nunito,system-ui,sans-serif;display:inline-flex;align-items:center;justify-content:center;gap:8px"><span data-anim="true" style="width:16px;height:16px;border-radius:50%;border:2px solid rgba(255,255,255,.4);border-top-color:#fff;animation:ap-giro .8s linear infinite"></span>Excluindo…</button>
+
+      <span style="font-size:14px;font-weight:700">Fantasma</span>
+      <button style="height:44px;padding:0 14px;border:none;border-radius:10px;background:transparent;color:#1E2A3A;font:700 15px Nunito,system-ui,sans-serif">+ Adicionar cartão</button>
+      <button style="height:44px;padding:0 14px;border:none;border-radius:10px;background:rgba(31,111,201,.08);color:#1F6FC9;font:700 15px Nunito,system-ui,sans-serif">+ Adicionar cartão</button>
+      <button style="height:44px;padding:0 14px;border:none;border-radius:10px;background:transparent;color:#1E2A3A;font:700 15px Nunito,system-ui,sans-serif;outline:3px solid rgba(31,111,201,.6);outline-offset:2px">+ Adicionar cartão</button>
+      <button disabled="{{ true }}" style="height:44px;padding:0 14px;border:none;border-radius:10px;background:transparent;color:#9AA8B8;font:700 15px Nunito,system-ui,sans-serif">+ Adicionar cartão</button>
+      <span style="font-size:12px;font-weight:600;color:#5B6B7F">—</span>
+    </div>
+  </section>
+
+  <div style="display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:32px">
+    <section style="display:flex;flex-direction:column;gap:20px">
+      <h2 style="margin:0;font-size:20px;font-weight:700">Inputs</h2>
+      <div style="background:#fff;border-radius:16px;border:1px solid #D6E8F7;padding:24px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px 24px">
+        <div style="display:flex;flex-direction:column;gap:6px"><span style="font-size:14px;font-weight:700">E-mail · normal</span><div style="height:46px;border-radius:8px;border:1.5px solid #C9DDF0;padding:0 14px;display:flex;align-items:center;font-size:15px;color:#5B6B7F">voce@email.com</div></div>
+        <div style="display:flex;flex-direction:column;gap:6px"><span style="font-size:14px;font-weight:700">E-mail · foco</span><div style="height:46px;border-radius:8px;border:1.5px solid #1F6FC9;box-shadow:0 0 0 3px rgba(31,111,201,.25);padding:0 14px;display:flex;align-items:center;font-size:15px">lucas@email.com</div></div>
+        <div style="display:flex;flex-direction:column;gap:6px"><span style="font-size:14px;font-weight:700">E-mail · erro</span><div style="height:46px;border-radius:8px;border:1.5px solid #E5484D;padding:0 14px;display:flex;align-items:center;font-size:15px">lucas@email</div>
+          <span style="display:flex;align-items:center;gap:6px;font-size:13px;font-weight:600;color:#C42F35"><svg width="15" height="15" viewBox="0 0 24 24" style="fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round"><circle cx="12" cy="12" r="10"></circle><path d="M12 8v4"></path><path d="M12 16h.01"></path></svg>Digite um e-mail válido</span></div>
+        <div style="display:flex;flex-direction:column;gap:6px"><span style="font-size:14px;font-weight:700">E-mail · desabilitado / leitura</span><div style="height:46px;border-radius:8px;border:1.5px solid #E1E9F2;background:#F1F5F9;padding:0 14px;display:flex;align-items:center;font-size:15px;color:#5B6B7F">lucas@email.com</div></div>
+        <div style="grid-column:1 / -1;display:flex;flex-direction:column;gap:6px"><span style="font-size:14px;font-weight:700">Senha · com mostrar/ocultar e força</span>
+          <div style="height:46px;border-radius:8px;border:1.5px solid #C9DDF0;padding:0 8px 0 14px;display:flex;align-items:center;justify-content:space-between;font-size:15px;letter-spacing:.2em">•••••••••<span style="width:34px;height:34px;display:grid;place-items:center;color:#5B6B7F;letter-spacing:0"><svg width="18" height="18" viewBox="0 0 24 24" style="fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path><circle cx="12" cy="12" r="3"></circle></svg></span></div>
+          <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin-top:4px">
+            <div style="display:flex;flex-direction:column;gap:4px"><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:4px"><span style="height:5px;border-radius:3px;background:#E5484D"></span><span style="height:5px;border-radius:3px;background:#E3ECF5"></span><span style="height:5px;border-radius:3px;background:#E3ECF5"></span></div><span style="font-size:12px;font-weight:700;color:#C42F35">Senha fraca</span></div>
+            <div style="display:flex;flex-direction:column;gap:4px"><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:4px"><span style="height:5px;border-radius:3px;background:#F5A524"></span><span style="height:5px;border-radius:3px;background:#F5A524"></span><span style="height:5px;border-radius:3px;background:#E3ECF5"></span></div><span style="font-size:12px;font-weight:700;color:#8A5300">Senha média</span></div>
+            <div style="display:flex;flex-direction:column;gap:4px"><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:4px"><span style="height:5px;border-radius:3px;background:#2EAD6B"></span><span style="height:5px;border-radius:3px;background:#2EAD6B"></span><span style="height:5px;border-radius:3px;background:#2EAD6B"></span></div><span style="font-size:12px;font-weight:700;color:#1E7A4A">Senha forte</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section style="display:flex;flex-direction:column;gap:20px">
+      <h2 style="margin:0;font-size:20px;font-weight:700">Toasts</h2>
+      <div style="background:#EAF4FD;border-radius:16px;border:1px solid #D6E8F7;padding:24px;display:flex;flex-direction:column;gap:12px">
+        <dc-import name="AirPlanToast" tipo="sucesso" mensagem="Cartão salvo" hint-size="100%,56px"></dc-import>
+        <dc-import name="AirPlanToast" tipo="erro" mensagem="Não foi possível mover o cartão" hint-size="100%,56px"></dc-import>
+        <dc-import name="AirPlanToast" tipo="info" mensagem="Até a próxima viagem! 👋" hint-size="100%,56px"></dc-import>
+        <p style="margin:4px 0 0;font-size:13px;color:#4A5A6E;line-height:1.5">Canto inferior direito (mobile: centro). Somem em 4s, têm botão fechar e empilham até 3. Região aria-live="polite".</p>
+      </div>
+    </section>
+  </div>
+
+  <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:32px">
+    <section style="display:flex;flex-direction:column;gap:20px">
+      <h2 style="margin:0;font-size:20px;font-weight:700">Prazos e indicadores</h2>
+      <div style="background:#fff;border-radius:16px;border:1px solid #D6E8F7;padding:24px;display:flex;flex-direction:column;gap:14px">
+        <div style="display:flex;align-items:center;gap:12px"><span style="display:inline-flex;align-items:center;gap:5px;height:22px;padding:0 8px;border-radius:6px;background:#EEF3F8;color:#4A5A6E;font-size:12px;font-weight:700"><svg width="13" height="13" viewBox="0 0 24 24" style="fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round"><rect x="3" y="4" width="18" height="18" rx="2"></rect><path d="M16 2v4"></path><path d="M8 2v4"></path><path d="M3 10h18"></path></svg>05 nov</span><span style="font-size:13px;color:#5B6B7F">Prazo normal</span></div>
+        <div style="display:flex;align-items:center;gap:12px"><span style="display:inline-flex;align-items:center;gap:5px;height:22px;padding:0 8px;border-radius:6px;background:#FEF0D6;color:#8A5300;font-size:12px;font-weight:700"><svg width="13" height="13" viewBox="0 0 24 24" style="fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round"><rect x="3" y="4" width="18" height="18" rx="2"></rect><path d="M16 2v4"></path><path d="M8 2v4"></path><path d="M3 10h18"></path></svg>23 out</span><span style="font-size:13px;color:#5B6B7F">Vence em até 2 dias</span></div>
+        <div style="display:flex;align-items:center;gap:12px"><span style="display:inline-flex;align-items:center;gap:5px;height:22px;padding:0 8px;border-radius:6px;background:#FDE8E8;color:#B4262B;font-size:12px;font-weight:700"><svg width="13" height="13" viewBox="0 0 24 24" style="fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round"><rect x="3" y="4" width="18" height="18" rx="2"></rect><path d="M16 2v4"></path><path d="M8 2v4"></path><path d="M3 10h18"></path></svg>Atrasado · 18 out</span><span style="font-size:13px;color:#5B6B7F">Vencido</span></div>
+        <div style="display:flex;align-items:center;gap:12px"><span style="display:inline-flex;color:#5B6B7F"><svg width="16" height="16" viewBox="0 0 24 24" style="fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round"><path d="M21 6H3"></path><path d="M15 12H3"></path><path d="M17 18H3"></path></svg></span><span style="font-size:13px;color:#5B6B7F">Tem descrição</span></div>
+        <div style="display:flex;align-items:center;gap:12px"><span style="min-width:24px;height:22px;padding:0 8px;border-radius:999px;background:#E1F0FC;color:#185AA3;font-size:12px;font-weight:700;display:inline-flex;align-items:center;justify-content:center">4</span><span style="font-size:13px;color:#5B6B7F">Contador da coluna</span></div>
+      </div>
+    </section>
+    <section style="display:flex;flex-direction:column;gap:20px">
+      <h2 style="margin:0;font-size:20px;font-weight:700">Cartão e arraste</h2>
+      <div style="background:linear-gradient(180deg,#5AB2F0,#B9E0FA);border-radius:16px;padding:24px;display:flex;flex-direction:column;gap:14px">
+        <div style="background:#fff;border-radius:10px;border:1px solid #DCE9F5;box-shadow:0 1px 3px rgba(30,42,58,.08);overflow:hidden"><div style="height:4px;background:#F5822A"></div><div style="padding:10px 12px 11px;display:flex;flex-direction:column;gap:8px"><span style="font-size:14px;font-weight:600">Codificar API de cartões</span><div style="display:flex;gap:8px;align-items:center"><span style="display:inline-flex;align-items:center;height:22px;padding:0 8px;border-radius:6px;background:#EEF3F8;color:#4A5A6E;font-size:12px;font-weight:700">30 out</span><svg width="16" height="16" viewBox="0 0 24 24" style="fill:none;stroke:#5B6B7F;stroke-width:2;stroke-linecap:round"><path d="M21 6H3"></path><path d="M15 12H3"></path><path d="M17 18H3"></path></svg></div></div></div>
+        <div style="height:58px;border:2px dashed #fff;border-radius:10px;background:rgba(255,255,255,.25);display:grid;place-items:center;font-size:12px;font-weight:700;color:#14385F">placeholder de destino</div>
+        <div style="background:#fff;border-radius:10px;border:1px solid #DCE9F5;overflow:hidden;transform:rotate(2deg);box-shadow:0 12px 32px rgba(30,42,58,.18)"><div style="height:4px;background:#8B5CF6"></div><div style="padding:10px 12px 11px;font-size:14px;font-weight:600">Em arraste · 2° + sombra elevada</div></div>
+      </div>
+    </section>
+    <section style="display:flex;flex-direction:column;gap:20px">
+      <h2 style="margin:0;font-size:20px;font-weight:700">Skeleton e menu ⋯</h2>
+      <div style="background:#fff;border-radius:16px;border:1px solid #D6E8F7;padding:24px;display:flex;flex-direction:column;gap:18px">
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <div data-anim="true" style="height:16px;width:60%;border-radius:6px;background:#D6E6F5;animation:ap-pulso 1.4s ease-in-out infinite"></div>
+          <div data-anim="true" style="height:56px;border-radius:10px;background:#E4EEF8;animation:ap-pulso 1.4s ease-in-out infinite;animation-delay:.15s"></div>
+          <div data-anim="true" style="height:40px;border-radius:10px;background:#E4EEF8;animation:ap-pulso 1.4s ease-in-out infinite;animation-delay:.3s"></div>
+        </div>
+        <div style="width:190px;background:#fff;border:1px solid #D6E8F7;border-radius:12px;box-shadow:0 12px 32px rgba(30,42,58,.18);padding:6px;display:flex;flex-direction:column;gap:2px">
+          <span style="display:flex;align-items:center;gap:10px;height:38px;padding:0 10px;border-radius:8px;background:#EEF6FE;font-size:14px;font-weight:600"><svg width="16" height="16" viewBox="0 0 24 24" style="fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><path d="M17 3a2.85 2.85 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"></path></svg>Renomear</span>
+          <span style="display:flex;align-items:center;gap:10px;height:38px;padding:0 10px;border-radius:8px;font-size:14px;font-weight:600;color:#C42F35"><svg width="16" height="16" viewBox="0 0 24 24" style="fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><path d="M3 6h18"></path><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"></path><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>Excluir</span>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:&quot;1440px&quot;,&quot;height&quot;:&quot;2000px&quot;}}">
+class Component extends DCLogic {
+  renderVals() {
+    return {
+      paleta: [
+        { token: '--ceu-topo', hex: '#5AB2F0', uso: 'topo do céu' }, { token: '--ceu-base', hex: '#E8F5FF', uso: 'base do céu' },
+        { token: '--primaria', hex: '#1F6FC9', uso: 'ações, foco' }, { token: '--primaria-hover', hex: '#185AA3', uso: 'hover' },
+        { token: '--nuvem', hex: '#FFFFFF', uso: 'superfícies' }, { token: '--nuvem-borda', hex: '#D6E8F7', uso: 'bordas' },
+        { token: '--texto', hex: '#1E2A3A', uso: 'texto' }, { token: '--texto-suave', hex: '#5B6B7F', uso: 'secundário' },
+        { token: '--sucesso', hex: '#2EAD6B', uso: 'toasts ok' }, { token: '--alerta', hex: '#F5A524', uso: 'prazo próximo' },
+        { token: '--erro', hex: '#E5484D', uso: 'bordas de erro' }, { token: '--erro-texto', hex: '#C42F35', uso: 'texto de erro (AA)' },
+      ],
+      etiquetas: [
+        { nome: 'Verde', hex: '#2EAD6B', borda: 'none', anel: 'none' }, { nome: 'Amarelo', hex: '#F5C524', borda: 'none', anel: 'none' },
+        { nome: 'Laranja', hex: '#F5822A', borda: 'none', anel: 'none' }, { nome: 'Vermelho', hex: '#E5484D', borda: 'none', anel: '0 0 0 3px #fff, 0 0 0 5px #E5484D' },
+        { nome: 'Roxo', hex: '#8B5CF6', borda: 'none', anel: 'none' }, { nome: 'Azul', hex: '#1F6FC9', borda: 'none', anel: 'none' },
+        { nome: 'Sem cor', hex: '#fff', borda: '2px dashed #9FB3C8', anel: 'none' },
+      ],
+    };
+  }
+}
+</script>
+</body>
+</html>
