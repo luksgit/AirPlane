@@ -15,7 +15,7 @@ class Config:
     # Cookie de sessão: inacessível ao JavaScript e enviado só para o próprio site.
     SESSION_COOKIE_HTTPONLY = True
     SESSION_COOKIE_SAMESITE = "Lax"
-    # Em produção (HTTPS no Render) o cookie só trafega criptografado.
+    # Em produção (HTTPS na Vercel) o cookie só trafega criptografado.
     SESSION_COOKIE_SECURE = os.environ.get("FLASK_ENV") == "production"
 
 

@@ -10,10 +10,10 @@ Projeto desenvolvido para a disciplina *Projeto Integrador Transdisciplinar em E
 
 ## 🔗 Acesse
 
-- **App:** `https://<link-do-app-no-render>`
+- **App:** `https://<link-do-app-na-vercel>`
 - **Conta de demonstração:** `lucas@email.com` / senha `voo12345`
 
-> ⏳ **Primeiro acesso lento:** o app fica no plano gratuito do Render, que "dorme" após 15 minutos sem uso. O primeiro acesso depois disso leva **cerca de 1 minuto**; em seguida, ele responde normalmente.
+> ⏳ **Primeiro acesso:** o app fica no plano gratuito da Vercel. Depois de um tempo sem uso, a primeira página pode levar alguns segundos para abrir; em seguida, ele responde normalmente.
 
 ## Funcionalidades
 
@@ -34,7 +34,7 @@ Projeto desenvolvido para a disciplina *Projeto Integrador Transdisciplinar em E
 | Back-end | Python 3.12 + Flask, padrão **MVC** |
 | Banco de dados | PostgreSQL (Supabase) com SQL escrito à mão (psycopg 3) |
 | Testes | Pytest (back-end) e `node --test` (front-end) |
-| Hospedagem | Render (app) + Supabase (banco) |
+| Hospedagem | Vercel (app) + Supabase (banco) |
 
 ## Estrutura (MVC)
 
@@ -46,8 +46,10 @@ models/           M: SQL e regras de negócio (usuario, quadro, coluna, cartao, 
 controllers/      C: rotas da API (/api/*) e das páginas; tratamento de erros
 views/
   templates/      V: HTML das telas (Jinja só para montar o esqueleto)
-  static/css/     estilos (tokens, base e um arquivo por tela)
-  static/js/      um arquivo por tela + ui/ (componentes) + utils/ (funções puras) + quadro/ (Kanban)
+public/static/    V: arquivos estáticos do navegador (na Vercel, servidos direto pela CDN)
+  css/            estilos (tokens, base e um arquivo por tela)
+  js/             um arquivo por tela + ui/ (componentes) + utils/ (funções puras) + quadro/ (Kanban)
+  img/            imagens e mascote
 database/         schema.sql (tabelas) e seed.sql (dados de exemplo)
 tests/back/       testes do back-end (pytest)
 tests/front/      testes do front-end (node --test)
@@ -93,11 +95,16 @@ O `package.json` não instala nenhuma dependência JavaScript. Ele só guarda at
 | `npm run prototipo` | Serve o protótipo de telas em http://localhost:8000 (só referência visual) |
 | `npm test` | Roda os testes do back-end e do front-end |
 
-## Deploy (Render + Supabase)
+## Deploy (Vercel + Supabase)
 
 1. **Supabase:** no SQL Editor, execute `database/schema.sql` e `database/seed.sql`. Copie a connection string do **Session pooler** (porta 5432).
-2. **Render:** *New → Blueprint* apontando para este repositório (o `render.yaml` já define build, start e variáveis). No painel, preencha `DATABASE_URL` com a string do Supabase. A `FLASK_SECRET_KEY` é gerada automaticamente.
-3. Acesse o link gerado pelo Render e faça login com a conta de demonstração.
+2. **Vercel:** *Add New → Project*, importe este repositório do GitHub. O Flask é detectado sozinho pelo `app.py` (a variável `app`), e a versão do Python vem do `.python-version`. Antes de clicar em *Deploy*, cadastre em *Environment Variables*:
+   - `DATABASE_URL`: a connection string do Supabase;
+   - `FLASK_SECRET_KEY`: uma chave aleatória (gere com `python -c "import secrets; print(secrets.token_hex(32))"`);
+   - `FLASK_ENV`: `production` (liga o cookie de sessão `Secure`).
+3. Acesse o link gerado pela Vercel e faça login com a conta de demonstração. Cada `git push` na `main` gera um deploy novo automaticamente.
+
+> Na Vercel, o Flask vira uma *Vercel Function* e os arquivos de `public/` são entregues pela CDN, por isso o CSS, o JS e as imagens ficam em `public/static/`. As URLs (`/static/...`) são as mesmas no computador e na Vercel.
 
 > O plano grátis do Supabase pausa o projeto depois de 7 dias sem uso: acesse o app pelo menos uma vez por semana até a avaliação.
 

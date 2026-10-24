@@ -1,0 +1,4 @@
+# Pastas que não precisam ir para a Vercel (não são servidas pelo app).
+prototipo/
+docs/
+tests/

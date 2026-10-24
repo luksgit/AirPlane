@@ -20,7 +20,7 @@ def create_app(config=Config):
     app = Flask(
         __name__,
         template_folder="views/templates",
-        static_folder="views/static",
+        static_folder="public/static",
     )
     app.config.from_object(config)
 

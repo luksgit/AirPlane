@@ -5,7 +5,7 @@ O teste leva cerca de **20 minutos**. Siga as tarefas abaixo e, sempre que algo 
 
 ## Antes de começar
 
-- **Link do app:** `https://<link-do-app-no-render>`
+- **Link do app:** `https://<link-do-app-na-vercel>`
 - ⏳ O primeiro acesso pode levar **cerca de 1 minuto** (o servidor gratuito estava "dormindo"). Isso não é bug.
 - Use **sua própria conta**: crie uma na tarefa 1. Não use a conta de demonstração.
 - Anote o **dispositivo e o navegador** que você está usando (ex.: Windows 11 + Chrome, iPhone + Safari).

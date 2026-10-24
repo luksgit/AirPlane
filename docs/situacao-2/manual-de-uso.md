@@ -8,11 +8,11 @@ O AirPlan é um gerenciador de tarefas no estilo Kanban. Você monta **planos de
 
 ## 1. Como acessar
 
-- **Endereço:** `https://<link-do-app-no-render>` *(o link definitivo entra aqui depois do deploy)*
+- **Endereço:** `https://<link-do-app-na-vercel>` *(o link definitivo entra aqui depois do deploy)*
 - **Navegadores testados:** Chrome, Edge e Firefox atualizados, no computador e no celular.
 - **Conta de demonstração:** e-mail `lucas@email.com`, senha `voo12345`.
 
-> ⏳ **O primeiro acesso pode demorar cerca de 1 minuto.** O servidor gratuito (Render) "dorme" depois de 15 minutos sem uso e precisa acordar. Depois disso, o app responde normalmente.
+> ⏳ **O primeiro acesso pode demorar alguns segundos.** O servidor gratuito (Vercel) desliga quando fica um tempo sem uso e precisa ligar de novo. Depois disso, o app responde normalmente.
 
 ---
 

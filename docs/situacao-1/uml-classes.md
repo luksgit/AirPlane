@@ -180,9 +180,9 @@ classDiagram
     }
     class Views {
         <<view>>
-        templates (HTML com Jinja)
-        static/css (estilos)
-        static/js (telas e utils)
+        views/templates (HTML com Jinja)
+        public/static/css (estilos)
+        public/static/js (telas e utils)
     }
 
     auth_controller --> usuario_model

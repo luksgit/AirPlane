@@ -6,8 +6,8 @@ import {
   textoExcluirCartao,
   textoExcluirColuna,
   textoExcluirQuadro,
-} from '../../views/static/js/utils/mensagens.js';
-import { iniciais, plural } from '../../views/static/js/utils/texto.js';
+} from '../../public/static/js/utils/mensagens.js';
+import { iniciais, plural } from '../../public/static/js/utils/texto.js';
 
 describe('iniciais', () => {
   test('primeira letra do primeiro e do último nome', () => {

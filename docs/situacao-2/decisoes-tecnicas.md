@@ -13,14 +13,15 @@ Este documento explica **como** o AirPlan foi construído e **por quê**, atende
 | Senhas | `werkzeug.security` (hash scrypt) | A senha nunca é guardada; só o hash |
 | Sessão | Cookie de sessão do Flask (`HttpOnly`, `SameSite=Lax`, `Secure` em produção) | Front e back na mesma origem: sem CORS e sem token no JavaScript |
 | Testes | Pytest (back) e `node --test` (front) | Runners padrão das linguagens, sem dependências extras no front |
-| Hospedagem | Render (app) + Supabase (banco) | Planos gratuitos suficientes para a avaliação |
+| Hospedagem | Vercel (app) + Supabase (banco) | Planos gratuitos suficientes para a avaliação; a Vercel publica a cada `git push` e não deixa o app "dormindo" por minutos |
 
 ## 2. Arquitetura MVC
 
 ```
 models/        M: SQL e regras de negócio (não conhece HTTP)
 controllers/   C: rotas Flask; recebem a requisição, chamam o model e devolvem JSON/HTML (não escrevem SQL)
-views/         V: templates HTML, CSS e JavaScript
+views/         V: templates HTML (Jinja)
+public/static/ V: CSS, JavaScript e imagens (na Vercel, entregues pela CDN)
 ```
 
 - **Model** (`models/*_model.py`): cada função recebe o `usuario_id` do dono e filtra por ele, de modo que um usuário nunca alcança dados de outro. Erros de negócio são **exceções de domínio** (`ErroValidacao`, `ErroConflito`, `NaoEncontrado`), sem nenhum código HTTP.
@@ -82,5 +83,5 @@ Toda rota da API verifica a sessão (`login_obrigatorio`) e todo SQL filtra pelo
 
 ## 6. Hospedagem
 
-- **Render** (Web Service grátis): `render.yaml` versionado; build `pip install -r requirements.txt`, start `gunicorn app:app`. O plano grátis "dorme" após 15 minutos sem acesso e leva cerca de 1 minuto para acordar.
+- **Vercel** (plano Hobby, grátis): o repositório do GitHub é importado e a Vercel detecta o Flask pelo `app.py`; cada `git push` na `main` gera um deploy. O app vira uma *Vercel Function* (sem gunicorn) e a versão do Python vem do `.python-version`. A Vercel só serve arquivos estáticos pela pasta `public/`, por isso o CSS, o JS e as imagens ficam em `public/static/` (o Flask usa a mesma pasta no computador, então as URLs `/static/...` não mudam). O `.vercelignore` deixa de fora o que não é servido (`prototipo/`, `docs/`, `tests/`). Depois de um tempo sem uso, a função desliga e o primeiro acesso leva alguns segundos.
 - **Supabase** (Postgres grátis): conexão pelo *Session pooler* (porta 5432, IPv4). O `db.py` exige SSL sempre que a URL não é local. O plano grátis pausa o projeto depois de 7 dias sem uso.

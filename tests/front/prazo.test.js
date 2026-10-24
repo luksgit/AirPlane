@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { describe, test } from 'node:test';
 
-import { diasAtePrazo, formatarDiaMes, statusDoPrazo } from '../../views/static/js/utils/prazo.js';
+import { diasAtePrazo, formatarDiaMes, statusDoPrazo } from '../../public/static/js/utils/prazo.js';
 
 // "Hoje" fixo nos testes: 24/10/2026, à tarde (o horário não pode influenciar).
 const HOJE = new Date(2026, 9, 24, 15, 30);

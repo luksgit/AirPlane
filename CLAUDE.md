@@ -75,8 +75,8 @@ O PIT II tem 3 "situações-problema" que se complementam:
 | Sessão | Cookie de sessão do Flask (`HttpOnly`, `SameSite=Lax`, `Secure` em produção) | Front e back na **mesma origem**, sem CORS |
 | Testes back | **Pytest** | Roda no mesmo banco Supabase de desenvolvimento (sem banco de teste separado) |
 | Testes front | **`node --test`** (runner nativo do Node, sem dependências) | Testa funções puras de `views/js/utils/` |
-| Servidor (prod) | **gunicorn** | |
-| Hospedagem | **Render** (app Flask, plano grátis) + **Supabase** (Postgres, plano grátis) | Ver seção 12 |
+| Servidor (prod) | **Vercel Functions** (sem gunicorn) | A Vercel detecta o `app` do `app.py` |
+| Hospedagem | **Vercel** (app Flask, plano Hobby grátis) + **Supabase** (Postgres, plano grátis) | Ver seção 12. Decisão do Lucas (trocou o Render pela Vercel) |
 | Config | `python-dotenv` + arquivo `.env` (no `.gitignore`) | Fornecer `.env.example` |
 
 ### Regra de ouro sobre o Supabase
@@ -110,10 +110,11 @@ airplan/
 │   ├── requisicao.py         # ler_json()
 │   ├── tratador_erros.py     # erros de domínio → 400/404/409/500 no formato padrão
 │   └── json_provider.py      # datas em ISO (prazo "2026-11-17")
-├── views/                    # V — tudo que o usuário vê
-│   ├── templates/            # HTML de cada tela (Jinja só para montar o esqueleto; sem lógica)
-│   │   ├── base.html, base_auth.html, _header.html, _toasts.html, _confirmar.html, _macros.html
-│   │   ├── login.html, cadastro.html, quadros.html, quadro.html, perfil.html, 404.html
+├── views/                    # V — HTML das telas
+│   └── templates/            # HTML de cada tela (Jinja só para montar o esqueleto; sem lógica)
+│       ├── base.html, base_auth.html, _header.html, _toasts.html, _confirmar.html, _macros.html
+│       ├── login.html, cadastro.html, quadros.html, quadro.html, perfil.html, 404.html
+├── public/                   # V — estáticos (a Vercel só serve estáticos por public/; URLs continuam /static/...)
 │   └── static/
 │       ├── css/
 │       │   ├── tokens.css    # variáveis CSS (cores, raios, sombras, fonte)
@@ -141,7 +142,8 @@ airplan/
 │   └── situacao-3/           # template de teste, 5 laudos, correções, laudo de qualidade
 ├── prototipo/                # bundle do Claude Design (só referência, não é servido)
 ├── requirements.txt
-├── render.yaml
+├── .python-version           # versão do Python usada pela Vercel
+├── .vercelignore             # deixa prototipo/, docs/ e tests/ fora do deploy
 ├── .env.example
 ├── .gitignore
 └── README.md
@@ -272,7 +274,7 @@ O protótipo foi feito no **Claude Design** e está em `prototipo/` (bundle de h
 | `AirPlanToast.dc.html` | toast (`ui.js`) |
 | `AirPlanGuia.dc.html` | guia de estilo (referência de tokens e componentes) |
 | `AirPlan.dc.html` | canvas com todas as telas em todos os estados (referência) |
-| `assets/*.png` | copiar para `views/static/img/` |
+| `assets/*.png` | copiar para `public/static/img/` |
 
 ### O que é SÓ do protótipo e NÃO vai para o app
 - A **barra escura do topo** (mostra a senha de teste, "Ir para…", "Reiniciar demo").
@@ -346,7 +348,7 @@ Fonte: **Nunito** (Google Fonts, pesos 400/600/700/800), fallback `system-ui, sa
   - Alterar senha (atual incorreta, igual à atual, sucesso).
 
 ### Front-end (`node --test`) — `tests/front/`
-- Testar as **funções puras** de `views/static/js/utils/`:
+- Testar as **funções puras** de `public/static/js/utils/`:
   - `validacoes.js`: nome, e-mail, senha, títulos.
   - `prazo.js`: status (normal / em breve / atrasado) e formato "dd mmm", recebendo a data de hoje por parâmetro.
   - `senha.js`: força da senha (fraca / média / forte).
@@ -379,10 +381,11 @@ DATABASE_URL=postgresql://postgres.SEU_PROJETO:SUA_SENHA@aws-0-us-east-1.pooler.
 FLASK_ENV=development
 ```
 
-### Produção: Render (app) + Supabase (banco)
-- **Render (Web Service, plano grátis):** build `pip install -r requirements.txt`, start `gunicorn app:app`. Configurar `FLASK_SECRET_KEY` e `DATABASE_URL` nas variáveis de ambiente. Versionar um `render.yaml`.
-  - O plano grátis **dorme após 15 min sem acesso** e leva **~1 min para acordar**. Avisar isso no README e no manual de uso.
-- **Supabase (Postgres, plano grátis):** usar a connection string do **Supavisor em modo session** (host `*.pooler.supabase.com`, porta **5432**), porque a conexão direta usa IPv6 e o Render precisa de IPv4. Rodar `schema.sql` e `seed.sql` pelo SQL Editor do Supabase.
+### Produção: Vercel (app) + Supabase (banco)
+- **Vercel (plano Hobby, grátis):** importar o repositório do GitHub; o Flask é detectado pelo `app.py`. Configurar `DATABASE_URL`, `FLASK_SECRET_KEY` e `FLASK_ENV=production` nas variáveis de ambiente. Cada `git push` na `main` gera deploy.
+  - Estáticos **só** em `public/static/` (o `static_folder` do Flask é ignorado na Vercel).
+  - Depois de um tempo sem uso, o primeiro acesso leva alguns segundos (avisado no README e no manual).
+- **Supabase (Postgres, plano grátis):** usar a connection string do **Supavisor em modo session** (host `*.pooler.supabase.com`, porta **5432**), porque a conexão direta usa IPv6 e a Vercel precisa de IPv4. Rodar `schema.sql` e `seed.sql` pelo SQL Editor do Supabase.
   - O plano grátis **pausa o projeto após 7 dias sem uso**. Até sair a nota, o Lucas precisa acessar pelo menos 1x por semana.
 - O `db.py` deve funcionar com as duas URLs (local e Supabase) sem mudar código, e exigir SSL quando a URL não for `localhost`.
 
@@ -416,7 +419,7 @@ Se algo disso aparecer como sugestão dos testadores, vai para o laudo como "fun
 5. CSS base (tokens, botões, inputs, toasts, modais, skeleton) seguindo o protótipo.
 6. Telas na ordem: Login/Cadastro → Meus Quadros → Quadro Kanban → Perfil → 404.
 7. Utils do front + testes `node --test`.
-8. Deploy (Render + Supabase) e teste do link público.
+8. Deploy (Vercel + Supabase) e teste do link público.
 9. Manual de uso (`docs/situacao-2/manual-de-uso.md`) com prints.
 10. Material da situação 3: template de teste para os colegas e estrutura do laudo de qualidade.
 
@@ -426,7 +429,7 @@ Se algo disso aparecer como sugestão dos testadores, vai para o laudo como "fun
 
 ## 16. Checklist final de entrega (17/11)
 
-- [ ] App no ar (Render + Supabase) e testado pelo link público
+- [ ] App no ar (Vercel + Supabase) e testado pelo link público
 - [ ] Repositório público no GitHub com código, `docs/situacao-1`, `docs/situacao-2` e `docs/situacao-3`
 - [ ] `pytest` e `node --test` passando
 - [ ] README com: descrição, stack, como rodar local, como testar, link do app, aviso do "primeiro acesso lento"
@@ -434,4 +437,4 @@ Se algo disso aparecer como sugestão dos testadores, vai para o laudo como "fun
 - [ ] Dicionário de dados + diagramas UML
 - [ ] 5 testes de colegas + laudo de qualidade + correções aplicadas
 - [ ] Vídeo narrado da solução (mín. 5 min) + vídeo das modificações (até 5 min)
-- [ ] Template da faculdade preenchido (linguagem: Python · banco: PostgreSQL · hospedagem: Render + Supabase · plataforma: Web · modo: Tradicional · links)
+- [ ] Template da faculdade preenchido (linguagem: Python · banco: PostgreSQL · hospedagem: Vercel + Supabase · plataforma: Web · modo: Tradicional · links)

@@ -11,7 +11,7 @@ import {
   validarTituloCartao,
   validarTituloColuna,
   validarTituloQuadro,
-} from '../../views/static/js/utils/validacoes.js';
+} from '../../public/static/js/utils/validacoes.js';
 
 const SENHA_FRACA = 'A senha deve ter no mínimo 8 caracteres, com letras e números';
 

@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { describe, test } from 'node:test';
 
-import { forcaDaSenha, rotuloDaForca } from '../../views/static/js/utils/senha.js';
+import { forcaDaSenha, rotuloDaForca } from '../../public/static/js/utils/senha.js';
 
 describe('forcaDaSenha', () => {
   test('vazia = 0', () => {

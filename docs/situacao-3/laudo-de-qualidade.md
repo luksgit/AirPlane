@@ -8,7 +8,7 @@
 |---|---|
 | Produto | AirPlan: gerenciador de tarefas Kanban |
 | Versão avaliada | `<tag ou commit>` |
-| Endereço | `<link do Render>` |
+| Endereço | `<link da Vercel>` |
 | Responsável | Lucas Santos |
 | Disciplina | Projeto Integrador Transdisciplinar em Engenharia de Software II |
 | Período dos testes | `<data inicial> a <data final>` |

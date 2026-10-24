@@ -8,7 +8,7 @@ import {
   removerCartao,
   removerColuna,
   salvarCartao,
-} from '../../views/static/js/utils/kanban.js';
+} from '../../public/static/js/utils/kanban.js';
 
 /** Quadro de exemplo: Embarque [A, B, C], Em voo [D], Pousou []. */
 function quadroDeExemplo() {
